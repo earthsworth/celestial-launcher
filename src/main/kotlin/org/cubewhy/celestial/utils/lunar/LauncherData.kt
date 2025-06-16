@@ -56,15 +56,16 @@ class LauncherData(val api: URI = URI.create("https://api.lunarclientprod.com"))
 
     fun getVersion(version: String?, branch: String?, module: String?): GameArtifactInfo {
         val map = mapOf(
-            "hwid" to "HWID-PUBLIC",
             "installation_id" to UUID.randomUUID().toString(), // fake uuid
+            "overwolf_muid" to UUID.randomUUID().toString(),
             "os" to OSEnum.current!!.jsName, // shit js
-            "arch" to arch, // example: x64
             "os_release" to "19045.3086", // fake os release
+            "arch" to arch, // example: x64
             "launcher_version" to config.api.versionSpoof, // fake version
-            "launch_type" to "offline",
-            "version" to version,
+            "canary_preference" to "OPT_IN",
+            "launch_type" to "OFFLINE",
             "branch" to branch,
+            "version" to version,
             "module" to module
         )
 
