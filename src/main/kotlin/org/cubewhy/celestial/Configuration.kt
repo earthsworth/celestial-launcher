@@ -120,7 +120,7 @@ data class APIConfig(
 enum class LauncherPage(val pageName: String, val translateKey: String, val clazz: Class<out JComponent>) {
     NEWS("news", "gui.news.title", GuiNews::class.java),
     VERSION("version", "gui.version.title", GuiVersion::class.java),
-    PLUGINS("plugins", "gui.plugins.title", GuiPlugins::class.java),
+//    PLUGINS("plugins", "gui.plugins.title", GuiPlugins::class.java),
     SETTINGS("settings", "gui.settings.title", GuiSettings::class.java),
     ABOUT("about", "gui.about.title", GuiAbout::class.java)
 }

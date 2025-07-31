@@ -20,7 +20,7 @@ class HelpApi : HelpPage("API") {
         this.add(t.getString("gui.help.api").toJTextArea().readOnly())
         this.add(JButton(t.getString("gui.settings.title")).let {
             it.addActionListener {
-                launcherFrame.layoutX.show(launcherFrame.mainPanel, "settings")
+                launcherFrame.cardLayout.show(launcherFrame.mainPanel, "settings")
             }
             it
         })

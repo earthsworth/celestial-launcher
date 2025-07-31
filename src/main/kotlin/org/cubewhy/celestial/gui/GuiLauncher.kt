@@ -29,7 +29,7 @@ import java.net.URI
 import javax.swing.*
 
 class GuiLauncher : JFrame() {
-    lateinit var layoutX: CardLayout
+    lateinit var cardLayout: CardLayout
     lateinit var mainPanel: JPanel
 
     init {
@@ -52,8 +52,8 @@ class GuiLauncher : JFrame() {
         this.add(statusBar, BorderLayout.SOUTH)
         // menu
         val menu = Panel()
-        val btnPrevious = JButton(t.getString("gui.previous"))
-        val btnNext = JButton(t.getString("gui.next"))
+//        val btnPrevious = JButton(t.getString("gui.previous"))
+//        val btnNext = JButton(t.getString("gui.next"))
         // For developers: It is not recommended to remove the Donate button in Celestial Launcher's derivative versions
         // Celestial is an opensource launcher, please donate to let us go further (All money will be used for development)
         val btnDonate = JButton(t.getString("gui.donate"))
@@ -62,7 +62,7 @@ class GuiLauncher : JFrame() {
         btnDonate.addActionListener {
             try {
                 URI.create("https://lunarclient.top/#/sponsor").open()
-            } catch (ignored: IOException) {
+            } catch (_: IOException) {
             }
         }
         btnHelp.addActionListener {
@@ -76,28 +76,38 @@ class GuiLauncher : JFrame() {
             }
         }
 
-        menu.add(btnPrevious)
-        menu.add(btnNext)
-        menu.add(btnDonate)
-        menu.add(btnHelp)
-        menu.add(btnDiscord)
+//        menu.add(btnPrevious)
+//        menu.add(btnNext)
 
         menu.setSize(100, 20)
 
         this.add(menu, BorderLayout.NORTH)
         // main panel
         mainPanel = JPanel()
-        layoutX = CardLayout()
-        mainPanel.layout = layoutX
+        cardLayout = CardLayout()
+        mainPanel.layout = cardLayout
 
         // add pages
         config.pages.forEach { page ->
             mainPanel.add(page.pageName, page.clazz.getConstructor().newInstance())
+
+            // create button
+            val navigateBtn = JButton(t.getString(page.translateKey))
+            menu.add(navigateBtn)
+
+            navigateBtn.addActionListener {
+                cardLayout.show(mainPanel, page.pageName)
+            }
         }
 
         // bind buttons
-        btnPrevious.addActionListener { layoutX.previous(mainPanel) }
-        btnNext.addActionListener { layoutX.next(mainPanel) }
+//        btnPrevious.addActionListener { cardLayout.previous(mainPanel) }
+//        btnNext.addActionListener { cardLayout.next(mainPanel) }
+
+        menu.add(btnDonate)
+        menu.add(btnHelp)
+        menu.add(btnDiscord)
+
         this.add(mainPanel) // add MainPanel
 
         // try to find the exist game process
