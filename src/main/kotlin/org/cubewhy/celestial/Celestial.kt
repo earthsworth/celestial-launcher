@@ -16,6 +16,7 @@ import kotlinx.serialization.json.Json
 import org.apache.commons.io.FileUtils
 import org.cubewhy.celestial.event.impl.APIReadyEvent
 import org.cubewhy.celestial.event.impl.InitGuiEvent
+import org.cubewhy.celestial.event.impl.UpdateStatusTextEvent
 import org.cubewhy.celestial.files.Downloadable
 import org.cubewhy.celestial.game.AuthServer
 import org.cubewhy.celestial.game.GameProperties
@@ -23,6 +24,7 @@ import org.cubewhy.celestial.game.LaunchCommand
 import org.cubewhy.celestial.game.addon.JavaAgent
 import org.cubewhy.celestial.gui.LauncherMainWindow
 import org.cubewhy.celestial.gui.elements.unzipUi
+import org.cubewhy.celestial.gui.elements.updateStatusText
 import org.cubewhy.celestial.utils.*
 import org.cubewhy.celestial.utils.game.MinecraftManifest
 import org.cubewhy.celestial.utils.game.MojangApiClient
@@ -469,7 +471,7 @@ suspend fun checkUpdate(version: String, module: String, branch: String) {
 
     val minecraftFolder = File(config.game.gameDir)
 
-    LauncherMainWindow.statusBar.text = "Complete textures for vanilla Minecraft"
+    t.getString("status.launch.complete-textures").updateStatusText()
     val textureIndex = MojangApiClient.getVersion(
         version, minecraftManifest
     )!!.let {
@@ -481,11 +483,7 @@ suspend fun checkUpdate(version: String, module: String, branch: String) {
     val assetsFolder = minecraftFolder.resolve("assets")
     val indexFile = File(
         assetsFolder,
-        "indexes/" + Arrays.copyOfRange(
-            version.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray(),
-            0,
-            2
-        ).joinToString(".") + ".json"
+        "indexes/" + version.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().copyOfRange(0, 2).joinToString(".") + ".json"
     )
     FileUtils.writeStringToFile(indexFile, Gson().toJson(textureIndex), StandardCharsets.UTF_8)
 

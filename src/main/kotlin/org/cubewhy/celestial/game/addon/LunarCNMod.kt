@@ -10,6 +10,7 @@ import org.cubewhy.celestial.configDir
 import org.cubewhy.celestial.t
 import org.cubewhy.celestial.game.BaseAddon
 import org.cubewhy.celestial.gui.LauncherMainWindow
+import org.cubewhy.celestial.gui.elements.updateStatusText
 import org.cubewhy.celestial.utils.downloadLoader
 import org.cubewhy.celestial.utils.toFile
 import org.jetbrains.annotations.Contract
@@ -89,7 +90,7 @@ class LunarCNMod(val file: File) : BaseAddon() {
 
         suspend fun checkUpdate(): Boolean {
             log.info("Updating LunarCN Loader...")
-            LauncherMainWindow.statusBar.text = t.getString("gui.addon.mods.cn.warn")
+            t.getString("gui.addon.mods.cn.warn").updateStatusText()
             return downloadLoader(
                 "CubeWhyMC/LunarClient-CN",
                 config.addon.lunarcn.installationDir.toFile()

@@ -152,12 +152,12 @@ class GuiVersionList : JPanel() {
                     JOptionPane.YES_NO_OPTION
                 ) == JOptionPane.YES_OPTION
             ) {
-                statusBar.text = t.getString("gui.version.cache.start")
+                t.getString("gui.version.cache.start").updateStatusText()
                 try {
                     if (wipeCache(null)) {
-                        statusBar.text = t.getString("gui.version.cache.success")
+                        t.getString("gui.version.cache.success").updateStatusText()
                     } else {
-                        statusBar.text = t.getString("gui.version.cache.failure")
+                        t.getString("gui.version.cache.failure").updateStatusText()
                     }
                 } catch (ex: IOException) {
                     throw RuntimeException(ex)
@@ -253,21 +253,21 @@ class GuiVersionList : JPanel() {
         }
 
         if (checkUpdate) {
-            statusBar.text = t.getString("gui.addon.update")
+            t.getString("gui.addon.update").updateStatusText()
         }
     }
 
     @EventTarget
     fun onGameStart(event: GameStartEvent) {
-        statusBar.text = t.format("status.launch.started", event.pid)
+        t.format("status.launch.started", event.pid).updateStatusText()
     }
 
     @EventTarget
     fun onGameTerminate(event: GameTerminateEvent) {
-        statusBar.text = t.getString("status.launch.terminated")
+        t.getString("status.launch.terminated").updateStatusText()
         if (event.code != 0) {
             // upload crash report
-            statusBar.text = t.getString("status.launch.crashed")
+            t.getString("status.launch.crashed").updateStatusText()
             log.info("Client looks crashed (code ${event.code})")
             JOptionPane.showMessageDialog(
                 this,
@@ -309,7 +309,7 @@ class GuiVersionList : JPanel() {
 
         CoroutineScope(Dispatchers.IO).launch {
             isLaunching = true
-            statusBar.text = t.getString("status.launch.begin")
+            t.getString("status.launch.begin").updateStatusText()
             try {
                 checkUpdate(
                     (versionSelect.selectedItem as String),
@@ -337,7 +337,7 @@ class GuiVersionList : JPanel() {
     private suspend fun offlineLaunch() {
         beforeLaunch()
         Thread {
-            statusBar.text = t.getString("status.launch.call-process")
+            t.getString("status.launch.call-process").updateStatusText()
             launchPrevious().waitFor()
         }.start()
     }

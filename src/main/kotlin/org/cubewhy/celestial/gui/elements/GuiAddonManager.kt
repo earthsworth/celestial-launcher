@@ -5,7 +5,7 @@
  */
 package org.cubewhy.celestial.gui.elements
 
-import org.cubewhy.celestial.*
+import org.cubewhy.celestial.config
 import org.cubewhy.celestial.event.impl.AddonAddEvent
 import org.cubewhy.celestial.files.DownloadManager
 import org.cubewhy.celestial.game.AddonType
@@ -20,18 +20,8 @@ import org.cubewhy.celestial.game.addon.WeaveMod
 import org.cubewhy.celestial.game.addon.WeaveMod.Companion.add
 import org.cubewhy.celestial.gui.LauncherMainWindow
 import org.cubewhy.celestial.gui.layouts.VerticalFlowLayout
-import org.cubewhy.celestial.utils.chooseFile
-import org.cubewhy.celestial.utils.createButtonOpenFolder
-import org.cubewhy.celestial.utils.currentJavaExec
-import org.cubewhy.celestial.utils.format
-import org.cubewhy.celestial.utils.isMod
-import org.cubewhy.celestial.utils.openAsJar
-import org.cubewhy.celestial.utils.readOnly
-import org.cubewhy.celestial.utils.isZipFile
-import org.cubewhy.celestial.utils.source
-import org.cubewhy.celestial.utils.toJButton
-import org.cubewhy.celestial.utils.toJLabel
-import org.cubewhy.celestial.utils.toJTextArea
+import org.cubewhy.celestial.t
+import org.cubewhy.celestial.utils.*
 import org.slf4j.LoggerFactory
 import java.awt.Color
 import java.awt.GridBagConstraints
@@ -129,14 +119,13 @@ class GuiAddonManager : JPanel() {
             if (newArg != null && currentAgent.arg != newArg) {
                 setArgFor(currentAgent, newArg)
                 if (newArg.isBlank()) {
-                    LauncherMainWindow.statusBar.text =
-                        String.format(t.getString("gui.addon.agents.arg.remove.success"), currentAgent.file.name)
+                    String.format(t.getString("gui.addon.agents.arg.remove.success"), currentAgent.file.name)
+                        .updateStatusText()
                 } else {
-                    LauncherMainWindow.statusBar.text = String.format(
-                        t.getString("gui.addon.agents.arg.set.success"),
-                        currentAgent.file.name,
+                    t.format(
+                        "gui.addon.agents.arg.set.success", currentAgent.file.name,
                         newArg
-                    )
+                    ).updateStatusText()
                 }
                 agentList.clear()
                 loadAgents()
@@ -153,7 +142,7 @@ class GuiAddonManager : JPanel() {
                     JOptionPane.OK_CANCEL_OPTION
                 ) == JOptionPane.OK_OPTION && currentAgent.file.delete()
             ) {
-                LauncherMainWindow.statusBar.text = t.format("gui.addon.agents.remove.success", name)
+                t.format("gui.addon.agents.remove.success", name).updateStatusText()
                 agentList.clear()
                 loadAgents()
             }
@@ -170,7 +159,7 @@ class GuiAddonManager : JPanel() {
             )
             if (newName != null && file.renameTo(File(file.parentFile, "$newName.jar"))) {
                 log.info("Rename agent $name -> $newName.jar")
-                LauncherMainWindow.statusBar.text = t.format("gui.addon.rename.success", newName)
+                t.format("gui.addon.rename.success", newName).updateStatusText()
                 // rename the name in the config
                 migrate(name, "$newName.jar")
                 agentList.clear()
@@ -199,7 +188,7 @@ class GuiAddonManager : JPanel() {
             )
             if (newName != null && file.renameTo(File(file.parentFile, "$newName.jar"))) {
                 log.info(String.format("Rename weave mod %s -> %s", name, "$newName.jar"))
-                LauncherMainWindow.statusBar.text = t.format("gui.addon.rename.success", newName)
+                t.format("gui.addon.rename.success", newName).updateStatusText()
                 weaveList.clear()
                 loadWeaveMods()
             }
@@ -241,7 +230,7 @@ class GuiAddonManager : JPanel() {
             )
             if (newName != null && file.renameTo(File(file.parentFile, "$newName.jar"))) {
                 log.info(String.format("Rename LunarCN mod %s -> %s", name, "$newName.jar"))
-                LauncherMainWindow.statusBar.text = String.format(t.getString("gui.addon.rename.success"), newName)
+                String.format(t.getString("gui.addon.rename.success"), newName).updateStatusText()
                 lunarcnList.clear()
                 loadLunarCNMods()
             }
@@ -257,7 +246,7 @@ class GuiAddonManager : JPanel() {
                     JOptionPane.OK_CANCEL_OPTION
                 ) == JOptionPane.OK_OPTION && currentMod.file.delete()
             ) {
-                LauncherMainWindow.statusBar.text = t.format("gui.addon.mods.cn.remove.success", name)
+                t.format("gui.addon.mods.cn.remove.success", name).updateStatusText()
                 lunarcnList.clear()
                 loadLunarCNMods()
             }
@@ -278,7 +267,7 @@ class GuiAddonManager : JPanel() {
             )
             if (newName != null && file.renameTo(File(file.parentFile, "$newName.jar"))) {
                 log.info(String.format("Rename Fabric mod %s -> %s", name, "$newName.jar"))
-                LauncherMainWindow.statusBar.text = String.format(t.getString("gui.addon.rename.success"), newName)
+                String.format(t.getString("gui.addon.rename.success"), newName).updateStatusText()
                 fabricList.clear()
                 loadFabricMods()
             }
@@ -294,8 +283,7 @@ class GuiAddonManager : JPanel() {
                     JOptionPane.OK_CANCEL_OPTION
                 ) == JOptionPane.OK_OPTION && currentMod.file.delete()
             ) {
-                LauncherMainWindow.statusBar.text =
-                    t.format("gui.addon.mods.fabric.remove.success", name)
+                t.format("gui.addon.mods.fabric.remove.success", name).updateStatusText()
                 fabricList.clear()
                 loadFabricMods()
             }
@@ -330,7 +318,7 @@ class GuiAddonManager : JPanel() {
                 if (agent != null) {
                     // success
                     AddonAddEvent(AddonType.JAVAAGENT, agent)
-                    LauncherMainWindow.statusBar.text = t.getString("gui.addon.agents.add.success")
+                    t.getString("gui.addon.agents.add.success").updateStatusText()
                     agentList.clear()
                     loadAgents()
                 } else {
@@ -368,7 +356,7 @@ class GuiAddonManager : JPanel() {
                 if (mod != null) {
                     // success
                     AddonAddEvent(AddonType.WEAVE, mod)
-                    LauncherMainWindow.statusBar.text = t.getString("gui.addon.mods.weave.add.success")
+                    t.getString("gui.addon.mods.weave.add.success").updateStatusText()
                     weaveList.clear()
                     loadWeaveMods()
                 } else {
@@ -406,7 +394,7 @@ class GuiAddonManager : JPanel() {
                 if (mod != null) {
                     // success
                     AddonAddEvent(AddonType.LUNARCN, mod)
-                    LauncherMainWindow.statusBar.text = t.getString("gui.addon.mods.cn.add.success")
+                    t.getString("gui.addon.mods.cn.add.success").updateStatusText()
                     weaveList.clear()
                     loadWeaveMods()
                 } else {
@@ -440,7 +428,7 @@ class GuiAddonManager : JPanel() {
                 if (mod != null) {
                     // success
                     AddonAddEvent(AddonType.FABRIC, mod)
-                    LauncherMainWindow.statusBar.text = t.getString("gui.addon.mods.fabric.add.success")
+                    t.getString("gui.addon.mods.fabric.add.success").updateStatusText()
                     fabricList.clear()
                     loadFabricMods()
                 } else {
