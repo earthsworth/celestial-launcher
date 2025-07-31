@@ -5,12 +5,8 @@
  */
 package org.cubewhy.celestial.gui.dialogs
 
-import org.cubewhy.celestial.*
-import org.cubewhy.celestial.utils.getKotlinField
-import org.cubewhy.celestial.utils.setKotlinField
-import org.cubewhy.celestial.utils.toJLabel
-import org.cubewhy.celestial.utils.toJTextArea
-import org.cubewhy.celestial.utils.withScroller
+import org.cubewhy.celestial.t
+import org.cubewhy.celestial.utils.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.awt.BorderLayout

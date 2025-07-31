@@ -12,7 +12,10 @@ import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.event.FocusAdapter
 import java.awt.event.FocusEvent
-import javax.swing.*
+import javax.swing.DefaultListModel
+import javax.swing.JList
+import javax.swing.JPanel
+import javax.swing.JTextField
 import javax.swing.event.ListDataEvent
 import javax.swing.event.ListDataListener
 
@@ -69,6 +72,7 @@ class SearchableList<T>(private val model: DefaultListModel<T>, baseList: JList<
             override fun intervalRemoved(e: ListDataEvent?) {
                 refresh()
             }
+
             override fun contentsChanged(e: ListDataEvent?) {
                 refresh()
             }

@@ -78,7 +78,6 @@ class WeaveMod(val file: File) : BaseAddon() {
             get() = config.addon.weave.installationDir.toFile()
 
 
-
         suspend fun checkUpdate(): Boolean {
             log.info("Updating Weave Loader")
             return downloadLoader(

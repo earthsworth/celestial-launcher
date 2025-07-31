@@ -11,13 +11,8 @@ import java.awt.Desktop
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
 import java.io.File
-import java.util.EventObject
-import javax.swing.JButton
-import javax.swing.JFileChooser
-import javax.swing.JLabel
-import javax.swing.JScrollPane
-import javax.swing.JTextArea
-import javax.swing.SwingConstants
+import java.util.*
+import javax.swing.*
 import javax.swing.filechooser.FileFilter
 import javax.swing.filechooser.FileNameExtensionFilter
 

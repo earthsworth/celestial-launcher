@@ -16,7 +16,6 @@ import kotlinx.serialization.json.Json
 import org.apache.commons.io.FileUtils
 import org.cubewhy.celestial.event.impl.APIReadyEvent
 import org.cubewhy.celestial.event.impl.InitGuiEvent
-import org.cubewhy.celestial.event.impl.UpdateStatusTextEvent
 import org.cubewhy.celestial.files.Downloadable
 import org.cubewhy.celestial.game.AuthServer
 import org.cubewhy.celestial.game.GameProperties
@@ -42,7 +41,6 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.util.*
 import java.util.concurrent.atomic.AtomicLong
-import javax.swing.JDialog
 import javax.swing.JOptionPane
 import kotlin.system.exitProcess
 
@@ -483,7 +481,8 @@ suspend fun checkUpdate(version: String, module: String, branch: String) {
     val assetsFolder = minecraftFolder.resolve("assets")
     val indexFile = File(
         assetsFolder,
-        "indexes/" + version.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().copyOfRange(0, 2).joinToString(".") + ".json"
+        "indexes/" + version.split("\\.".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().copyOfRange(0, 2)
+            .joinToString(".") + ".json"
     )
     FileUtils.writeStringToFile(indexFile, Gson().toJson(textureIndex), StandardCharsets.UTF_8)
 

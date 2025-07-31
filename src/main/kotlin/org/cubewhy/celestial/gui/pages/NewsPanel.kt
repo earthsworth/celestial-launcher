@@ -7,17 +7,18 @@ import kotlinx.coroutines.launch
 import org.cubewhy.celestial.event.EventManager
 import org.cubewhy.celestial.event.EventTarget
 import org.cubewhy.celestial.event.impl.APIReadyEvent
-import org.cubewhy.celestial.t
 import org.cubewhy.celestial.files.DownloadManager.cache
 import org.cubewhy.celestial.gui.LauncherAlert
 import org.cubewhy.celestial.gui.LauncherBirthday
 import org.cubewhy.celestial.gui.LauncherNews
 import org.cubewhy.celestial.metadata
+import org.cubewhy.celestial.t
 import org.cubewhy.celestial.utils.lunar.Blogpost
 import org.cubewhy.celestial.utils.toJLabel
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.awt.Color
+import java.awt.GridLayout
 import java.io.IOException
 import java.net.URL
 import java.time.LocalDate
@@ -27,7 +28,6 @@ import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.border.TitledBorder
 import kotlin.math.abs
-import java.awt.GridLayout
 
 class NewsPanel : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_AS_NEEDED) {
     private lateinit var blogPosts: List<Blogpost>

@@ -6,11 +6,11 @@
 
 package org.cubewhy.celestial.gui.dialogs
 
-import org.cubewhy.celestial.t
 import org.cubewhy.celestial.gui.elements.HelpPage
 import org.cubewhy.celestial.gui.elements.HelpPageX
 import org.cubewhy.celestial.gui.elements.SearchableList
 import org.cubewhy.celestial.gui.elements.help.HelpWelcome
+import org.cubewhy.celestial.t
 import org.cubewhy.celestial.utils.resolvePackage
 import org.slf4j.LoggerFactory
 import java.awt.BorderLayout

@@ -12,8 +12,6 @@ import org.apache.commons.io.FileUtils
 import org.cubewhy.celestial.configDir
 import org.cubewhy.celestial.event.impl.FileDownloadEvent
 import org.cubewhy.celestial.event.impl.UpdateStatusTextEvent
-import org.cubewhy.celestial.gui.LauncherMainWindow
-import org.cubewhy.celestial.runningOnGui
 import org.cubewhy.celestial.utils.RequestUtils.get
 import org.cubewhy.celestial.utils.bytesAsync
 import org.slf4j.Logger

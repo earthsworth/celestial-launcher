@@ -6,8 +6,8 @@
 
 package org.cubewhy.celestial.gui.elements.help
 
-import org.cubewhy.celestial.t
 import org.cubewhy.celestial.gui.elements.HelpPage
+import org.cubewhy.celestial.t
 import org.cubewhy.celestial.utils.readOnly
 import org.cubewhy.celestial.utils.toJTextArea
 

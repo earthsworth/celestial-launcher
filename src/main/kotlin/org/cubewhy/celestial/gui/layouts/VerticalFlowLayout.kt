@@ -164,12 +164,15 @@ class VerticalFlowLayout(// 每一列中各组件水平向对齐方式(注意非
             TOP -> {
                 insets.top + vPadding
             }
+
             CENTER -> {
                 (availableHeight - preferredHeight) / 2 + insets.top + vPadding
             }
+
             BOTTOM -> {
                 availableHeight - preferredHeight + insets.top + vPadding
             }
+
             else -> {
                 insets.top + vPadding
             }
@@ -186,12 +189,15 @@ class VerticalFlowLayout(// 每一列中各组件水平向对齐方式(注意非
                     LEFT -> {
                         xBase
                     }
+
                     CENTER -> {
                         xBase + (preferredWidth - item.preferredSize.width) / 2
                     }
+
                     RIGHT -> {
                         xBase + preferredWidth - item.preferredSize.width
                     }
+
                     else -> {
                         xBase
                     }

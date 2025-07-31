@@ -6,7 +6,7 @@
 
 package org.cubewhy.celestial.gui.elements.help
 
-import org.cubewhy.celestial.t
 import org.cubewhy.celestial.gui.elements.HelpPage
+import org.cubewhy.celestial.t
 
 class HelpLunarQT : HelpPage("LunarQT", t.getString("gui.help.lcqt"))

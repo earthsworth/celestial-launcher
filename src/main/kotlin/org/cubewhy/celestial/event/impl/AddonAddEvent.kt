@@ -9,5 +9,4 @@ import org.cubewhy.celestial.event.Event
 import org.cubewhy.celestial.game.AddonType
 import org.cubewhy.celestial.game.BaseAddon
 
-class AddonAddEvent(val type: AddonType, val addon: BaseAddon) : Event() {
-}
+class AddonAddEvent(val type: AddonType, val addon: BaseAddon) : Event()

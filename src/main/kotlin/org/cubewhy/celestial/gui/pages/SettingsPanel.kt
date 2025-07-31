@@ -17,8 +17,8 @@ import org.cubewhy.celestial.event.impl.APIReadyEvent
 import org.cubewhy.celestial.event.impl.ChangeConfigEvent
 import org.cubewhy.celestial.game.addon.LunarCNMod
 import org.cubewhy.celestial.game.addon.WeaveMod
-import org.cubewhy.celestial.gui.LauncherMainWindow
 import org.cubewhy.celestial.gui.Language
+import org.cubewhy.celestial.gui.LauncherMainWindow
 import org.cubewhy.celestial.gui.dialogs.ArgsConfigDialog
 import org.cubewhy.celestial.gui.dialogs.LunarQTDialog
 import org.cubewhy.celestial.gui.dialogs.MirrorDialog

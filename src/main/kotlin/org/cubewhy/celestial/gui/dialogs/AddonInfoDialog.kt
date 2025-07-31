@@ -9,15 +9,11 @@ package org.cubewhy.celestial.gui.dialogs
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import org.cubewhy.celestial.*
 import org.cubewhy.celestial.files.Downloadable
 import org.cubewhy.celestial.game.RemoteAddon
 import org.cubewhy.celestial.gui.layouts.VerticalFlowLayout
-import org.cubewhy.celestial.utils.forEachIsEnd
-import org.cubewhy.celestial.utils.format
-import org.cubewhy.celestial.utils.open
-import org.cubewhy.celestial.utils.toURI
-import org.cubewhy.celestial.utils.withScroller
+import org.cubewhy.celestial.t
+import org.cubewhy.celestial.utils.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.awt.Color

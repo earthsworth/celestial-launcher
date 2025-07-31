@@ -6,7 +6,7 @@
 
 package org.cubewhy.celestial.utils
 
-import java.util.ResourceBundle
+import java.util.*
 
 fun ResourceBundle.format(key: String, vararg args: Any?): String =
     this.getString(key).format(*args)

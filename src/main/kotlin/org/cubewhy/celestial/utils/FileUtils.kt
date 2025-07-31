@@ -8,14 +8,9 @@ package org.cubewhy.celestial.utils
 
 import org.cubewhy.celestial.game.AddonType
 import org.cubewhy.celestial.gui.LauncherMainWindow
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStream
+import java.io.*
 import java.util.jar.JarFile
 import java.util.zip.ZipFile
-import kotlin.collections.iterator
 
 
 fun String.toFile(): File = File(this)
@@ -41,7 +36,6 @@ fun ZipFile.unzipTo(targetDir: File) {
         }
     }
 }
-
 
 
 /**

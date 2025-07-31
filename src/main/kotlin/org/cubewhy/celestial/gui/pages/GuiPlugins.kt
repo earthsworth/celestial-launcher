@@ -7,14 +7,14 @@ package org.cubewhy.celestial.gui.pages
 
 import org.cubewhy.celestial.event.EventTarget
 import org.cubewhy.celestial.event.impl.APIReadyEvent
-import org.cubewhy.celestial.t
-import org.cubewhy.celestial.lunarApiClient
 import org.cubewhy.celestial.game.RemoteAddon
 import org.cubewhy.celestial.game.addon.JavaAgent
 import org.cubewhy.celestial.game.addon.LunarCNMod
 import org.cubewhy.celestial.game.addon.WeaveMod
 import org.cubewhy.celestial.gui.dialogs.AddonInfoDialog
 import org.cubewhy.celestial.gui.layouts.VerticalFlowLayout
+import org.cubewhy.celestial.lunarApiClient
+import org.cubewhy.celestial.t
 import org.cubewhy.celestial.utils.format
 import org.cubewhy.celestial.utils.withScroller
 import org.slf4j.Logger

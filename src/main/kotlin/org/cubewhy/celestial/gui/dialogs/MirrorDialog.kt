@@ -7,9 +7,8 @@ package org.cubewhy.celestial.gui.dialogs
 
 import cn.hutool.core.util.NumberUtil
 import org.cubewhy.celestial.config
-import org.cubewhy.celestial.t
-import org.cubewhy.celestial.gui.LauncherMainWindow
 import org.cubewhy.celestial.gui.elements.updateStatusText
+import org.cubewhy.celestial.t
 import org.cubewhy.celestial.utils.withScroller
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

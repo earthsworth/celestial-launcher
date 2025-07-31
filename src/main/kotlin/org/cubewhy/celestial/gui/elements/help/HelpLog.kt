@@ -6,10 +6,10 @@
 
 package org.cubewhy.celestial.gui.elements.help
 
-import org.cubewhy.celestial.t
-import org.cubewhy.celestial.launcherLogFile
 import org.cubewhy.celestial.gui.elements.HelpPage
 import org.cubewhy.celestial.gui.layouts.VerticalFlowLayout
+import org.cubewhy.celestial.launcherLogFile
+import org.cubewhy.celestial.t
 import org.cubewhy.celestial.utils.createButtonOpenFolder
 import org.cubewhy.celestial.utils.readOnly
 import org.cubewhy.celestial.utils.toJTextArea

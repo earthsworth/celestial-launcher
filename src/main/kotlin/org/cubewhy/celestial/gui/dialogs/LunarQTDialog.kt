@@ -6,16 +6,10 @@
 
 package org.cubewhy.celestial.gui.dialogs
 
-import org.cubewhy.celestial.*
 import org.cubewhy.celestial.game.thirdparty.LunarQT
 import org.cubewhy.celestial.gui.layouts.VerticalFlowLayout
-import org.cubewhy.celestial.utils.emptyJLabel
-import org.cubewhy.celestial.utils.getKotlinField
-import org.cubewhy.celestial.utils.getKotlinName
-import org.cubewhy.celestial.utils.setKotlinField
-import org.cubewhy.celestial.utils.source
-import org.cubewhy.celestial.utils.toJLabel
-import org.cubewhy.celestial.utils.withScroller
+import org.cubewhy.celestial.t
+import org.cubewhy.celestial.utils.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.awt.event.FocusAdapter
@@ -70,9 +64,10 @@ class LunarQTDialog : JDialog() {
         }
     }
 
-    private fun getTextField(name: String, text: String) : JPanel {
+    private fun getTextField(name: String, text: String): JPanel {
         val methodGet = LunarQT.configLunarQT::class.java.getDeclaredMethod("get${getKotlinName(name)}")
-        val methodSet = LunarQT.configLunarQT::class.java.getDeclaredMethod("set${getKotlinName(name)}", String::class.java)
+        val methodSet =
+            LunarQT.configLunarQT::class.java.getDeclaredMethod("set${getKotlinName(name)}", String::class.java)
         val textField = JTextField(methodGet.invoke(LunarQT.configLunarQT) as String)
         fun doSet() {
             methodSet.invoke(LunarQT.configLunarQT, textField.text)
@@ -80,7 +75,7 @@ class LunarQTDialog : JDialog() {
         textField.addActionListener {
             doSet()
         }
-        textField.addFocusListener(object: FocusAdapter() {
+        textField.addFocusListener(object : FocusAdapter() {
             override fun focusLost(e: FocusEvent?) {
                 doSet()
             }
@@ -92,10 +87,12 @@ class LunarQTDialog : JDialog() {
         return panelTF
     }
 
-    private fun getFloatInput(name: String, text: String) : JPanel {
+    private fun getFloatInput(name: String, text: String): JPanel {
         val methodGet = LunarQT.configLunarQT::class.java.getDeclaredMethod("get${getKotlinName(name)}")
-        val methodSet = LunarQT.configLunarQT::class.java.getDeclaredMethod("set${getKotlinName(name)}", Float::class.java)
-        val spinner = JSpinner(SpinnerNumberModel(methodGet.invoke(LunarQT.configLunarQT) as Float, 0f, Float.MAX_VALUE, 0.01f))
+        val methodSet =
+            LunarQT.configLunarQT::class.java.getDeclaredMethod("set${getKotlinName(name)}", Float::class.java)
+        val spinner =
+            JSpinner(SpinnerNumberModel(methodGet.invoke(LunarQT.configLunarQT) as Float, 0f, Float.MAX_VALUE, 0.01f))
         spinner.autoscrolls = true
         val editor = spinner.editor
         val textField = (editor as JSpinner.DefaultEditor).textField

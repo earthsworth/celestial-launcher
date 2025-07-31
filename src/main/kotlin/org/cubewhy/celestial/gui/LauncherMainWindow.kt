@@ -7,14 +7,16 @@
 package org.cubewhy.celestial.gui
 
 import com.sun.tools.attach.AttachNotSupportedException
-import org.cubewhy.celestial.*
+import org.cubewhy.celestial.config
 import org.cubewhy.celestial.event.EventManager
 import org.cubewhy.celestial.event.EventTarget
 import org.cubewhy.celestial.event.impl.AuthEvent
 import org.cubewhy.celestial.event.impl.GameStartEvent
 import org.cubewhy.celestial.event.impl.GameTerminateEvent
+import org.cubewhy.celestial.gamePid
 import org.cubewhy.celestial.gui.dialogs.HelpDialog
 import org.cubewhy.celestial.gui.elements.StatusBar
+import org.cubewhy.celestial.t
 import org.cubewhy.celestial.utils.findJava
 import org.cubewhy.celestial.utils.format
 import org.cubewhy.celestial.utils.getInputStream
@@ -168,7 +170,7 @@ class LauncherMainWindow : JFrame() {
     }
 
     @EventTarget
-    fun onGameStart(e : GameStartEvent) {
+    fun onGameStart(e: GameStartEvent) {
         this.setIconImage("running")
     }
 

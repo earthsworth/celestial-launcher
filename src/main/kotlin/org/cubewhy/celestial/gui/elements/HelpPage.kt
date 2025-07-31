@@ -36,7 +36,8 @@ open class HelpPage(val documentName: String, val text: String? = null) : JPanel
 /**
  * HelpPage with a scrollbar
  * */
-internal class HelpPageX(base: HelpPage) : JScrollPane(base, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+internal class HelpPageX(base: HelpPage) :
+    JScrollPane(base, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_AS_NEEDED) {
     private var documentName: String
 
     init {

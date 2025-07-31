@@ -7,8 +7,9 @@
 package org.cubewhy.celestial.gui
 
 import cn.hutool.crypto.SecureUtil
-import org.cubewhy.celestial.*
+import org.cubewhy.celestial.config
 import org.cubewhy.celestial.files.DownloadManager.cacheDir
+import org.cubewhy.celestial.t
 import org.cubewhy.celestial.utils.lunar.Alert
 import org.cubewhy.celestial.utils.lunar.Blogpost
 import org.cubewhy.celestial.utils.open

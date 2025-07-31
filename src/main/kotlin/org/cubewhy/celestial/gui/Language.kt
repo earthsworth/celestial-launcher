@@ -5,7 +5,7 @@
  */
 package org.cubewhy.celestial.gui
 
-import java.util.Locale
+import java.util.*
 
 enum class Language(val view: String, val code: String, val locale: Locale) {
     ENGLISH("English", "en", Locale.ENGLISH),

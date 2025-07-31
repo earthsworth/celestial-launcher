@@ -11,15 +11,12 @@ import kotlinx.serialization.Serializable
 import okhttp3.coroutines.executeAsync
 import org.cubewhy.celestial.JSON
 import org.cubewhy.celestial.config
-import org.cubewhy.celestial.event.impl.CrashReportUploadEvent
 import org.cubewhy.celestial.game.AddonMeta
 import org.cubewhy.celestial.game.RemoteAddon
-import org.cubewhy.celestial.utils.CrashReportType
 import org.cubewhy.celestial.utils.OSEnum
 import org.cubewhy.celestial.utils.RequestUtils.get
 import org.cubewhy.celestial.utils.RequestUtils.post
 import org.cubewhy.celestial.utils.arch
-import org.cubewhy.celestial.utils.string
 import org.cubewhy.celestial.utils.stringAsync
 import java.net.URI
 import java.util.*

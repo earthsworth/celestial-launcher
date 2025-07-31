@@ -8,7 +8,6 @@ package org.cubewhy.celestial.utils
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import kotlinx.serialization.encodeToString
 import okhttp3.*
 import okhttp3.HttpUrl.Companion.toHttpUrl
 import okhttp3.MediaType.Companion.toMediaType
@@ -17,7 +16,6 @@ import okhttp3.dnsoverhttps.DnsOverHttps
 import org.cubewhy.celestial.JSON
 import org.cubewhy.celestial.config
 import org.cubewhy.celestial.configDir
-import java.io.File
 import java.net.InetAddress
 import java.net.URL
 

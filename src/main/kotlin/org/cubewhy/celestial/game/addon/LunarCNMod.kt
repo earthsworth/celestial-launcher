@@ -7,10 +7,9 @@ package org.cubewhy.celestial.game.addon
 
 import org.cubewhy.celestial.config
 import org.cubewhy.celestial.configDir
-import org.cubewhy.celestial.t
 import org.cubewhy.celestial.game.BaseAddon
-import org.cubewhy.celestial.gui.LauncherMainWindow
 import org.cubewhy.celestial.gui.elements.updateStatusText
+import org.cubewhy.celestial.t
 import org.cubewhy.celestial.utils.downloadLoader
 import org.cubewhy.celestial.utils.toFile
 import org.jetbrains.annotations.Contract

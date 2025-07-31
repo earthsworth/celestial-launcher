@@ -10,7 +10,10 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import org.cubewhy.celestial.game.LauncherFeatureFlags
 import org.cubewhy.celestial.gui.Language
-import org.cubewhy.celestial.gui.pages.*
+import org.cubewhy.celestial.gui.pages.AboutPanel
+import org.cubewhy.celestial.gui.pages.NewsPanel
+import org.cubewhy.celestial.gui.pages.SettingsPanel
+import org.cubewhy.celestial.gui.pages.VersionPanel
 import org.cubewhy.celestial.utils.getLanguage
 import org.cubewhy.celestial.utils.totalMem
 import java.io.File
@@ -49,8 +52,7 @@ data class GameConfiguration(
     var overrides: Map<String, String> = HashMap(), // serviceOverrideXXX=address
     var patched: Map<String, String> = mapOf(),
     var flags: LauncherFeatureFlags = LauncherFeatureFlags(),
-) {
-}
+)
 
 @Serializable
 data class JavaagentConfiguration(
@@ -80,8 +82,11 @@ data class AddonLoaderConfiguration(
 @Serializable
 data class AddonConfiguration(
     val weave: AddonLoaderConfiguration = AddonLoaderConfiguration(false, configDir.resolve("loaders/weave.jar").path),
-    val lunarcn: AddonLoaderConfiguration =AddonLoaderConfiguration(false, configDir.resolve("loaders/cn.jar").path),
-    val lcqt: AddonLoaderConfiguration = AddonLoaderConfiguration(false, configDir.resolve("loaders/lcqt-agent.jar").path),
+    val lunarcn: AddonLoaderConfiguration = AddonLoaderConfiguration(false, configDir.resolve("loaders/cn.jar").path),
+    val lcqt: AddonLoaderConfiguration = AddonLoaderConfiguration(
+        false,
+        configDir.resolve("loaders/lcqt-agent.jar").path
+    ),
 )
 
 @Serializable
@@ -111,7 +116,8 @@ data class APIConfig(
 enum class LauncherPage(val pageName: String, val translateKey: String, val clazz: Class<out JComponent>) {
     NEWS("news", "gui.news.title", NewsPanel::class.java),
     VERSION("version", "gui.version.title", VersionPanel::class.java),
-//    PLUGINS("plugins", "gui.plugins.title", GuiPlugins::class.java),
+
+    //    PLUGINS("plugins", "gui.plugins.title", GuiPlugins::class.java),
     SETTINGS("settings", "gui.settings.title", SettingsPanel::class.java),
     ABOUT("about", "gui.about.title", AboutPanel::class.java)
 }
@@ -151,10 +157,13 @@ data class ProxyConfig(
         return src
     }
 
-    fun toProxy() : Proxy? {
+    fun toProxy(): Proxy? {
         if (this.proxyAddress.isBlank()) return null
         val address = URL(this.proxyAddress)
-        return if (state) Proxy(getProtocolType(address.protocol), InetSocketAddress(address.host, address.port)) else null
+        return if (state) Proxy(
+            getProtocolType(address.protocol),
+            InetSocketAddress(address.host, address.port)
+        ) else null
     }
 
     private fun getProtocolType(protocol: String): Proxy.Type {
