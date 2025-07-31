@@ -2,6 +2,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 plugins {
+    application
     kotlin("jvm")
     kotlin("plugin.serialization") version "2.1.20"
     id("com.github.johnrengelman.shadow") version "8.+"
@@ -74,6 +75,10 @@ protobuf {
     protoc {
         artifact = "com.google.protobuf:protoc:4.30.2"
     }
+}
+
+application {
+    mainClass = "org.cubewhy.celestial.CelestialKt"
 }
 
 tasks.jar {
