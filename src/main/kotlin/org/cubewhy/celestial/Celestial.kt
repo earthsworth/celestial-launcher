@@ -14,14 +14,14 @@ import com.google.gson.JsonParser
 import kotlinx.serialization.json.Json
 import org.apache.commons.io.FileUtils
 import org.cubewhy.celestial.event.impl.APIReadyEvent
-import org.cubewhy.celestial.event.impl.CreateLauncherEvent
+import org.cubewhy.celestial.event.impl.InitGuiEvent
 import org.cubewhy.celestial.files.DownloadManager
 import org.cubewhy.celestial.files.Downloadable
 import org.cubewhy.celestial.game.AuthServer
 import org.cubewhy.celestial.game.GameProperties
 import org.cubewhy.celestial.game.LaunchCommand
 import org.cubewhy.celestial.game.addon.JavaAgent
-import org.cubewhy.celestial.gui.GuiLauncher
+import org.cubewhy.celestial.gui.LauncherMainWindow
 import org.cubewhy.celestial.gui.elements.unzipUi
 import org.cubewhy.celestial.utils.*
 import org.cubewhy.celestial.utils.game.MojangApiClient
@@ -68,7 +68,7 @@ val gamePid: AtomicLong = AtomicLong()
 lateinit var t: ResourceBundle
 lateinit var lunarApiClient: LunarApiClient
 lateinit var metadata: LauncherMetadata
-lateinit var launcherFrame: GuiLauncher
+lateinit var launcherFrame: LauncherMainWindow
 var sessionFile: File = if (OSEnum.Windows.isCurrent) {
     // Microsoft Windows
     File(System.getenv("APPDATA"), "launcher/sentry/session.json")
@@ -106,7 +106,7 @@ val minecraftFolder: File
         return File(System.getProperty("user.home"), ".minecraft")
     }
 
-fun main() {
+suspend fun main() {
     // set encoding
     System.setProperty("file.encoding", "UTF-8")
     log.info("Celestial v${GitUtils.buildVersion} build by ${GitUtils.buildUser}")
@@ -128,7 +128,7 @@ fun main() {
     }
 }
 
-private fun run() {
+private suspend fun run() {
     // init config
     initConfig()
     initTheme() // init theme
@@ -173,8 +173,8 @@ private fun run() {
     AuthServer.instance.startServer()
 
     // start gui launcher
-    launcherFrame = GuiLauncher()
-    CreateLauncherEvent(launcherFrame).call()
+    launcherFrame = LauncherMainWindow()
+    InitGuiEvent(launcherFrame).call()
     launcherFrame.isVisible = true
     runningOnGui = true
     APIReadyEvent().call()
@@ -274,7 +274,7 @@ private fun checkJava() {
     }
 }
 
-private fun initLauncher() {
+private suspend fun initLauncher() {
     metadata = lunarApiClient.metadata()
     minecraftManifest = MojangApiClient.manifest()
 }
@@ -299,15 +299,16 @@ fun wipeCache(id: String?): Boolean {
 /**
  * Generate args
  */
-fun getArgs(
+suspend fun getArgs(
     version: String,
-    branch: String?,
-    module: String?,
+    branch: String,
+    module: String,
     installation: File,
     gameProperties: GameProperties,
     givenAgents: List<JavaAgent> = emptyList()
 ): LaunchCommand {
-    val json = lunarApiClient.getVersion(version, branch, module)
+    // TODO: allow pass json in the params
+    val json = lunarApiClient.launchVersion(version, branch, module)
     // === JRE ===
     val wrapper = config.game.wrapper
     val customJre = config.jre
@@ -424,22 +425,18 @@ fun getArgs(
  * @param module  LunarClient module
  * @param branch  Git branch (LunarClient)
  */
-
-@Synchronized
-fun checkUpdate(version: String, module: String?, branch: String?) {
+suspend fun checkUpdate(version: String, module: String, branch: String) {
     log.info("Checking update")
     val installation = File(config.installationDir)
-    val versionJson = lunarApiClient.getVersion(version, branch, module)
+    val versionJson = lunarApiClient.launchVersion(version, branch, module)
     // download artifacts
     val artifacts = versionJson.launchTypeData.artifacts
     for (artifact in artifacts) {
-        DownloadManager.download(
-            Downloadable(
-                artifact.url.toURI().toURL(),
-                File(installation, artifact.name),
-                artifact.sha1
-            )
-        )
+        Downloadable(
+            artifact.url.toURI().toURL(),
+            File(installation, artifact.name),
+            artifact.sha1
+        ).download()
     }
 
     // download textures
@@ -463,7 +460,7 @@ fun checkUpdate(version: String, module: String?, branch: String?) {
 
     val minecraftFolder = File(config.game.gameDir)
 
-    GuiLauncher.statusBar.text = "Complete textures for vanilla Minecraft"
+    LauncherMainWindow.statusBar.text = "Complete textures for vanilla Minecraft"
     val textureIndex = MojangApiClient.getVersion(
         version, minecraftManifest
     )!!.let {
@@ -494,7 +491,7 @@ fun checkUpdate(version: String, module: String?, branch: String?) {
     }
 }
 
-private fun downloadAssets(urlString: String, file: File) {
+private suspend fun downloadAssets(urlString: String, file: File) {
     val url: URL
     try {
         url = urlString.toURI().toURL()
@@ -502,7 +499,7 @@ private fun downloadAssets(urlString: String, file: File) {
         throw RuntimeException(e)
     }
     val full = urlString.split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-    DownloadManager.download(Downloadable(url, file, full[full.size - 1]))
+    Downloadable(url, file, full[full.size - 1]).download();
 }
 
 private fun File.isReallyOfficial(): Boolean {

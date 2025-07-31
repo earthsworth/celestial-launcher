@@ -9,7 +9,7 @@ import org.cubewhy.celestial.config
 import org.cubewhy.celestial.configDir
 import org.cubewhy.celestial.t
 import org.cubewhy.celestial.game.BaseAddon
-import org.cubewhy.celestial.gui.GuiLauncher
+import org.cubewhy.celestial.gui.LauncherMainWindow
 import org.cubewhy.celestial.utils.downloadLoader
 import org.cubewhy.celestial.utils.toFile
 import org.jetbrains.annotations.Contract
@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory
 import java.io.File
 import java.util.*
 
+@Deprecated("deprecated")
 class LunarCNMod(val file: File) : BaseAddon() {
     override fun toString(): String {
         return file.name
@@ -86,9 +87,9 @@ class LunarCNMod(val file: File) : BaseAddon() {
         }
 
 
-        fun checkUpdate(): Boolean {
+        suspend fun checkUpdate(): Boolean {
             log.info("Updating LunarCN Loader...")
-            GuiLauncher.statusBar.text = t.getString("gui.addon.mods.cn.warn")
+            LauncherMainWindow.statusBar.text = t.getString("gui.addon.mods.cn.warn")
             return downloadLoader(
                 "CubeWhyMC/LunarClient-CN",
                 config.addon.lunarcn.installationDir.toFile()

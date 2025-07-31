@@ -79,7 +79,7 @@ class WeaveMod(val file: File) : BaseAddon() {
 
 
 
-        fun checkUpdate(): Boolean {
+        suspend fun checkUpdate(): Boolean {
             log.info("Updating Weave Loader")
             return downloadLoader(
                 "Weave-MC/Weave-Loader",

@@ -8,6 +8,7 @@ package org.cubewhy.celestial.utils.lunar
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import okhttp3.coroutines.executeAsync
 import org.cubewhy.celestial.JSON
 import org.cubewhy.celestial.config
 import org.cubewhy.celestial.event.impl.CrashReportUploadEvent
@@ -19,8 +20,8 @@ import org.cubewhy.celestial.utils.RequestUtils.get
 import org.cubewhy.celestial.utils.RequestUtils.post
 import org.cubewhy.celestial.utils.arch
 import org.cubewhy.celestial.utils.string
+import org.cubewhy.celestial.utils.stringAsync
 import java.net.URI
-import java.net.URL
 import java.util.*
 
 /**
@@ -40,21 +41,21 @@ class LunarApiClient(val api: URI = URI.create("https://api.lunarclientprod.com"
      * @return Launcher Metadata
      */
 
-    fun metadata(): LauncherMetadata {
+    suspend fun metadata(): LauncherMetadata {
         // do request with fake system info
         // DO NOT REPLACE THE launcher_version FIELD TO config.api.versionSpoof
-        get("$api/launcher/metadata?installation_id=${UUID.randomUUID()}&os=${OSEnum.current!!.jsName}&arch=${arch}&launcher_version=114.514.191&branch=master&branch_changed=true&private=true&os_release=114.514").execute()
+        get("$api/launcher/metadata?installation_id=${UUID.randomUUID()}&os=${OSEnum.current!!.jsName}&arch=${arch}&launcher_version=114.514.191&branch=master&branch_changed=true&private=true&os_release=114.514")
+            .executeAsync()
             .use { response ->
                 assert(response.code == 200) {
                     "Code = " + response.code
                 }
-                assert(response.body != null) { "ResponseBody was null" }
-                return JSON.decodeFromString(response.string!!)
+                return JSON.decodeFromString(response.body.stringAsync()!!)
             }
     }
 
 
-    fun getVersion(version: String?, branch: String?, module: String?): GameArtifactInfo {
+    suspend fun launchVersion(version: String, branch: String, module: String): GameArtifactInfo {
         val map = mapOf(
             "installation_id" to UUID.randomUUID().toString(), // fake uuid
             "overwolf_muid" to UUID.randomUUID().toString(),
@@ -69,59 +70,58 @@ class LunarApiClient(val api: URI = URI.create("https://api.lunarclientprod.com"
             "module" to module
         )
 
-        post("$api/launcher/launch", JSON.encodeToString(map)).execute().use { response ->
-            assert(response.body != null) { "ResponseBody was null" }
-            return JSON.decodeFromString(response.string!!)
+        post("$api/launcher/launch", JSON.encodeToString(map)).executeAsync().use { response ->
+            return JSON.decodeFromString(response.body.stringAsync())
         }
     }
 
 
-    fun uploadCrashReport(trace: String?, type: CrashReportType, launchScript: String?): CrashReportResult? {
-        // do request
-        val request = mapOf(
-            "type" to type.jsonName,
-            "trace" to trace,
-            "launchScript" to launchScript
-        )
-        post("$api/launcher/uploadCrashReport", request).execute().use { response ->
-            if (response.isSuccessful && response.body != null) {
-                val result: CrashReportResult = JSON.decodeFromString(response.string!!)
-                CrashReportUploadEvent(result).call()
-                return result
-            }
-        }
-        return null
-    }
+//    suspend fun uploadCrashReport(trace: String?, type: CrashReportType, launchScript: String?): CrashReportResult? {
+//        // do request
+//        val request = mapOf(
+//            "type" to type.jsonName,
+//            "trace" to trace,
+//            "launchScript" to launchScript
+//        )
+//        post("$api/launcher/uploadCrashReport", request).executeAsync().use { response ->
+//            if (response.isSuccessful) {
+//                val result: CrashReportResult = JSON.decodeFromString(response.body.stringAsync())
+//                CrashReportUploadEvent(result).call()
+//                return result
+//            }
+//        }
+//        return null
+//    }
 
-    val plugins: List<RemoteAddon>?
-        /**
-         * Get the plugin list
-         */
-        get() {
-            val list: MutableList<RemoteAddon> = ArrayList()
-            val info = URL("$api/plugins/info")
-            var json: Array<PluginInfo>
-            try {
-                get(info).execute().use { response ->
-                    assert(response.body != null)
-                    json = JSON.decodeFromString(response.string!!)
-                }
-            } catch (e: Exception) {
-                return null // official api
-            }
-            for (plugin in json) {
-                list.add(
-                    RemoteAddon(
-                        plugin.name,
-                        URL(api.toString() + plugin.downloadLink),
-                        plugin.sha1,
-                        plugin.category,
-                        plugin.meta
-                    )
-                )
-            }
-            return list
-        }
+    val plugins: List<RemoteAddon>? = emptyList()
+//        /**
+//         * Get the plugin list
+//         */
+//        get() {
+//            val list: MutableList<RemoteAddon> = ArrayList()
+//            val info = URL("$api/plugins/info")
+//            var json: Array<PluginInfo>
+//            try {
+//                get(info).execute().use { response ->
+//                    assert(response.body != null)
+//                    json = JSON.decodeFromString(response.string!!)
+//                }
+//            } catch (e: Exception) {
+//                return null // official api
+//            }
+//            for (plugin in json) {
+//                list.add(
+//                    RemoteAddon(
+//                        plugin.name,
+//                        URL(api.toString() + plugin.downloadLink),
+//                        plugin.sha1,
+//                        plugin.category,
+//                        plugin.meta
+//                    )
+//                )
+//            }
+//            return list
+//        }
 
     companion object {
         /**
@@ -133,9 +133,9 @@ class LunarApiClient(val api: URI = URI.create("https://api.lunarclientprod.com"
         fun getMainClass(json: GameArtifactInfo? = null): String =
             json?.launchTypeData?.mainClass ?: "com.moonsworth.lunar.genesis.Genesis"
 
-        fun check(api: String): Boolean {
+        suspend fun checkConnective(api: String): Boolean {
             try {
-                get(api).execute()
+                get(api).executeAsync()
                 return true
             } catch (e: Exception) {
                 return false
@@ -223,33 +223,30 @@ class LunarApiClient(val api: URI = URI.create("https://api.lunarclientprod.com"
          * @param version version info
          * @return textures' index
          */
-
-        fun getLunarTexturesIndex(version: GameArtifactInfo): Map<String, String>? {
+        suspend fun getLunarTexturesIndex(version: GameArtifactInfo): Map<String, String>? {
             val indexUrl = version.textures.indexUrl
             // get index json
             val baseUrl = version.textures.baseUrl
             return getIndex(baseUrl, indexUrl)
         }
 
-        fun getLunarUiAssetsIndex(version: GameArtifactInfo): Map<String, String> {
+        suspend fun getLunarUiAssetsIndex(version: GameArtifactInfo): Map<String, String> {
             if (version.ui == null) return emptyMap() // there's no ui files for old LC
             return getIndex(version.ui.assets.baseUrl, version.ui.assets.indexUrl)
         }
 
-        private fun getIndex(baseUrl: String, indexUrl: String): Map<String, String> {
-            get(indexUrl).execute().use { response ->
-                if (response.body != null) {
-                    // parse
-                    val map: MutableMap<String, String> = HashMap()
-                    for (s in response.body!!.string().split("\n".toRegex()).dropLastWhile { it.isEmpty() }
-                        .toTypedArray()) {
-                        // filename hashcode
-                        map[s.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]] =
-                            baseUrl + s.split(" ".toRegex()).dropLastWhile { it.isEmpty() }
-                                .toTypedArray()[1]
-                    }
-                    return map
+        private suspend fun getIndex(baseUrl: String, indexUrl: String): Map<String, String> {
+            get(indexUrl).executeAsync().use { response ->
+                // parse
+                val map: MutableMap<String, String> = HashMap()
+                for (s in response.body.stringAsync().split("\n".toRegex()).dropLastWhile { it.isEmpty() }
+                    .toTypedArray()) {
+                    // filename hashcode
+                    map[s.split(" ".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0]] =
+                        baseUrl + s.split(" ".toRegex()).dropLastWhile { it.isEmpty() }
+                            .toTypedArray()[1]
                 }
+                return map
             }
             return emptyMap()
         }

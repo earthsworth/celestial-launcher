@@ -118,11 +118,11 @@ data class APIConfig(
 )
 
 enum class LauncherPage(val pageName: String, val translateKey: String, val clazz: Class<out JComponent>) {
-    NEWS("news", "gui.news.title", GuiNews::class.java),
-    VERSION("version", "gui.version.title", GuiVersion::class.java),
+    NEWS("news", "gui.news.title", NewsPanel::class.java),
+    VERSION("version", "gui.version.title", VersionPanel::class.java),
 //    PLUGINS("plugins", "gui.plugins.title", GuiPlugins::class.java),
-    SETTINGS("settings", "gui.settings.title", GuiSettings::class.java),
-    ABOUT("about", "gui.about.title", GuiAbout::class.java)
+    SETTINGS("settings", "gui.settings.title", SettingsPanel::class.java),
+    ABOUT("about", "gui.about.title", AboutPanel::class.java)
 }
 
 class Mirror(address: String) {

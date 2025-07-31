@@ -6,23 +6,19 @@
 package org.cubewhy.celestial.utils
 
 import com.google.gson.Gson
-import org.cubewhy.celestial.entities.Assets
+import okhttp3.coroutines.executeAsync
 import org.cubewhy.celestial.entities.ReleaseEntity
-import org.cubewhy.celestial.files.DownloadManager
 import org.cubewhy.celestial.files.Downloadable
 import java.io.File
 import java.net.URL
 import java.util.*
 
 
-fun downloadLoader(repo: String, file: File): Boolean {
+suspend fun downloadLoader(repo: String, file: File): Boolean {
     var apiJson: String
     try {
-        RequestUtils.get(String.format("https://api.github.com/repos/%s/releases/latest", repo)).execute()
-            .use { response ->
-                assert(response.body != null)
-                apiJson = response.body!!.string()
-            }
+        apiJson = RequestUtils.get(String.format("https://api.github.com/repos/%s/releases/latest", repo))
+            .executeAsync().body.stringAsync()
     } catch (e: Exception) {
         return false
     }
@@ -37,9 +33,8 @@ fun downloadLoader(repo: String, file: File): Boolean {
             }
             if (assets.name.endsWith(".sha256")) {
                 try {
-                    RequestUtils.get(url).execute().use { response ->
-                        assert(response.body != null)
-                        hash = response.body!!.string().split(" ").dropLastWhile { it.isEmpty() }
+                    RequestUtils.get(url).executeAsync().use { response ->
+                        hash = response.body.stringAsync().split(" ").dropLastWhile { it.isEmpty() }
                             .toTypedArray()[0]
                     }
                 } catch (ignored: Exception) {
@@ -52,7 +47,7 @@ fun downloadLoader(repo: String, file: File): Boolean {
         return false
     }
     // send download
-    DownloadManager.download(Downloadable(loader, file, hash!!, Downloadable.Type.SHA256))
+    Downloadable(loader, file, hash!!, Downloadable.Type.SHA256).download()
     return true
 }
 

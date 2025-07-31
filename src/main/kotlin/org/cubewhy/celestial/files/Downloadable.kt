@@ -15,7 +15,7 @@ class Downloadable(
     private val hash: String?,
     private val type: Type,
     private val callback: (file: File) -> Unit = {}
-) : Runnable {
+) {
 
     constructor(url: URL, file: File, sha1: String?, callback: (file: File) -> Unit = {}) : this(
         url,
@@ -34,7 +34,7 @@ class Downloadable(
     /**
      * Start download
      */
-    override fun run() {
+    suspend fun download() {
         // TODO multipart support
         for (i in 0 until FALL_BACK) {
             try {

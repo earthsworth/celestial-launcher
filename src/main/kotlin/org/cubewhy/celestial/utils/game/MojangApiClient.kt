@@ -6,9 +6,11 @@
 package org.cubewhy.celestial.utils.game
 
 import kotlinx.serialization.Serializable
+import okhttp3.coroutines.executeAsync
 import org.cubewhy.celestial.JSON
 import org.cubewhy.celestial.utils.RequestUtils.get
 import org.cubewhy.celestial.utils.string
+import org.cubewhy.celestial.utils.stringAsync
 import java.net.URL
 
 object MojangApiClient {
@@ -16,9 +18,9 @@ object MojangApiClient {
     var texture: URL = URL("https://resources.download.minecraft.net")
 
 
-    fun manifest(): MinecraftManifest {
-        get(versionManifest).execute().use { response ->
-            return JSON.decodeFromString(response.string!!)
+    suspend fun manifest(): MinecraftManifest {
+        get(versionManifest).executeAsync().use { response ->
+            return JSON.decodeFromString(response.body.stringAsync())
         }
     }
 
@@ -28,13 +30,12 @@ object MojangApiClient {
      * @param version version id
      * @return version json
      */
-
-    fun getVersion(version: String, manifest: MinecraftManifest): MinecraftArtifactInfo? {
+    suspend fun getVersion(version: String, manifest: MinecraftManifest): MinecraftArtifactInfo? {
         for (versionInfo in manifest.versions) {
             if (versionInfo.id == version) {
                 val url = versionInfo.url
-                get(url).execute().use { response ->
-                    return JSON.decodeFromString(response.string!!)
+                get(url).executeAsync().use { response ->
+                    return JSON.decodeFromString(response.body.stringAsync())
                 }
             }
         }
@@ -47,10 +48,9 @@ object MojangApiClient {
      * @param info json object from MinecraftData.getVersion
      * @return json of texture index
      */
-
-    fun getTextureIndex(info: MinecraftArtifactInfo): MinecraftResources {
+    suspend fun getTextureIndex(info: MinecraftArtifactInfo): MinecraftResources {
         val url = URL(info.assetIndex.url)
-        get(url).execute().use { response ->
+        get(url).executeAsync().use { response ->
             return JSON.decodeFromString(response.string!!)
         }
     }

@@ -6,6 +6,9 @@
 
 package org.cubewhy.celestial.gui.pages
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.apache.commons.io.FileUtils
 import org.cubewhy.celestial.*
 import org.cubewhy.celestial.event.EventManager
@@ -14,7 +17,7 @@ import org.cubewhy.celestial.event.impl.APIReadyEvent
 import org.cubewhy.celestial.event.impl.ChangeConfigEvent
 import org.cubewhy.celestial.game.addon.LunarCNMod
 import org.cubewhy.celestial.game.addon.WeaveMod
-import org.cubewhy.celestial.gui.GuiLauncher
+import org.cubewhy.celestial.gui.LauncherMainWindow
 import org.cubewhy.celestial.gui.Language
 import org.cubewhy.celestial.gui.dialogs.ArgsConfigDialog
 import org.cubewhy.celestial.gui.dialogs.LunarQTDialog
@@ -39,9 +42,9 @@ import javax.swing.border.TitledBorder
 import javax.swing.event.ChangeEvent
 import javax.swing.filechooser.FileNameExtensionFilter
 
-private val log: Logger = LoggerFactory.getLogger(GuiSettings::class.java)
+private val log: Logger = LoggerFactory.getLogger(SettingsPanel::class.java)
 
-class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+class SettingsPanel : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_AS_NEEDED) {
     init {
         EventManager.register(this)
         this.border = TitledBorder(
@@ -67,9 +70,11 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
             val newApi = e.newValue as String
             try {
                 lunarApiClient = LunarApiClient(newApi)
-                metadata = lunarApiClient.metadata()
-                log.info("API is ready.")
-                APIReadyEvent().call()
+                CoroutineScope(Dispatchers.IO).launch {
+                    metadata = lunarApiClient.metadata()
+                    log.info("API is ready.")
+                    APIReadyEvent().call()
+                }
             } catch (ex: Exception) {
                 log.info("Failed to apply API ${e.newValue}")
                 log.error(ex.message, ex)
@@ -119,7 +124,7 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
                 chooseFile(if ((current == OSEnum.Windows)) FileNameExtensionFilter("Java Executable", "exe") else null)
             if (file != null) {
                 val source = e.source as JButton
-                GuiLauncher.statusBar.text = t.format("gui.settings.jvm.jre.success", file)
+                LauncherMainWindow.statusBar.text = t.format("gui.settings.jvm.jre.success", file)
                 config.jre = file.path
                 source.text = file.path
             }
@@ -136,7 +141,7 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
             val java = currentJavaExec
             btnSelectPath.text = java.path
             config.jre = ""
-            GuiLauncher.statusBar.text = t.getString("gui.settings.jvm.jre.unset.success")
+            LauncherMainWindow.statusBar.text = t.getString("gui.settings.jvm.jre.unset.success")
         }
         // jre settings
         val p1 = JPanel()
@@ -254,7 +259,7 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
             }
             try {
                 FileUtils.copyFile(file, f1)
-                GuiLauncher.statusBar.text = "gui.settings.launcher.theme.success"
+                LauncherMainWindow.statusBar.text = "gui.settings.launcher.theme.success"
             } catch (ex: IOException) {
                 throw RuntimeException(ex)
             }
@@ -315,7 +320,7 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
             config.installationDir = file.path
             log.info("Set installation-dir to $file")
             source.text = file.path
-            GuiLauncher.statusBar.text = String.format(t.getString("gui.settings.installation.success"), file)
+            LauncherMainWindow.statusBar.text = String.format(t.getString("gui.settings.installation.success"), file)
         }
         p8.add(btnSelectInstallation)
         panelLauncher.add(p8)
@@ -332,7 +337,7 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
             config.game.gameDir = file.path
             log.info("Set game-dir to $file")
             source.text = file.path
-            GuiLauncher.statusBar.text = String.format(t.getString("gui.settings.game-dir.success"), file)
+            LauncherMainWindow.statusBar.text = String.format(t.getString("gui.settings.game-dir.success"), file)
         }
         p9.add(btnSelectGameDir)
         panelLauncher.add(p9)
@@ -413,7 +418,7 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
             config.addon.lcqt.installationDir = file.path
             log.info("Set lcqt-installation to $file")
             source.text = file.path
-            GuiLauncher.statusBar.text = t.format("gui.settings.addons.lcqt.success", file)
+            LauncherMainWindow.statusBar.text = t.format("gui.settings.addons.lcqt.success", file)
         }
         panelManageLunarQTInstallation.add(btnSelectLunarQTInstallation)
         panelLunarQT.add(panelManageLunarQTInstallation)

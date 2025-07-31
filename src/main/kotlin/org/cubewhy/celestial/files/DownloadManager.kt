@@ -7,19 +7,19 @@
 package org.cubewhy.celestial.files
 
 import cn.hutool.crypto.SecureUtil
+import okhttp3.coroutines.executeAsync
 import org.apache.commons.io.FileUtils
-import org.cubewhy.celestial.config
 import org.cubewhy.celestial.configDir
 import org.cubewhy.celestial.event.impl.FileDownloadEvent
-import org.cubewhy.celestial.gui.GuiLauncher
+import org.cubewhy.celestial.gui.LauncherMainWindow
 import org.cubewhy.celestial.runningOnGui
 import org.cubewhy.celestial.utils.RequestUtils.get
+import org.cubewhy.celestial.utils.bytesAsync
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.net.URL
 import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 object DownloadManager {
@@ -53,7 +53,7 @@ object DownloadManager {
      * @param override allow override?
      * @return status (true=success, false=failure)
      */
-    fun cache(url: URL, name: String, override: Boolean): Boolean {
+    suspend fun cache(url: URL, name: String, override: Boolean): Boolean {
         val file = File(cacheDir, name)
         if (file.exists() && !override) {
             return true
@@ -71,27 +71,27 @@ object DownloadManager {
      * @return is success
      */
 
-    fun download0(url: URL, file: File, crcSha: String?, type: Downloadable.Type): Boolean {
+    internal suspend fun download0(url: URL, file: File, hash: String?, type: Downloadable.Type): Boolean {
         // connect
-        if (file.isFile && crcSha != null) {
+        if (file.isFile && hash != null) {
             // compare hash
-            if (compareHash(file, crcSha, type)) {
+            if (compareHash(file, hash, type)) {
                 return true
             }
         }
         FileDownloadEvent(file, FileDownloadEvent.Type.START).call()
         log.info("Downloading $url to $file")
-        get(url).execute().use { response ->
-            if (!response.isSuccessful || response.body == null) {
+        get(url).executeAsync().use { response ->
+            if (!response.isSuccessful) {
                 FileDownloadEvent(file, FileDownloadEvent.Type.FAILURE).call()
                 return false
             }
-            val bytes = response.body!!.bytes()
+            val bytes = response.body.bytesAsync()
             FileUtils.writeByteArrayToFile(file, bytes)
         }
-        if (runningOnGui) GuiLauncher.statusBar.text = "Download " + file.name + " success."
-        if (crcSha != null) {
-            val result = compareHash(file, crcSha, type)
+        if (runningOnGui) LauncherMainWindow.statusBar.text = "Download " + file.name + " success."
+        if (hash != null) {
+            val result = compareHash(file, hash, type)
             if (!result) {
                 FileDownloadEvent(file, FileDownloadEvent.Type.FAILURE).call()
             }
@@ -101,22 +101,19 @@ object DownloadManager {
         return true
     }
 
-    private fun compareHash(file: File, crcSha: String, type: Downloadable.Type): Boolean {
-        return type == Downloadable.Type.SHA1 && SecureUtil.sha1(file) == crcSha || type == Downloadable.Type.SHA256 && SecureUtil.sha256(
+    private fun compareHash(file: File, hashString: String, hashType: Downloadable.Type): Boolean {
+        return hashType == Downloadable.Type.SHA1 && SecureUtil.sha1(file) == hashString || hashType == Downloadable.Type.SHA256 && SecureUtil.sha256(
             file
-        ) == crcSha
+        ) == hashString
     }
 
 
-    private fun download0(url: URL, file: File): Boolean {
+    private suspend fun download0(url: URL, file: File): Boolean {
         return download0(url, file, null, Downloadable.Type.SHA1)
     }
 
 
-    fun download(downloadable: Downloadable) {
-        if (pool == null || pool!!.isTerminated) {
-            pool = Executors.newWorkStealingPool(config.maxThreads)
-        }
-        pool!!.execute(downloadable)
+    suspend fun download(downloadable: Downloadable) {
+        downloadable.download()
     }
 }

@@ -7,7 +7,7 @@
 package org.cubewhy.celestial.utils
 
 import org.cubewhy.celestial.game.AddonType
-import org.cubewhy.celestial.gui.GuiLauncher
+import org.cubewhy.celestial.gui.LauncherMainWindow
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -21,7 +21,7 @@ import kotlin.collections.iterator
 fun String.toFile(): File = File(this)
 
 
-fun String.getInputStream(): InputStream? = GuiLauncher::class.java.getResourceAsStream(this)
+fun String.getInputStream(): InputStream? = LauncherMainWindow::class.java.getResourceAsStream(this)
 
 fun File.openAsJar(): JarFile = JarFile(this)
 fun File.openAsZip(): ZipFile = ZipFile(this)

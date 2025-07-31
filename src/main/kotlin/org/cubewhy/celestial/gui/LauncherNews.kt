@@ -23,6 +23,7 @@ import java.time.LocalDate
 import java.time.temporal.ChronoUnit
 import javax.swing.*
 import javax.swing.border.TitledBorder
+import kotlin.math.abs
 
 private val log: Logger = LoggerFactory.getLogger(LauncherNews::class.java)
 
@@ -150,7 +151,7 @@ class LauncherBirthday(birthday: Int) : JPanel() {
         } else if (birthday > 0) {
             this.add(t.getString("gui.news.birthday.coming").format(birthday).toJLabel())
         } else {
-            this.add(t.getString("gui.news.birthday.after").format(birthday, betweenNext).toJLabel())
+            this.add(t.getString("gui.news.birthday.after").format(abs(birthday), betweenNext).toJLabel())
         }
     }
 }

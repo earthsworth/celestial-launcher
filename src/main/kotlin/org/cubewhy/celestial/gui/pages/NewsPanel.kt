@@ -1,6 +1,9 @@
 package org.cubewhy.celestial.gui.pages
 
 import cn.hutool.crypto.SecureUtil
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.cubewhy.celestial.event.EventManager
 import org.cubewhy.celestial.event.EventTarget
 import org.cubewhy.celestial.event.impl.APIReadyEvent
@@ -26,7 +29,7 @@ import javax.swing.border.TitledBorder
 import kotlin.math.abs
 import java.awt.GridLayout
 
-class GuiNews : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+class NewsPanel : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCROLLBAR_AS_NEEDED) {
     private lateinit var blogPosts: List<Blogpost>
 
     init {
@@ -86,9 +89,11 @@ class GuiNews : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCRO
                 val imageURL = blogPost.image
                 val title = blogPost.title
                 try {
-                    if (cache(URL(imageURL), "news/${SecureUtil.sha1(title)}", false)) {
-                        // load news
-                        panel.add(LauncherNews(blogPost))
+                    CoroutineScope(Dispatchers.IO).launch {
+                        if (cache(URL(imageURL), "news/${SecureUtil.sha1(title)}", false)) {
+                            // load news
+                            panel.add(LauncherNews(blogPost))
+                        }
                     }
                 } catch (e: IOException) {
                     log.warn("Failed to cache $imageURL")
@@ -105,6 +110,6 @@ class GuiNews : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCRO
 
     companion object {
         private val panel = JPanel()
-        private val log: Logger = LoggerFactory.getLogger(GuiNews::class.java)
+        private val log: Logger = LoggerFactory.getLogger(NewsPanel::class.java)
     }
 }

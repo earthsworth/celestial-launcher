@@ -6,6 +6,6 @@
 package org.cubewhy.celestial.event.impl
 
 import org.cubewhy.celestial.event.Event
-import org.cubewhy.celestial.gui.GuiLauncher
+import org.cubewhy.celestial.gui.LauncherMainWindow
 
-class CreateLauncherEvent(val theLauncher: GuiLauncher) : Event()
+class InitGuiEvent(val theLauncher: LauncherMainWindow) : Event()

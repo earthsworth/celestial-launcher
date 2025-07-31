@@ -32,7 +32,7 @@ object LunarQT {
         FileUtils.writeStringToFile(getConfigDir().resolve("config.json"), string, Charsets.UTF_8)
     }
 
-    fun checkUpdate(): Boolean {
+    suspend fun checkUpdate(): Boolean {
         log.info("Checking update for LunarQT")
         log.warn("LCQT2 is stopped update, downloading lcqt from XiaoHeiPa/lcqt2")
         downloadLoader(

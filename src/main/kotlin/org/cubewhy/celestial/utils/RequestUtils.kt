@@ -6,6 +6,8 @@
 
 package org.cubewhy.celestial.utils
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kotlinx.serialization.encodeToString
 import okhttp3.*
 import okhttp3.HttpUrl.Companion.toHttpUrl
@@ -74,4 +76,17 @@ object RequestUtils {
 }
 
 val Response.string: String?
-    get() = this.body?.string()
+    get() = this.body.string()
+
+
+suspend fun ResponseBody.stringAsync(): String {
+    return withContext(Dispatchers.IO) {
+        return@withContext this@stringAsync.string()
+    }
+}
+
+suspend fun ResponseBody.bytesAsync(): ByteArray {
+    return withContext(Dispatchers.IO) {
+        return@withContext this@bytesAsync.bytes()
+    }
+}

@@ -28,7 +28,7 @@ import java.io.IOException
 import java.net.URI
 import javax.swing.*
 
-class GuiLauncher : JFrame() {
+class LauncherMainWindow : JFrame() {
     lateinit var cardLayout: CardLayout
     lateinit var mainPanel: JPanel
 
@@ -168,7 +168,7 @@ class GuiLauncher : JFrame() {
     }
 
     @EventTarget
-    fun onGameStart(e: GameStartEvent) {
+    fun onGameStart(e : GameStartEvent) {
         this.setIconImage("running")
     }
 
@@ -193,6 +193,6 @@ class GuiLauncher : JFrame() {
 
     companion object {
         val statusBar = StatusBar()
-        private val log: Logger = LoggerFactory.getLogger(GuiLauncher::class.java)
+        private val log: Logger = LoggerFactory.getLogger(LauncherMainWindow::class.java)
     }
 }

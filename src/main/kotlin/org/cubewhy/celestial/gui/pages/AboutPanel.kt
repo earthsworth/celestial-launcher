@@ -23,7 +23,7 @@ import javax.swing.JPanel
 import javax.swing.border.TitledBorder
 
 
-class GuiAbout : JPanel() {
+class AboutPanel : JPanel() {
     init {
         this.name = "about"
         this.border = TitledBorder(

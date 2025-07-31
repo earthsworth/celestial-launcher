@@ -16,7 +16,7 @@ import javax.swing.JPanel
 import javax.swing.border.TitledBorder
 
 
-class GuiVersion : JPanel() {
+class VersionPanel : JPanel() {
     init {
         this.border = TitledBorder(
             null,
@@ -37,6 +37,6 @@ class GuiVersion : JPanel() {
     }
 
     companion object {
-        private val log: Logger = LoggerFactory.getLogger(GuiVersion::class.java)
+        private val log: Logger = LoggerFactory.getLogger(VersionPanel::class.java)
     }
 }

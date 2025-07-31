@@ -6,6 +6,9 @@
 package org.cubewhy.celestial.gui.elements
 
 import com.sun.tools.attach.AttachNotSupportedException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.apache.commons.io.FileUtils
 import org.cubewhy.celestial.*
 import org.cubewhy.celestial.event.EventManager
@@ -19,17 +22,12 @@ import org.cubewhy.celestial.game.LaunchCommandJson
 import org.cubewhy.celestial.game.addon.LunarCNMod
 import org.cubewhy.celestial.game.addon.WeaveMod
 import org.cubewhy.celestial.game.thirdparty.LunarQT
-import org.cubewhy.celestial.gui.GuiLauncher.Companion.statusBar
-import org.cubewhy.celestial.utils.CrashReportType
-import org.cubewhy.celestial.utils.findJava
-import org.cubewhy.celestial.utils.format
+import org.cubewhy.celestial.gui.LauncherMainWindow.Companion.statusBar
+import org.cubewhy.celestial.utils.*
 import org.cubewhy.celestial.utils.lunar.GameArtifactInfo
 import org.cubewhy.celestial.utils.lunar.LunarApiClient.Companion.getMainClass
 import org.cubewhy.celestial.utils.lunar.LunarApiClient.Companion.getSupportModules
 import org.cubewhy.celestial.utils.lunar.LunarApiClient.Companion.getSupportVersions
-import org.cubewhy.celestial.utils.openAsZip
-import org.cubewhy.celestial.utils.saveFile
-import org.cubewhy.celestial.utils.unzipTo
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.awt.Color
@@ -121,7 +119,9 @@ class GuiVersionList : JPanel() {
         // add launch buttons
         btnOnline.addActionListener {
             try {
-                this.online()
+                CoroutineScope(Dispatchers.IO).launch {
+                    this@GuiVersionList.onlineLaunch()
+                }
             } catch (e: Exception) {
                 log.error(e.stackTraceToString())
             }
@@ -131,7 +131,9 @@ class GuiVersionList : JPanel() {
         this.add(btnOffline)
         btnOffline.addActionListener {
             try {
-                this.offline()
+                CoroutineScope(Dispatchers.IO).launch {
+                    this@GuiVersionList.offlineLaunch()
+                }
             } catch (e: IOException) {
                 log.error(e.stackTraceToString())
             } catch (e: InterruptedException) {
@@ -169,20 +171,27 @@ class GuiVersionList : JPanel() {
 
         btnFetchJson.addActionListener {
             // open file save dialog
-            val file = saveFile(FileNameExtensionFilter("Json (*.json)", "json"))
-            file?.apply {
-                log.info("Fetching version json...")
-                val json = lunarApiClient.getVersion(
-                    versionSelect.selectedItem as String,
-                    branchInput.text,
-                    moduleSelect.selectedItem as String,
-                )
-                var file1 = this
-                if (!this.name.endsWith(".json")) {
-                    file1 = file + ".json" // add extension
+            CoroutineScope(Dispatchers.IO).launch {
+                val file = saveFile(FileNameExtensionFilter("Json (*.json)", "json"))
+                file?.apply {
+                    log.info("Fetching version json...")
+
+                    val json = lunarApiClient.launchVersion(
+                        versionSelect.selectedItem as String,
+                        branchInput.text,
+                        moduleSelect.selectedItem as String,
+                    )
+                    var file1 = this
+                    if (!this.name.endsWith(".json")) {
+                        file1 = file + ".json" // add extension
+                    }
+                    log.info("Fetch OK! Dumping to ${file1.path}")
+                    FileUtils.write(
+                        file1,
+                        JSON.encodeToString(GameArtifactInfo.serializer(), json),
+                        StandardCharsets.UTF_8
+                    )
                 }
-                log.info("Fetch OK! Dumping to ${file1.path}")
-                FileUtils.write(file1, JSON.encodeToString(GameArtifactInfo.serializer(), json), StandardCharsets.UTF_8)
             }
         }
 
@@ -190,7 +199,7 @@ class GuiVersionList : JPanel() {
     }
 
 
-    private fun beforeLaunch() {
+    private suspend fun beforeLaunch() {
         if (gamePid.get() != 0L) {
             if (findJava(/*if (config.celeWrap.state) CeleWrap.MAIN_CLASS else */getMainClass(null)) != null) {
                 JOptionPane.showMessageDialog(
@@ -276,7 +285,7 @@ class GuiVersionList : JPanel() {
     }
 
 
-    private fun online() {
+    private suspend fun onlineLaunch() {
         beforeLaunch()
         val version = versionSelect.selectedItem as String
         val module = moduleSelect.selectedItem as String
@@ -300,7 +309,7 @@ class GuiVersionList : JPanel() {
         log.info("Generating launch scripts...")
         launchScript.writeText(generateScripts())
 
-        Thread {
+        CoroutineScope(Dispatchers.IO).launch {
             isLaunching = true
             statusBar.text = t.getString("status.launch.begin")
             try {
@@ -324,10 +333,11 @@ class GuiVersionList : JPanel() {
             log.info("Everything is OK, starting game...")
             isLaunching = false
             launch(launchCommand).waitFor()
-        }.start()
+        }
     }
 
-    private fun offline() {
+    // TODO: move to another class
+    private suspend fun offlineLaunch() {
         beforeLaunch()
         Thread {
             statusBar.text = t.getString("status.launch.call-process")
