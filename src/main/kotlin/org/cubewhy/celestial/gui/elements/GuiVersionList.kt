@@ -22,11 +22,14 @@ import org.cubewhy.celestial.game.thirdparty.LunarQT
 import org.cubewhy.celestial.gui.GuiLauncher.Companion.statusBar
 import org.cubewhy.celestial.utils.CrashReportType
 import org.cubewhy.celestial.utils.findJava
+import org.cubewhy.celestial.utils.format
 import org.cubewhy.celestial.utils.lunar.GameArtifactInfo
-import org.cubewhy.celestial.utils.lunar.LauncherData.Companion.getMainClass
-import org.cubewhy.celestial.utils.lunar.LauncherData.Companion.getSupportModules
-import org.cubewhy.celestial.utils.lunar.LauncherData.Companion.getSupportVersions
+import org.cubewhy.celestial.utils.lunar.LunarApiClient.Companion.getMainClass
+import org.cubewhy.celestial.utils.lunar.LunarApiClient.Companion.getSupportModules
+import org.cubewhy.celestial.utils.lunar.LunarApiClient.Companion.getSupportVersions
+import org.cubewhy.celestial.utils.openAsZip
 import org.cubewhy.celestial.utils.saveFile
+import org.cubewhy.celestial.utils.unzipTo
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.awt.Color
@@ -38,15 +41,15 @@ import javax.swing.*
 import javax.swing.border.TitledBorder
 import javax.swing.filechooser.FileNameExtensionFilter
 
-private val log: Logger = LoggerFactory.getLogger(GuiVersionSelect::class.java)
+private val log: Logger = LoggerFactory.getLogger(GuiVersionList::class.java)
 
-class GuiVersionSelect : JPanel() {
+class GuiVersionList : JPanel() {
     private val versionSelect = JComboBox<String>()
     private val moduleSelect = JComboBox<String>()
     private val branchInput = JTextField()
     private var isFinishOk = false
-    private val btnOnline: JButton = JButton(f.getString("gui.version.online"))
-    private val btnOffline: JButton = JButton(f.getString("gui.version.offline"))
+    private val btnOnline: JButton = JButton(t.getString("gui.version.online"))
+    private val btnOffline: JButton = JButton(t.getString("gui.version.offline"))
     private var isLaunching = false
 
     init {
@@ -55,7 +58,7 @@ class GuiVersionSelect : JPanel() {
         )
         this.border = TitledBorder(
             null,
-            f.getString("gui.version-select.title"),
+            t.getString("gui.version-select.title"),
             TitledBorder.DEFAULT_JUSTIFICATION,
             TitledBorder.DEFAULT_POSITION,
             null,
@@ -73,11 +76,11 @@ class GuiVersionSelect : JPanel() {
     }
 
     private fun initGui() {
-        this.add(JLabel(f.getString("gui.version-select.label.version")))
+        this.add(JLabel(t.getString("gui.version-select.label.version")))
         this.add(versionSelect)
-        this.add(JLabel(f.getString("gui.version-select.label.module")))
+        this.add(JLabel(t.getString("gui.version-select.label.module")))
         this.add(moduleSelect)
-        this.add(JLabel(f.getString("gui.version-select.label.branch")))
+        this.add(JLabel(t.getString("gui.version-select.label.branch")))
         this.add(branchInput)
 
         // add items
@@ -138,22 +141,22 @@ class GuiVersionSelect : JPanel() {
             }
         }
 
-        val btnWipeCache = JButton(f.getString("gui.version.cache.wipe"))
+        val btnWipeCache = JButton(t.getString("gui.version.cache.wipe"))
 
         btnWipeCache.addActionListener {
             if (JOptionPane.showConfirmDialog(
                     this,
-                    f.getString("gui.version.cache.warn"),
+                    t.getString("gui.version.cache.warn"),
                     "Confirm",
                     JOptionPane.YES_NO_OPTION
                 ) == JOptionPane.YES_OPTION
             ) {
-                statusBar.text = f.getString("gui.version.cache.start")
+                statusBar.text = t.getString("gui.version.cache.start")
                 try {
                     if (wipeCache(null)) {
-                        statusBar.text = f.getString("gui.version.cache.success")
+                        statusBar.text = t.getString("gui.version.cache.success")
                     } else {
-                        statusBar.text = f.getString("gui.version.cache.failure")
+                        statusBar.text = t.getString("gui.version.cache.failure")
                     }
                 } catch (ex: IOException) {
                     throw RuntimeException(ex)
@@ -162,14 +165,14 @@ class GuiVersionSelect : JPanel() {
         }
         this.add(btnWipeCache)
 
-        val btnFetchJson = JButton(f.getString("gui.version.fetch"))
+        val btnFetchJson = JButton(t.getString("gui.version.fetch"))
 
         btnFetchJson.addActionListener {
             // open file save dialog
             val file = saveFile(FileNameExtensionFilter("Json (*.json)", "json"))
             file?.apply {
                 log.info("Fetching version json...")
-                val json = launcherData.getVersion(
+                val json = lunarApiClient.getVersion(
                     versionSelect.selectedItem as String,
                     branchInput.text,
                     moduleSelect.selectedItem as String,
@@ -192,8 +195,8 @@ class GuiVersionSelect : JPanel() {
             if (findJava(/*if (config.celeWrap.state) CeleWrap.MAIN_CLASS else */getMainClass(null)) != null) {
                 JOptionPane.showMessageDialog(
                     this,
-                    f.getString("gui.version.launched.message"),
-                    f.getString("gui.version.launched.title"),
+                    t.getString("gui.version.launched.message"),
+                    t.getString("gui.version.launched.title"),
                     JOptionPane.WARNING_MESSAGE
                 )
             } else {
@@ -220,7 +223,7 @@ class GuiVersionSelect : JPanel() {
             log.error(e.stackTraceToString())
             if (!config.proxy.mirror.containsKey("github.com:443") && JOptionPane.showConfirmDialog(
                     this,
-                    f.getString("gui.proxy.suggest.gh"),
+                    t.getString("gui.proxy.suggest.gh"),
                     "Apply GitHub Mirror",
                     JOptionPane.YES_NO_OPTION
                 ) == JOptionPane.YES_OPTION
@@ -242,64 +245,33 @@ class GuiVersionSelect : JPanel() {
         }
 
         if (checkUpdate) {
-            statusBar.text = f.getString("gui.addon.update")
+            statusBar.text = t.getString("gui.addon.update")
             waitForAll()
         }
     }
 
     @EventTarget
     fun onGameStart(event: GameStartEvent) {
-        statusBar.text = f.format("status.launch.started", event.pid)
+        statusBar.text = t.format("status.launch.started", event.pid)
     }
 
     @EventTarget
     fun onGameTerminate(event: GameTerminateEvent) {
-        statusBar.text = f.getString("status.launch.terminated")
+        statusBar.text = t.getString("status.launch.terminated")
         if (event.code != 0) {
             // upload crash report
-            statusBar.text = f.getString("status.launch.crashed")
+            statusBar.text = t.getString("status.launch.crashed")
             log.info("Client looks crashed (code ${event.code})")
-            try {
-                if (config.dataSharing) {
-                    val trace = FileUtils.readFileToString(launcherLogFile, StandardCharsets.UTF_8)
-                    val script = FileUtils.readFileToString(launchJson, StandardCharsets.UTF_8)
-                    val result = launcherData.uploadCrashReport(trace, CrashReportType.GAME, script)
-                    if (result != null) {
-                        val url = result.url
-                        val id = result.id
-                        JOptionPane.showMessageDialog(
-                            this,
-                            String.format(
-                                f.getString("gui.message.clientCrash1"),
-                                id,
-                                url,
-                                launcherLogFile.path,
-                                f.getString("gui.version.crash.tip")
-                            ),
-                            "Game crashed!",
-                            JOptionPane.ERROR_MESSAGE
-                        )
-                    } else {
-                        throw RuntimeException("Failed to upload crash report")
-                    }
-                } else {
-                    throw UnsupportedOperationException("Unsupported")
-                }
-            } catch (e: Exception) {
-                JOptionPane.showMessageDialog(
-                    this,
-                    String.format(
-                        f.getString("gui.message.clientCrash2"),
-                        launcherLogFile.path,
-                        f.getString("gui.version.crash.tip")
-                    ),
-                    "Game crashed!",
-                    JOptionPane.ERROR_MESSAGE
-                )
-                if (e !is UnsupportedOperationException) {
-                    throw RuntimeException(e)
-                }
-            }
+            JOptionPane.showMessageDialog(
+                this,
+                String.format(
+                    t.getString("gui.message.clientCrash2"),
+                    launcherLogFile.path,
+                    t.getString("gui.version.crash.tip")
+                ),
+                "Game crashed!",
+                JOptionPane.ERROR_MESSAGE
+            )
         }
     }
 
@@ -310,7 +282,7 @@ class GuiVersionSelect : JPanel() {
         val module = moduleSelect.selectedItem as String
         val branch = branchInput.text
         val launchCommand = getArgs(
-            version, branch, module, config.installationDir.toFile(),
+            version, branch, module, File(config.installationDir),
             gameProperties = GameProperties(
                 config.game.resize.width,
                 config.game.resize.height,
@@ -330,7 +302,7 @@ class GuiVersionSelect : JPanel() {
 
         Thread {
             isLaunching = true
-            statusBar.text = f.getString("status.launch.begin")
+            statusBar.text = t.getString("status.launch.begin")
             try {
                 checkUpdate(
                     (versionSelect.selectedItem as String),
@@ -343,8 +315,8 @@ class GuiVersionSelect : JPanel() {
                 log.error(trace)
                 JOptionPane.showMessageDialog(
                     null,
-                    f.format("gui.check-update.error.message", trace),
-                    f.getString("gui.check-update.error.title"),
+                    t.format("gui.check-update.error.message", trace),
+                    t.getString("gui.check-update.error.title"),
                     JOptionPane.ERROR_MESSAGE
                 )
             }
@@ -358,7 +330,7 @@ class GuiVersionSelect : JPanel() {
     private fun offline() {
         beforeLaunch()
         Thread {
-            statusBar.text = f.getString("status.launch.call-process")
+            statusBar.text = t.getString("status.launch.call-process")
             launchPrevious().waitFor()
         }.start()
     }
@@ -409,7 +381,7 @@ fun File.unzipNatives(baseDir: File) {
     if (!dir.exists()) {
         dir.mkdirs()
     }
-    this.toZip().unzip(dir)
+    this.openAsZip().unzipTo(dir)
     log.info("Natives unzipped successful")
 }
 
@@ -419,7 +391,7 @@ fun File.unzipUi(baseDir: File) {
     if (!dir.exists()) {
         dir.mkdirs()
     }
-    this.toZip().unzip(dir)
+    this.openAsZip().unzipTo(dir)
     log.info("Ui unzipped successful")
 }
 

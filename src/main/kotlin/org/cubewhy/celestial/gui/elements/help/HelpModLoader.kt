@@ -6,13 +6,13 @@
 
 package org.cubewhy.celestial.gui.elements.help
 
-import org.cubewhy.celestial.f
+import org.cubewhy.celestial.t
 import org.cubewhy.celestial.gui.elements.HelpPage
-import org.cubewhy.celestial.readOnly
-import org.cubewhy.celestial.toJTextArea
+import org.cubewhy.celestial.utils.readOnly
+import org.cubewhy.celestial.utils.toJTextArea
 
-class HelpModLoader : HelpPage(f.getString("gui.help.loader.title")) {
+class HelpModLoader : HelpPage(t.getString("gui.help.loader.title")) {
     init {
-        this.add(f.getString("gui.help.loader").toJTextArea().readOnly())
+        this.add(t.getString("gui.help.loader").toJTextArea().readOnly())
     }
 }

@@ -10,29 +10,38 @@ import org.apache.logging.log4j.core.config.plugins.util.ResolverUtil
 import java.lang.reflect.Modifier
 import java.net.URI
 
-// Thanks FDPClient
-// https://github.com/SkidderMC/FDPClient/blob/main/src/main/java/net/ccbluex/liquidbounce/utils/ClassUtils.kt
+fun getKotlinName(name: String): String {
+    val case = name[0].uppercase()
+    val exceptCase = name.substring(1)
+    return case + exceptCase
+}
 
-private val cachedClasses = mutableMapOf<String, Boolean>()
+fun <T> Any.getKotlinField(name: String): T =
+    this::class.java.getDeclaredMethod("get${getKotlinName(name)}").let {
+        it.isAccessible = true
+        it.invoke(this) as T
+    }
 
-/**
- * Allows you to check for existing classes with the className
- */
-fun String.hasClass(): Boolean {
-    return if (cachedClasses.containsKey(this)) {
-        cachedClasses[this]!!
-    } else try {
-        Class.forName(this)
-        cachedClasses[this] = true
-
-        true
-    } catch (e: ClassNotFoundException) {
-        cachedClasses[this] = false
-
-        false
+inline fun <reified T> Any.setKotlinField(name: String, value: T?) {
+    // Fuck Kotlin
+    val clazz = when (value) {
+        is Boolean -> Boolean::class.java
+        is Int -> Int::class.java
+        is Short -> Short::class.java
+        is Double -> Double::class.java
+        is Long -> Long::class.java
+        is Char -> Char::class.java
+        is Float -> Float::class.java
+        else -> T::class.java // not built-in types
+    }
+    this::class.java.getDeclaredMethod("set${getKotlinName(name)}", clazz).apply {
+        isAccessible = true
+        invoke(this@setKotlinField, value)
     }
 }
 
+// Thanks FDPClient
+// https://github.com/SkidderMC/FDPClient/blob/main/src/main/java/net/ccbluex/liquidbounce/utils/ClassUtils.kt
 
 /**
  * scan classes with specified superclass like what Reflections do but with log4j [ResolverUtil]

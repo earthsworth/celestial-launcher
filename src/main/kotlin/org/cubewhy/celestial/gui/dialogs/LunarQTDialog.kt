@@ -10,6 +10,12 @@ import org.cubewhy.celestial.*
 import org.cubewhy.celestial.game.thirdparty.LunarQT
 import org.cubewhy.celestial.gui.layouts.VerticalFlowLayout
 import org.cubewhy.celestial.utils.emptyJLabel
+import org.cubewhy.celestial.utils.getKotlinField
+import org.cubewhy.celestial.utils.getKotlinName
+import org.cubewhy.celestial.utils.setKotlinField
+import org.cubewhy.celestial.utils.source
+import org.cubewhy.celestial.utils.toJLabel
+import org.cubewhy.celestial.utils.withScroller
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.awt.event.FocusAdapter
@@ -24,7 +30,7 @@ class LunarQTDialog : JDialog() {
     private val panel = JPanel()
 
     init {
-        this.title = f.getString("gui.settings.addons.lcqt.manage")
+        this.title = t.getString("gui.settings.addons.lcqt.manage")
         this.isLocationByPlatform = true
         this.setSize(600, 350)
         this.modalityType = ModalityType.APPLICATION_MODAL
@@ -45,22 +51,22 @@ class LunarQTDialog : JDialog() {
 
     private fun initGui() {
         panel.run {
-            add(f.getString("gui.settings.addons.lcqt.tip").toJLabel())
+            add(t.getString("gui.settings.addons.lcqt.tip").toJLabel())
             add(emptyJLabel())
-            add(getCheckBoxToggleModule("cosmetics", f.getString("gui.settings.addons.lcqt.module.cosmetics")))
-            add(getCheckBoxToggleModule("freelook", f.getString("gui.settings.addons.lcqt.module.freelook")))
-            add(getCheckBoxToggleModule("cracked", f.getString("gui.settings.addons.lcqt.module.cracked")))
-            add(getCheckBoxToggleModule("noHitDelay", f.getString("gui.settings.addons.lcqt.module.noHitDelay")))
-            add(getCheckBoxToggleModule("debugMods", f.getString("gui.settings.addons.lcqt.module.debugMods")))
+            add(getCheckBoxToggleModule("cosmetics", t.getString("gui.settings.addons.lcqt.module.cosmetics")))
+            add(getCheckBoxToggleModule("freelook", t.getString("gui.settings.addons.lcqt.module.freelook")))
+            add(getCheckBoxToggleModule("cracked", t.getString("gui.settings.addons.lcqt.module.cracked")))
+            add(getCheckBoxToggleModule("noHitDelay", t.getString("gui.settings.addons.lcqt.module.noHitDelay")))
+            add(getCheckBoxToggleModule("debugMods", t.getString("gui.settings.addons.lcqt.module.debugMods")))
 
-            add(getCheckBoxToggleModule("fpsSpoof", f.getString("gui.settings.addons.lcqt.module.fpsSpoof")))
-            add(getFloatInput("fpsSpoofMultiplier", f.getString("gui.settings.addons.lcqt.module.fpsSpoofMultiplier")))
+            add(getCheckBoxToggleModule("fpsSpoof", t.getString("gui.settings.addons.lcqt.module.fpsSpoof")))
+            add(getFloatInput("fpsSpoofMultiplier", t.getString("gui.settings.addons.lcqt.module.fpsSpoofMultiplier")))
 
-            add(getCheckBoxToggleModule("rawInput", f.getString("gui.settings.addons.lcqt.module.rawInput")))
-            add(getCheckBoxToggleModule("packFix", f.getString("gui.settings.addons.lcqt.module.packfix")))
+            add(getCheckBoxToggleModule("rawInput", t.getString("gui.settings.addons.lcqt.module.rawInput")))
+            add(getCheckBoxToggleModule("packFix", t.getString("gui.settings.addons.lcqt.module.packfix")))
 
-            add(getCheckBoxToggleModule("customMetadata", f.getString("gui.settings.addons.lcqt.module.metadata")))
-            add(getTextField("customMetadataURL", f.getString("gui.settings.addons.lcqt.module.metadata.url")))
+            add(getCheckBoxToggleModule("customMetadata", t.getString("gui.settings.addons.lcqt.module.metadata")))
+            add(getTextField("customMetadataURL", t.getString("gui.settings.addons.lcqt.module.metadata.url")))
         }
     }
 

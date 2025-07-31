@@ -6,6 +6,11 @@
 package org.cubewhy.celestial.gui.dialogs
 
 import org.cubewhy.celestial.*
+import org.cubewhy.celestial.utils.getKotlinField
+import org.cubewhy.celestial.utils.setKotlinField
+import org.cubewhy.celestial.utils.toJLabel
+import org.cubewhy.celestial.utils.toJTextArea
+import org.cubewhy.celestial.utils.withScroller
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.awt.BorderLayout
@@ -25,9 +30,9 @@ class ArgsConfigDialog(private val key: String, private val obj3ct: Any) : JDial
         this.modalityType = ModalityType.APPLICATION_MODAL
         this.isLocationByPlatform = true
 
-        this.title = f.getString("gui.settings.args.title")
+        this.title = t.getString("gui.settings.args.title")
         input = array.toArgsString().toJTextArea()
-        this.add(f.getString("gui.settings.args.tip").toJLabel(), BorderLayout.SOUTH)
+        this.add(t.getString("gui.settings.args.tip").toJLabel(), BorderLayout.SOUTH)
         this.add(input.withScroller(), BorderLayout.CENTER)
 
         this.addWindowListener(object : WindowAdapter() {

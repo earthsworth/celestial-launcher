@@ -6,7 +6,6 @@
 
 package org.cubewhy.celestial
 
-import cn.hutool.crypto.SecureUtil
 import com.formdev.flatlaf.FlatDarkLaf
 import com.formdev.flatlaf.FlatLightLaf
 import com.formdev.flatlaf.IntelliJTheme
@@ -25,10 +24,10 @@ import org.cubewhy.celestial.game.addon.JavaAgent
 import org.cubewhy.celestial.gui.GuiLauncher
 import org.cubewhy.celestial.gui.elements.unzipUi
 import org.cubewhy.celestial.utils.*
-import org.cubewhy.celestial.utils.game.MinecraftData
+import org.cubewhy.celestial.utils.game.MojangApiClient
 import org.cubewhy.celestial.utils.game.MinecraftManifest
 import org.cubewhy.celestial.utils.lunar.GameArtifactInfo
-import org.cubewhy.celestial.utils.lunar.LauncherData
+import org.cubewhy.celestial.utils.lunar.LunarApiClient
 import org.cubewhy.celestial.utils.lunar.LauncherMetadata
 import org.slf4j.LoggerFactory
 import java.awt.event.WindowAdapter
@@ -66,8 +65,8 @@ val config: BasicConfig = try {
 val launcherLogFile: File = File(configDir, "logs/launcher.log")
 
 val gamePid: AtomicLong = AtomicLong()
-lateinit var f: ResourceBundle
-lateinit var launcherData: LauncherData
+lateinit var t: ResourceBundle
+lateinit var lunarApiClient: LunarApiClient
 lateinit var metadata: LauncherMetadata
 lateinit var launcherFrame: GuiLauncher
 var sessionFile: File = if (OSEnum.Windows.isCurrent) {
@@ -123,18 +122,6 @@ fun main() {
         // please share the crash report with developers to help us solve the problems of the Celestial Launcher
         val message = StringBuffer("Celestial Crashed\n")
         message.append("Launcher Version: ").append(GitUtils.buildVersion).append("\n")
-        if (config.dataSharing) {
-            log.info("Uploading crash report")
-            val logString = FileUtils.readFileToString(launcherLogFile, StandardCharsets.UTF_8)
-            val result = launcherData.uploadCrashReport(logString, CrashReportType.LAUNCHER, null)
-            if (result == null) {
-                log.info("Crash report update failed")
-            } else {
-                log.info("Upload success, reportID is " + result.id)
-                message.append("Report id: ").append(result.id).append("\n").append("View the report: ")
-                    .append(result.url).append("\n")
-            }
-        }
         message.append(trace)
         JOptionPane.showMessageDialog(null, message, "Oops, Celestial crashed", JOptionPane.ERROR_MESSAGE)
         exitProcess(1)
@@ -148,12 +135,12 @@ private fun run() {
 
     log.info("Language: $userLanguage")
     checkJava()
-    launcherData = LauncherData(config.api.address)
+    lunarApiClient = LunarApiClient(config.api.address)
     if (config.proxy.state) log.info("Use proxy ${config.proxy.proxyAddress}")
     while (true) {
         try {
             // I don't know why my computer crashed here if the connection takes too much time :(
-            log.info("Starting connect to the api -> " + launcherData.api.toString())
+            log.info("Starting connect to the api -> " + lunarApiClient.api.toString())
             initLauncher()
             log.info("connected")
             break // success
@@ -161,12 +148,12 @@ private fun run() {
             log.warn("API is unreachable")
             log.error(e.stackTraceToString())
             // shell we switch an api?
-            val input = JOptionPane.showInputDialog(f.getString("api.unreachable"), config.api.address)
+            val input = JOptionPane.showInputDialog(t.getString("api.unreachable"), config.api.address)
             if (input == null) {
                 exitProcess(1)
             } else {
                 val proxyInput = JOptionPane.showInputDialog(
-                    f.getString("api.unreachable.proxy"),
+                    t.getString("api.unreachable.proxy"),
                     if (config.proxy.state) config.proxy.proxyAddress else ""
                 )
                 if (proxyInput.isNullOrBlank()) {
@@ -175,7 +162,7 @@ private fun run() {
                     config.proxy.state = true
                     config.proxy.proxyAddress = proxyInput
                 }
-                launcherData = LauncherData(input)
+                lunarApiClient = LunarApiClient(input)
                 config.api.address = input
             }
         }
@@ -209,7 +196,7 @@ private fun run() {
 
 private class SwitchAPIDialog : JDialog() {
     init {
-        this.title = f.getString("api.unreachable.title")
+        this.title = t.getString("api.unreachable.title")
     }
 }
 
@@ -227,7 +214,7 @@ private fun initConfig() {
     log.info("Initializing language manager")
     locale = config.language.locale
     userLanguage = locale.language
-    f = ResourceBundle.getBundle("languages/launcher", locale)
+    t = ResourceBundle.getBundle("languages/launcher", locale)
 }
 
 private fun initTheme() {
@@ -245,8 +232,8 @@ private fun initTheme() {
                 // cannot load custom theme without theme.json
                 JOptionPane.showMessageDialog(
                     null,
-                    f.getString("theme.custom.notfound.message"),
-                    f.getString("theme.custom.notfound.title"),
+                    t.getString("theme.custom.notfound.message"),
+                    t.getString("theme.custom.notfound.title"),
                     JOptionPane.WARNING_MESSAGE
                 )
                 return
@@ -269,8 +256,8 @@ private fun checkJava() {
         log.warn("Compatibility warning: The Java you are currently using may not be able to start LunarClient properly (Java 21 is recommended)")
         JOptionPane.showMessageDialog(
             null,
-            f.getString("compatibility.warn.message"),
-            f.getString("compatibility.warn.title"),
+            t.getString("compatibility.warn.message"),
+            t.getString("compatibility.warn.title"),
             JOptionPane.WARNING_MESSAGE
         )
     }
@@ -288,8 +275,8 @@ private fun checkJava() {
 }
 
 private fun initLauncher() {
-    metadata = launcherData.metadata()
-    minecraftManifest = MinecraftData.manifest()
+    metadata = lunarApiClient.metadata()
+    minecraftManifest = MojangApiClient.manifest()
 }
 
 /**
@@ -320,7 +307,7 @@ fun getArgs(
     gameProperties: GameProperties,
     givenAgents: List<JavaAgent> = emptyList()
 ): LaunchCommand {
-    val json = launcherData.getVersion(version, branch, module)
+    val json = lunarApiClient.getVersion(version, branch, module)
     // === JRE ===
     val wrapper = config.game.wrapper
     val customJre = config.jre
@@ -343,7 +330,7 @@ fun getArgs(
         log.info("Use default jre: $java")
     }
     // === default vm args ===
-    vmArgs.addAll(LauncherData.getDefaultJvmArgs(json))
+    vmArgs.addAll(LunarApiClient.getDefaultJvmArgs(json))
     // serviceOverride
     config.game.overrides.forEach { (ov, address) ->
         vmArgs.add("-DserviceOverride$ov=$address")
@@ -417,7 +404,7 @@ fun getArgs(
         installation = installation, // LunarClient installation
         jre = java, // java executable
         wrapper = config.game.wrapper.ifEmpty { null },
-        mainClass = LauncherData.getMainClass(json), // Genesis main class
+        mainClass = LunarApiClient.getMainClass(json), // Genesis main class
         natives = natives, // Minecraft Natives
         vmArgs = vmArgs, // jvm args
         javaAgents = javaAgents,
@@ -442,7 +429,7 @@ fun getArgs(
 fun checkUpdate(version: String, module: String?, branch: String?) {
     log.info("Checking update")
     val installation = File(config.installationDir)
-    val versionJson = launcherData.getVersion(version, branch, module)
+    val versionJson = lunarApiClient.getVersion(version, branch, module)
     // download artifacts
     val artifacts = versionJson.launchTypeData.artifacts
     for (artifact in artifacts) {
@@ -456,7 +443,7 @@ fun checkUpdate(version: String, module: String?, branch: String?) {
     }
 
     // download textures
-    LauncherData.getLunarTexturesIndex(versionJson)!!.forEach { (fileName: String, urlString: String) ->
+    LunarApiClient.getLunarTexturesIndex(versionJson)!!.forEach { (fileName: String, urlString: String) ->
         downloadAssets(urlString, File(installation, "textures/$fileName"))
     }
     // download ui
@@ -470,17 +457,17 @@ fun checkUpdate(version: String, module: String?, branch: String?) {
         })
     }
     // ui assets
-    LauncherData.getLunarUiAssetsIndex(versionJson).forEach { (fileName: String, urlString: String) ->
+    LunarApiClient.getLunarUiAssetsIndex(versionJson).forEach { (fileName: String, urlString: String) ->
         downloadAssets(urlString, File(installation, "ui/assets/$fileName"))
     }
 
     val minecraftFolder = File(config.game.gameDir)
 
     GuiLauncher.statusBar.text = "Complete textures for vanilla Minecraft"
-    val textureIndex = MinecraftData.getVersion(
+    val textureIndex = MojangApiClient.getVersion(
         version, minecraftManifest
     )!!.let {
-        MinecraftData.getTextureIndex(
+        MojangApiClient.getTextureIndex(
             it
         )
     }
@@ -501,7 +488,7 @@ fun checkUpdate(version: String, module: String?, branch: String?) {
     for (resource in objects.values) {
         val hash = resource.hash
         val folder = hash.substring(0, 2)
-        val finalURL = String.format("%s/%s/%s", MinecraftData.texture, folder, hash).toURI().toURL()
+        val finalURL = String.format("%s/%s/%s", MojangApiClient.texture, folder, hash).toURI().toURL()
         val finalFile = File(assetsFolder, "objects/$folder/$hash")
         DownloadManager.download(Downloadable(finalURL, finalFile, hash))
     }

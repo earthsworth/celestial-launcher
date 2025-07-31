@@ -7,8 +7,8 @@ package org.cubewhy.celestial.game.addon
 
 import org.cubewhy.celestial.config
 import org.cubewhy.celestial.game.BaseAddon
-import org.cubewhy.celestial.toFile
 import org.cubewhy.celestial.utils.downloadLoader
+import org.cubewhy.celestial.utils.toFile
 import org.jetbrains.annotations.Contract
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

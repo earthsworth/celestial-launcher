@@ -11,6 +11,9 @@ import org.cubewhy.celestial.*
 import org.cubewhy.celestial.files.DownloadManager.cacheDir
 import org.cubewhy.celestial.utils.lunar.Alert
 import org.cubewhy.celestial.utils.lunar.Blogpost
+import org.cubewhy.celestial.utils.open
+import org.cubewhy.celestial.utils.toJLabel
+import org.cubewhy.celestial.utils.toURI
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.awt.Color
@@ -68,7 +71,7 @@ class LauncherNews(private val blogPost: Blogpost) : JPanel() {
                 Blogpost.ButtonType.CHANGE_API -> {
                     if (JOptionPane.showConfirmDialog(
                             this,
-                            f.getString("gui.news.api.confirm").format(blogPost.link),
+                            t.getString("gui.news.api.confirm").format(blogPost.link),
                             "Confirm",
                             JOptionPane.YES_NO_OPTION
                         ) == JOptionPane.OK_OPTION
@@ -77,7 +80,7 @@ class LauncherNews(private val blogPost: Blogpost) : JPanel() {
                         log.info("Change API into ${config.api}")
                         JOptionPane.showMessageDialog(
                             this,
-                            f.getString("gui.news.api.reopen"),
+                            t.getString("gui.news.api.reopen"),
                             "Reopen needed",
                             JOptionPane.INFORMATION_MESSAGE
                         )
@@ -86,7 +89,7 @@ class LauncherNews(private val blogPost: Blogpost) : JPanel() {
 
                 null -> JOptionPane.showMessageDialog(
                     this,
-                    f.getString("gui.news.empty"),
+                    t.getString("gui.news.empty"),
                     "A Joke",
                     JOptionPane.INFORMATION_MESSAGE
                 ) // do nothing
@@ -103,7 +106,7 @@ class LauncherAlert(alert: Alert) : JPanel() {
         this.layout = BoxLayout(this, BoxLayout.Y_AXIS)
         this.border = TitledBorder(
             null,
-            f.getString("gui.news.alert.title"),
+            t.getString("gui.news.alert.title"),
             TitledBorder.DEFAULT_JUSTIFICATION,
             TitledBorder.DEFAULT_POSITION,
             null,
@@ -127,7 +130,7 @@ class LauncherBirthday(birthday: Int) : JPanel() {
         this.layout = BoxLayout(this, BoxLayout.Y_AXIS)
         this.border = TitledBorder(
             null,
-            f.getString("gui.news.birthday.title"),
+            t.getString("gui.news.birthday.title"),
             TitledBorder.DEFAULT_JUSTIFICATION,
             TitledBorder.DEFAULT_POSITION,
             null,
@@ -139,15 +142,15 @@ class LauncherBirthday(birthday: Int) : JPanel() {
         val betweenNext = ChronoUnit.DAYS.between(today, nextBirthday).toInt()
 
         if (birthday == 0) {
-            this.add(f.getString("gui.news.birthday.today").toJLabel())
+            this.add(t.getString("gui.news.birthday.today").toJLabel())
         } else if (birthday == 1) {
-            this.add(f.getString("gui.news.birthday.tomorrow").toJLabel())
+            this.add(t.getString("gui.news.birthday.tomorrow").toJLabel())
         } else if (birthday == -1) {
-            this.add(f.getString("gui.news.birthday.yesterday").format(betweenNext).toJLabel())
+            this.add(t.getString("gui.news.birthday.yesterday").format(betweenNext).toJLabel())
         } else if (birthday > 0) {
-            this.add(f.getString("gui.news.birthday.coming").format(birthday).toJLabel())
+            this.add(t.getString("gui.news.birthday.coming").format(birthday).toJLabel())
         } else {
-            this.add(f.getString("gui.news.birthday.after").format(birthday, betweenNext).toJLabel())
+            this.add(t.getString("gui.news.birthday.after").format(birthday, betweenNext).toJLabel())
         }
     }
 }

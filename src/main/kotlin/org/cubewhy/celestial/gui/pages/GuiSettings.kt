@@ -22,7 +22,7 @@ import org.cubewhy.celestial.gui.dialogs.MirrorDialog
 import org.cubewhy.celestial.gui.layouts.VerticalFlowLayout
 import org.cubewhy.celestial.utils.*
 import org.cubewhy.celestial.utils.OSEnum.Companion.current
-import org.cubewhy.celestial.utils.lunar.LauncherData
+import org.cubewhy.celestial.utils.lunar.LunarApiClient
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.awt.Color
@@ -46,7 +46,7 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
         EventManager.register(this)
         this.border = TitledBorder(
             null,
-            f.getString("gui.settings.title"),
+            t.getString("gui.settings.title"),
             TitledBorder.DEFAULT_JUSTIFICATION,
             TitledBorder.DEFAULT_POSITION,
             null,
@@ -66,8 +66,8 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
             log.info("API changed, hot reloading...")
             val newApi = e.newValue as String
             try {
-                launcherData = LauncherData(newApi)
-                metadata = launcherData.metadata()
+                lunarApiClient = LunarApiClient(newApi)
+                metadata = lunarApiClient.metadata()
                 log.info("API is ready.")
                 APIReadyEvent().call()
             } catch (ex: Exception) {
@@ -77,8 +77,8 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
                 e.cancel() // cancel the change
                 JOptionPane.showMessageDialog(
                     this,
-                    f.format("gui.settings.launcher.api.error.connection.message", newApi),
-                    f.getString("gui.settings.launcher.api.error.connection.title"),
+                    t.format("gui.settings.launcher.api.error.connection.message", newApi),
+                    t.getString("gui.settings.launcher.api.error.connection.title"),
                     JOptionPane.ERROR_MESSAGE
                 )
             }
@@ -87,14 +87,14 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
 
     private fun initGui() {
         // config
-        panel.add(JLabel(f.getString("gui.settings.warn.restart")))
+        panel.add(JLabel(t.getString("gui.settings.warn.restart")))
         val panelFolders = JPanel()
-        panelFolders.add(createButtonOpenFolder(f.getString("gui.settings.folder.main"), configDir))
-        panelFolders.add(createButtonOpenFolder(f.getString("gui.settings.folder.theme"), themesDir))
-        panelFolders.add(createButtonOpenFolder(f.getString("gui.settings.folder.log"), launcherLogFile.parentFile))
+        panelFolders.add(createButtonOpenFolder(t.getString("gui.settings.folder.main"), configDir))
+        panelFolders.add(createButtonOpenFolder(t.getString("gui.settings.folder.theme"), themesDir))
+        panelFolders.add(createButtonOpenFolder(t.getString("gui.settings.folder.log"), launcherLogFile.parentFile))
         panelFolders.add(
             createButtonOpenFolder(
-                f.getString("gui.settings.folder.game"),
+                t.getString("gui.settings.folder.game"),
                 config.installationDir.toFile()
             )
         )
@@ -104,7 +104,7 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
         panelVM.layout = VerticalFlowLayout(VerticalFlowLayout.LEFT)
         panelVM.border = TitledBorder(
             null,
-            f.getString("gui.settings.jvm"),
+            t.getString("gui.settings.jvm"),
             TitledBorder.DEFAULT_JUSTIFICATION,
             TitledBorder.DEFAULT_POSITION,
             null,
@@ -113,13 +113,13 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
 
         val customJre: String = config.jre
         val btnSelectPath = JButton(if ((customJre.isEmpty())) currentJavaExec.path else customJre)
-        val btnUnset = JButton(f.getString("gui.settings.jvm.jre.unset"))
+        val btnUnset = JButton(t.getString("gui.settings.jvm.jre.unset"))
         btnSelectPath.addActionListener { e: ActionEvent ->
             val file =
                 chooseFile(if ((current == OSEnum.Windows)) FileNameExtensionFilter("Java Executable", "exe") else null)
             if (file != null) {
                 val source = e.source as JButton
-                GuiLauncher.statusBar.text = f.format("gui.settings.jvm.jre.success", file)
+                GuiLauncher.statusBar.text = t.format("gui.settings.jvm.jre.success", file)
                 config.jre = file.path
                 source.text = file.path
             }
@@ -127,7 +127,7 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
         btnUnset.addActionListener {
             if (JOptionPane.showConfirmDialog(
                     this,
-                    f.getString("gui.settings.jvm.jre.unset.confirm"),
+                    t.getString("gui.settings.jvm.jre.unset.confirm"),
                     "Confirm",
                     JOptionPane.YES_NO_OPTION
                 ) == JOptionPane.NO_OPTION
@@ -136,17 +136,17 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
             val java = currentJavaExec
             btnSelectPath.text = java.path
             config.jre = ""
-            GuiLauncher.statusBar.text = f.getString("gui.settings.jvm.jre.unset.success")
+            GuiLauncher.statusBar.text = t.getString("gui.settings.jvm.jre.unset.success")
         }
         // jre settings
         val p1 = JPanel()
-        p1.add(JLabel(f.getString("gui.settings.jvm.jre")))
+        p1.add(JLabel(t.getString("gui.settings.jvm.jre")))
         p1.add(btnSelectPath)
         p1.add(btnUnset)
         panelVM.add(p1)
         // ram settings
         val p2 = JPanel()
-        p2.add(JLabel(f.getString("gui.settings.jvm.ram")))
+        p2.add(JLabel(t.getString("gui.settings.jvm.ram")))
         val ramSlider = JSlider(JSlider.HORIZONTAL, 0, totalMem, config.game.ram)
         ramSlider.paintTicks = true
         ramSlider.majorTickSpacing = 1024 // 1G
@@ -167,10 +167,10 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
         panelVM.add(p2)
 
         val p3 = JPanel()
-        p3.add(JLabel(f.getString("gui.settings.jvm.wrapper")))
+        p3.add(JLabel(t.getString("gui.settings.jvm.wrapper")))
         val wrapperInput = getAutoSaveTextField(config.game, "wrapper")
         p3.add(wrapperInput)
-        val btnSetVMArgs = JButton(f.getString("gui.settings.jvm.args"))
+        val btnSetVMArgs = JButton(t.getString("gui.settings.jvm.args"))
         btnSetVMArgs.addActionListener {
             ArgsConfigDialog("vmArgs", config.game).isVisible = true
         }
@@ -182,7 +182,7 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
         panelLauncher.layout = VerticalFlowLayout(VerticalFlowLayout.LEFT)
         panelLauncher.border = TitledBorder(
             null,
-            f.getString("gui.settings.launcher"),
+            t.getString("gui.settings.launcher"),
             TitledBorder.DEFAULT_JUSTIFICATION,
             TitledBorder.DEFAULT_POSITION,
             null,
@@ -192,7 +192,7 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
         val p4 = JPanel().apply {
             border = TitledBorder(
                 null,
-                f.getString("gui.settings.launcher.api"),
+                t.getString("gui.settings.launcher.api"),
                 TitledBorder.DEFAULT_JUSTIFICATION,
                 TitledBorder.DEFAULT_POSITION,
                 null,
@@ -201,17 +201,17 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
 
             layout = VerticalFlowLayout(VerticalFlowLayout.LEFT)
 
-            add(f.getString("gui.settings.launcher.api.address").toJLabel())
+            add(t.getString("gui.settings.launcher.api.address").toJLabel())
             add(getAutoSaveTextField(config.api, "address"))
 
-            add(f.getString("gui.settings.launcher.api.spoof").toJLabel())
+            add(t.getString("gui.settings.launcher.api.spoof").toJLabel())
             add(getAutoSaveTextField(config.api, "versionSpoof") { callback ->
                 // check
                 if (!isValidVersion(callback.value)) {
                     JOptionPane.showMessageDialog(
                         this,
-                        f.getString("gui.settings.launcher.api.spoof.bad-version.message"),
-                        f.getString("gui.settings.launcher.api.spoof.bad-version.title"),
+                        t.getString("gui.settings.launcher.api.spoof.bad-version.message"),
+                        t.getString("gui.settings.launcher.api.spoof.bad-version.title"),
                         JOptionPane.ERROR_MESSAGE
                     )
                     callback.revert()
@@ -220,20 +220,12 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
         }
 
         panelLauncher.add(p4)
-        // data sharing
-        panelLauncher.add(
-            getAutoSaveCheckBox(
-                config,
-                "dataSharing",
-                f.getString("gui.settings.launcher.data-sharing")
-            )
-        )
 //        panelLauncher.add(f.getString("gui.settings.pages.manage").toJButton {
 //            SortPagesDialog().isVisible = true
 //        })
         // theme
         val p5 = JPanel()
-        p5.add(JLabel(f.getString("gui.settings.launcher.theme")))
+        p5.add(JLabel(t.getString("gui.settings.launcher.theme")))
         val themes: MutableList<String> = ArrayList()
         themes.add("dark")
         themes.add("light") // default themes
@@ -245,7 +237,7 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
             }
         }
         p5.add(getAutoSaveComboBox(config, "theme", themes))
-        val btnAddTheme = JButton(f.getString("gui.settings.launcher.theme.add"))
+        val btnAddTheme = JButton(t.getString("gui.settings.launcher.theme.add"))
         btnAddTheme.addActionListener {
             val file = chooseFile(FileNameExtensionFilter("Intellij IDEA theme (.json)", "json"))
                 ?: return@addActionListener
@@ -254,7 +246,7 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
             if (f1.exists()) {
                 JOptionPane.showMessageDialog(
                     this,
-                    f.getString("gui.settings.launcher.theme.exist"),
+                    t.getString("gui.settings.launcher.theme.exist"),
                     "File always exist",
                     JOptionPane.ERROR_MESSAGE
                 )
@@ -271,7 +263,7 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
         panelLauncher.add(p5)
         // language
         val p6 = JPanel()
-        p6.add(JLabel(f.getString("gui.settings.launcher.language")))
+        p6.add(JLabel(t.getString("gui.settings.launcher.language")))
         p6.add(
             getAutoSaveComboBox(
                 config,
@@ -307,12 +299,12 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
                 panelLauncher.add(panelCeleWrap)*/
         // max-threads
         val p7 = JPanel()
-        p7.add(JLabel(f.getString("gui.settings.launcher.max-threads")))
+        p7.add(JLabel(t.getString("gui.settings.launcher.max-threads")))
         p7.add(getAutoSaveSpinner(config, "maxThreads", 1.0, 256.0, 1.0, true))
         panelLauncher.add(p7)
         // installation-dir
         val p8 = JPanel()
-        p8.add(JLabel(f.getString("gui.settings.launcher.installation")))
+        p8.add(JLabel(t.getString("gui.settings.launcher.installation")))
         val btnSelectInstallation = JButton(config.installationDir)
         btnSelectInstallation.addActionListener { e: ActionEvent ->
             val file = chooseFolder()
@@ -323,13 +315,13 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
             config.installationDir = file.path
             log.info("Set installation-dir to $file")
             source.text = file.path
-            GuiLauncher.statusBar.text = String.format(f.getString("gui.settings.installation.success"), file)
+            GuiLauncher.statusBar.text = String.format(t.getString("gui.settings.installation.success"), file)
         }
         p8.add(btnSelectInstallation)
         panelLauncher.add(p8)
         // game-dir
         val p9 = JPanel()
-        p9.add(JLabel(f.getString("gui.settings.launcher.game")))
+        p9.add(JLabel(t.getString("gui.settings.launcher.game")))
         val btnSelectGameDir = JButton(config.game.gameDir)
         btnSelectGameDir.addActionListener { e: ActionEvent ->
             val file = chooseFolder()
@@ -340,7 +332,7 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
             config.game.gameDir = file.path
             log.info("Set game-dir to $file")
             source.text = file.path
-            GuiLauncher.statusBar.text = String.format(f.getString("gui.settings.game-dir.success"), file)
+            GuiLauncher.statusBar.text = String.format(t.getString("gui.settings.game-dir.success"), file)
         }
         p9.add(btnSelectGameDir)
         panelLauncher.add(p9)
@@ -350,7 +342,7 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
         panelAddon.layout = VerticalFlowLayout(VerticalFlowLayout.LEFT)
         panelAddon.border = TitledBorder(
             null,
-            f.getString("gui.settings.addon"),
+            t.getString("gui.settings.addon"),
             TitledBorder.DEFAULT_JUSTIFICATION,
             TitledBorder.DEFAULT_POSITION,
             null,
@@ -358,7 +350,7 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
         )
         val p10 = JPanel()
         val btnGroup = ButtonGroup()
-        val btnLoaderUnset = JRadioButton(f.getString("gui.settings.addon.loader.unset"), isLoaderSelected(null))
+        val btnLoaderUnset = JRadioButton(t.getString("gui.settings.addon.loader.unset"), isLoaderSelected(null))
         btnGroup.add(btnLoaderUnset)
         val btnWeave = JRadioButton("Weave", isLoaderSelected("weave"))
         btnGroup.add(btnWeave)
@@ -376,12 +368,12 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
         // lunarcn
         val btnSelectLunarCNInstallation =
             getSelectInstallationButton(LunarCNMod.installation, "LunarCN Loader", "lunarcn")
-        p11.add(JLabel(f.getString("gui.settings.addon.loader.cn.installation")))
+        p11.add(JLabel(t.getString("gui.settings.addon.loader.cn.installation")))
         p11.add(btnSelectLunarCNInstallation)
         panelAddon.add(p11)
         val p12 = JPanel()
         val btnSelectWeaveInstallation = getSelectInstallationButton(WeaveMod.installation, "Weave Loader", "weave")
-        p12.add(JLabel(f.getString("gui.settings.addon.loader.weave.installation")))
+        p12.add(JLabel(t.getString("gui.settings.addon.loader.weave.installation")))
         p12.add(btnSelectWeaveInstallation)
         panelAddon.add(p12)
 
@@ -389,31 +381,31 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
         panelLunarQT.layout = VerticalFlowLayout()
         panelLunarQT.border = TitledBorder(
             null,
-            f.getString("gui.settings.addons.lcqt"),
+            t.getString("gui.settings.addons.lcqt"),
             TitledBorder.DEFAULT_JUSTIFICATION,
             TitledBorder.DEFAULT_POSITION,
             null,
             Color.ORANGE
         )
         panelLunarQT.add(
-            f.getString("gui.settings.addons.lcqt.compatibility").toJLabel()
+            t.getString("gui.settings.addons.lcqt.compatibility").toJLabel()
         )
         panelLunarQT.add(
             getAutoSaveCheckBox(
                 config.addon.lcqt,
                 "state",
-                f.getString("gui.settings.addons.lcqt.toggle")
+                t.getString("gui.settings.addons.lcqt.toggle")
             )
         )
         panelLunarQT.add(
             getAutoSaveCheckBox(
                 config.addon.lcqt,
                 "checkUpdate",
-                f.getString("gui.settings.addons.lcqt.check-update")
+                t.getString("gui.settings.addons.lcqt.check-update")
             )
         )
         val panelManageLunarQTInstallation = JPanel()
-        panelManageLunarQTInstallation.add(f.getString("gui.settings.addons.lcqt.installation").toJLabel())
+        panelManageLunarQTInstallation.add(t.getString("gui.settings.addons.lcqt.installation").toJLabel())
         val btnSelectLunarQTInstallation = createJButton(config.addon.lcqt.installationDir) { e: ActionEvent ->
             val file = chooseFile(FileNameExtensionFilter("LunarQT Agent (*.jar)", "jar"))
             val source = e.source as JButton
@@ -421,12 +413,12 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
             config.addon.lcqt.installationDir = file.path
             log.info("Set lcqt-installation to $file")
             source.text = file.path
-            GuiLauncher.statusBar.text = f.format("gui.settings.addons.lcqt.success", file)
+            GuiLauncher.statusBar.text = t.format("gui.settings.addons.lcqt.success", file)
         }
         panelManageLunarQTInstallation.add(btnSelectLunarQTInstallation)
         panelLunarQT.add(panelManageLunarQTInstallation)
 
-        val btnManageLunarQT = JButton(f.getString("gui.settings.addons.lcqt.manage"))
+        val btnManageLunarQT = JButton(t.getString("gui.settings.addons.lcqt.manage"))
         btnManageLunarQT.addActionListener {
             LunarQTDialog().isVisible = true
         }
@@ -440,14 +432,14 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
             getAutoSaveCheckBox(
                 config.addon.weave,
                 "checkUpdate",
-                f.getString("gui.settings.addon.loader.weave.check-update")
+                t.getString("gui.settings.addon.loader.weave.check-update")
             )
         )
         p13.add(
             getAutoSaveCheckBox(
                 config.addon.lunarcn,
                 "checkUpdate",
-                f.getString("gui.settings.addon.loader.cn.check-update")
+                t.getString("gui.settings.addon.loader.cn.check-update")
             )
         )
         panelAddon.add(p13)
@@ -455,7 +447,7 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
         val panelGame = JPanel()
         panelGame.border = TitledBorder(
             null,
-            f.getString("gui.settings.game"),
+            t.getString("gui.settings.game"),
             TitledBorder.DEFAULT_JUSTIFICATION,
             TitledBorder.DEFAULT_POSITION,
             null,
@@ -465,7 +457,7 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
 
         // program args
         val p14 = JPanel()
-        val btnProgramArgs = JButton(f.getString("gui.settings.game.args"))
+        val btnProgramArgs = JButton(t.getString("gui.settings.game.args"))
         btnProgramArgs.addActionListener {
             ArgsConfigDialog(
                 "args",
@@ -508,7 +500,7 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
         val p15 = JPanel()
         p15.border = TitledBorder(
             null,
-            f.getString("gui.settings.game.resize"),
+            t.getString("gui.settings.game.resize"),
             TitledBorder.DEFAULT_JUSTIFICATION,
             TitledBorder.DEFAULT_POSITION,
             null,
@@ -516,11 +508,11 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
         )
         p15.layout = VerticalFlowLayout(VerticalFlowLayout.LEFT)
         val p16 = JPanel()
-        p16.add(JLabel(f.getString("gui.settings.game.resize.width")))
+        p16.add(JLabel(t.getString("gui.settings.game.resize.width")))
         p16.add(getAutoSaveSpinner(config.game.resize, "width", 10.0, 5000.0, 1.0))
         p15.add(p16)
         val p17 = JPanel()
-        p17.add(JLabel(f.getString("gui.settings.game.resize.height")))
+        p17.add(JLabel(t.getString("gui.settings.game.resize.height")))
         p17.add(getAutoSaveSpinner(config.game.resize, "height", 10.0, 5000.0, 1.0))
         p15.add(p17)
         panelGame.add(p15)
@@ -528,7 +520,7 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
         val panelProxy = JPanel()
         panelProxy.border = TitledBorder(
             null,
-            f.getString("gui.settings.proxy"),
+            t.getString("gui.settings.proxy"),
             TitledBorder.DEFAULT_JUSTIFICATION,
             TitledBorder.DEFAULT_POSITION,
             null,
@@ -537,12 +529,12 @@ class GuiSettings : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_
         panelProxy.layout = VerticalFlowLayout(VerticalFlowLayout.LEFT)
 
         val p18 = JPanel()
-        p18.add(JLabel(f.getString("gui.settings.proxy.address")))
+        p18.add(JLabel(t.getString("gui.settings.proxy.address")))
 
         p18.add(getAutoSaveTextField(config.proxy, "proxyAddress"))
-        p18.add(getAutoSaveCheckBox(config.proxy, "state", f.getString("gui.settings.proxy.state")))
+        p18.add(getAutoSaveCheckBox(config.proxy, "state", t.getString("gui.settings.proxy.state")))
 
-        val btnMirror = JButton(f.getString("gui.settings.proxy.mirror"))
+        val btnMirror = JButton(t.getString("gui.settings.proxy.mirror"))
         btnMirror.addActionListener {
             MirrorDialog().isVisible = true
         }

@@ -6,7 +6,7 @@
 
 package org.cubewhy.celestial.gui.elements.help
 
-import org.cubewhy.celestial.f
+import org.cubewhy.celestial.t
 import org.cubewhy.celestial.gui.elements.HelpPage
 
-class HelpListener : HelpPage("Listener", f.getString("gui.help.listener"))
+class HelpListener : HelpPage("Listener", t.getString("gui.help.listener"))

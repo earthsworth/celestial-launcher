@@ -21,6 +21,8 @@ import org.cubewhy.celestial.gui.elements.unzipNatives
 import org.cubewhy.celestial.utils.GitUtils
 import org.cubewhy.celestial.utils.OSEnum
 import org.cubewhy.celestial.utils.currentJavaExec
+import org.cubewhy.celestial.utils.getInputStream
+import org.cubewhy.celestial.utils.toFile
 import org.slf4j.LoggerFactory
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
@@ -41,8 +43,8 @@ object Wrapper {
         clipboard.setContents(StringSelection(e.authURL.toString()), null)
         val link = JOptionPane.showInputDialog(
             null,
-            f.getString("gui.launcher.auth.message"),
-            f.getString("gui.launcher.auth.title"),
+            t.getString("gui.launcher.auth.message"),
+            t.getString("gui.launcher.auth.title"),
             JOptionPane.QUESTION_MESSAGE
         )
         e.put(link)

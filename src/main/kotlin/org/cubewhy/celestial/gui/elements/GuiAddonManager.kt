@@ -23,6 +23,15 @@ import org.cubewhy.celestial.gui.layouts.VerticalFlowLayout
 import org.cubewhy.celestial.utils.chooseFile
 import org.cubewhy.celestial.utils.createButtonOpenFolder
 import org.cubewhy.celestial.utils.currentJavaExec
+import org.cubewhy.celestial.utils.format
+import org.cubewhy.celestial.utils.isMod
+import org.cubewhy.celestial.utils.openAsJar
+import org.cubewhy.celestial.utils.readOnly
+import org.cubewhy.celestial.utils.isZipFile
+import org.cubewhy.celestial.utils.source
+import org.cubewhy.celestial.utils.toJButton
+import org.cubewhy.celestial.utils.toJLabel
+import org.cubewhy.celestial.utils.toJTextArea
 import org.slf4j.LoggerFactory
 import java.awt.Color
 import java.awt.GridBagConstraints
@@ -55,7 +64,7 @@ class GuiAddonManager : JPanel() {
     init {
         this.border = TitledBorder(
             null,
-            f.getString("gui.addons.title"),
+            t.getString("gui.addons.title"),
             TitledBorder.DEFAULT_JUSTIFICATION,
             TitledBorder.DEFAULT_POSITION,
             null,
@@ -104,9 +113,9 @@ class GuiAddonManager : JPanel() {
         val agentMenu = JPopupMenu()
         agentMenu.add(toggleAgent)
         agentMenu.add(toggleAgentClasspath)
-        val manageArg = JMenuItem(f.getString("gui.addon.agents.arg"))
-        val removeAgent = JMenuItem(f.getString("gui.addon.agents.remove"))
-        val renameAgent = JMenuItem(f.getString("gui.addon.rename"))
+        val manageArg = JMenuItem(t.getString("gui.addon.agents.arg"))
+        val removeAgent = JMenuItem(t.getString("gui.addon.agents.remove"))
+        val renameAgent = JMenuItem(t.getString("gui.addon.rename"))
         agentMenu.add(manageArg)
         agentMenu.add(renameAgent)
         agentMenu.addSeparator()
@@ -116,15 +125,15 @@ class GuiAddonManager : JPanel() {
             // open a dialog
             val currentAgent = jListAgents.selectedValue
             val newArg =
-                JOptionPane.showInputDialog(this, f.getString("gui.addon.agents.arg.message"), currentAgent.arg)
+                JOptionPane.showInputDialog(this, t.getString("gui.addon.agents.arg.message"), currentAgent.arg)
             if (newArg != null && currentAgent.arg != newArg) {
                 setArgFor(currentAgent, newArg)
                 if (newArg.isBlank()) {
                     GuiLauncher.statusBar.text =
-                        String.format(f.getString("gui.addon.agents.arg.remove.success"), currentAgent.file.name)
+                        String.format(t.getString("gui.addon.agents.arg.remove.success"), currentAgent.file.name)
                 } else {
                     GuiLauncher.statusBar.text = String.format(
-                        f.getString("gui.addon.agents.arg.set.success"),
+                        t.getString("gui.addon.agents.arg.set.success"),
                         currentAgent.file.name,
                         newArg
                     )
@@ -139,12 +148,12 @@ class GuiAddonManager : JPanel() {
             val name = currentAgent.file.name
             if (JOptionPane.showConfirmDialog(
                     this,
-                    f.format("gui.addon.agents.remove.confirm.message", name),
-                    f.getString("gui.addon.agents.remove.confirm.title"),
+                    t.format("gui.addon.agents.remove.confirm.message", name),
+                    t.getString("gui.addon.agents.remove.confirm.title"),
                     JOptionPane.OK_CANCEL_OPTION
                 ) == JOptionPane.OK_OPTION && currentAgent.file.delete()
             ) {
-                GuiLauncher.statusBar.text = f.format("gui.addon.agents.remove.success", name)
+                GuiLauncher.statusBar.text = t.format("gui.addon.agents.remove.success", name)
                 agentList.clear()
                 loadAgents()
             }
@@ -156,12 +165,12 @@ class GuiAddonManager : JPanel() {
             val name = file.name
             val newName = JOptionPane.showInputDialog(
                 this,
-                f.getString("gui.addon.rename.dialog.message"),
+                t.getString("gui.addon.rename.dialog.message"),
                 name.substring(0, name.length - 4)
             )
             if (newName != null && file.renameTo(File(file.parentFile, "$newName.jar"))) {
                 log.info("Rename agent $name -> $newName.jar")
-                GuiLauncher.statusBar.text = f.format("gui.addon.rename.success", newName)
+                GuiLauncher.statusBar.text = t.format("gui.addon.rename.success", newName)
                 // rename the name in the config
                 migrate(name, "$newName.jar")
                 agentList.clear()
@@ -173,8 +182,8 @@ class GuiAddonManager : JPanel() {
         // weave menu
         val weaveMenu = JPopupMenu()
         weaveMenu.add(toggleWeave)
-        val renameWeaveMod = JMenuItem(f.getString("gui.addon.rename"))
-        val removeWeaveMod = JMenuItem(f.getString("gui.addon.mods.weave.remove"))
+        val renameWeaveMod = JMenuItem(t.getString("gui.addon.rename"))
+        val removeWeaveMod = JMenuItem(t.getString("gui.addon.mods.weave.remove"))
         weaveMenu.add(renameWeaveMod)
         weaveMenu.addSeparator()
         weaveMenu.add(removeWeaveMod)
@@ -185,12 +194,12 @@ class GuiAddonManager : JPanel() {
             val name = file.name
             val newName = JOptionPane.showInputDialog(
                 this,
-                f.getString("gui.addon.rename.dialog.message"),
+                t.getString("gui.addon.rename.dialog.message"),
                 name.substring(0, name.length - 4)
             )
             if (newName != null && file.renameTo(File(file.parentFile, "$newName.jar"))) {
                 log.info(String.format("Rename weave mod %s -> %s", name, "$newName.jar"))
-                GuiLauncher.statusBar.text = f.format("gui.addon.rename.success", newName)
+                GuiLauncher.statusBar.text = t.format("gui.addon.rename.success", newName)
                 weaveList.clear()
                 loadWeaveMods()
             }
@@ -201,13 +210,13 @@ class GuiAddonManager : JPanel() {
             val name = currentMod.file.name
             if (JOptionPane.showConfirmDialog(
                     this,
-                    f.format("gui.addon.mods.weave.remove.confirm.message", name),
-                    f.getString("gui.addon.mods.weave.remove.confirm.title"),
+                    t.format("gui.addon.mods.weave.remove.confirm.message", name),
+                    t.getString("gui.addon.mods.weave.remove.confirm.title"),
                     JOptionPane.OK_CANCEL_OPTION
                 ) == JOptionPane.OK_OPTION && currentMod.file.delete()
             ) {
                 GuiLauncher.statusBar.text =
-                    String.format(f.getString("gui.addon.mods.weave.remove.success"), name)
+                    String.format(t.getString("gui.addon.mods.weave.remove.success"), name)
                 weaveList.clear()
                 loadWeaveMods()
             }
@@ -215,8 +224,8 @@ class GuiAddonManager : JPanel() {
 
         val lunarCNMenu = JPopupMenu()
         lunarCNMenu.add(toggleCN)
-        val renameLunarCNMod = JMenuItem(f.getString("gui.addon.rename"))
-        val removeLunarCNMod = JMenuItem(f.getString("gui.addon.mods.cn.remove"))
+        val renameLunarCNMod = JMenuItem(t.getString("gui.addon.rename"))
+        val removeLunarCNMod = JMenuItem(t.getString("gui.addon.mods.cn.remove"))
         lunarCNMenu.add(renameLunarCNMod)
         lunarCNMenu.addSeparator()
         lunarCNMenu.add(removeLunarCNMod)
@@ -227,12 +236,12 @@ class GuiAddonManager : JPanel() {
             val name = file.name
             val newName = JOptionPane.showInputDialog(
                 this,
-                f.getString("gui.addon.rename.dialog.message"),
+                t.getString("gui.addon.rename.dialog.message"),
                 name.substring(0, name.length - 4)
             )
             if (newName != null && file.renameTo(File(file.parentFile, "$newName.jar"))) {
                 log.info(String.format("Rename LunarCN mod %s -> %s", name, "$newName.jar"))
-                GuiLauncher.statusBar.text = String.format(f.getString("gui.addon.rename.success"), newName)
+                GuiLauncher.statusBar.text = String.format(t.getString("gui.addon.rename.success"), newName)
                 lunarcnList.clear()
                 loadLunarCNMods()
             }
@@ -243,20 +252,20 @@ class GuiAddonManager : JPanel() {
             val name = currentMod.file.name
             if (JOptionPane.showConfirmDialog(
                     this,
-                    String.format(f.getString("gui.addon.mods.cn.remove.confirm.message"), name),
-                    f.getString("gui.addon.mods.cn.remove.confirm.title"),
+                    String.format(t.getString("gui.addon.mods.cn.remove.confirm.message"), name),
+                    t.getString("gui.addon.mods.cn.remove.confirm.title"),
                     JOptionPane.OK_CANCEL_OPTION
                 ) == JOptionPane.OK_OPTION && currentMod.file.delete()
             ) {
-                GuiLauncher.statusBar.text = f.format("gui.addon.mods.cn.remove.success", name)
+                GuiLauncher.statusBar.text = t.format("gui.addon.mods.cn.remove.success", name)
                 lunarcnList.clear()
                 loadLunarCNMods()
             }
         }
 
         val fabricMenu = JPopupMenu()
-        val renameFabricMod = JMenuItem(f.getString("gui.addon.rename"))
-        val removeFabricMod = JMenuItem(f.getString("gui.addon.mods.fabric.remove"))
+        val renameFabricMod = JMenuItem(t.getString("gui.addon.rename"))
+        val removeFabricMod = JMenuItem(t.getString("gui.addon.mods.fabric.remove"))
 
         renameFabricMod.addActionListener {
             val currentMod = jListFabric.selectedValue
@@ -264,12 +273,12 @@ class GuiAddonManager : JPanel() {
             val name = file.name
             val newName = JOptionPane.showInputDialog(
                 this,
-                f.getString("gui.addon.rename.dialog.message"),
+                t.getString("gui.addon.rename.dialog.message"),
                 name.substring(0, name.length - 4)
             )
             if (newName != null && file.renameTo(File(file.parentFile, "$newName.jar"))) {
                 log.info(String.format("Rename Fabric mod %s -> %s", name, "$newName.jar"))
-                GuiLauncher.statusBar.text = String.format(f.getString("gui.addon.rename.success"), newName)
+                GuiLauncher.statusBar.text = String.format(t.getString("gui.addon.rename.success"), newName)
                 fabricList.clear()
                 loadFabricMods()
             }
@@ -280,13 +289,13 @@ class GuiAddonManager : JPanel() {
             val name = currentMod.file.name
             if (JOptionPane.showConfirmDialog(
                     this,
-                    f.format("gui.addon.mods.fabric.remove.confirm.message", name),
-                    f.getString("gui.addon.mods.fabric.remove.confirm.title"),
+                    t.format("gui.addon.mods.fabric.remove.confirm.message", name),
+                    t.getString("gui.addon.mods.fabric.remove.confirm.title"),
                     JOptionPane.OK_CANCEL_OPTION
                 ) == JOptionPane.OK_OPTION && currentMod.file.delete()
             ) {
                 GuiLauncher.statusBar.text =
-                    f.format("gui.addon.mods.fabric.remove.success", name)
+                    t.format("gui.addon.mods.fabric.remove.success", name)
                 fabricList.clear()
                 loadFabricMods()
             }
@@ -304,10 +313,10 @@ class GuiAddonManager : JPanel() {
 
 
         // buttons
-        val btnAddLunarCNMod = JButton(f.getString("gui.addon.mods.add"))
-        val btnAddWeaveMod = JButton(f.getString("gui.addon.mods.add"))
-        val btnAddFabric = JButton(f.getString("gui.addon.mods.add"))
-        val btnAddAgent = JButton(f.getString("gui.addon.agents.add"))
+        val btnAddLunarCNMod = JButton(t.getString("gui.addon.mods.add"))
+        val btnAddWeaveMod = JButton(t.getString("gui.addon.mods.add"))
+        val btnAddFabric = JButton(t.getString("gui.addon.mods.add"))
+        val btnAddAgent = JButton(t.getString("gui.addon.agents.add"))
 
         btnAddAgent.addActionListener {
             val file = chooseFile(FileNameExtensionFilter("Agent", "jar"))
@@ -315,19 +324,19 @@ class GuiAddonManager : JPanel() {
                 log.info("Cancel add agent because file == null")
                 return@addActionListener
             }
-            val arg = JOptionPane.showInputDialog(this, f.getString("gui.addon.agents.add.arg"))
+            val arg = JOptionPane.showInputDialog(this, t.getString("gui.addon.agents.add.arg"))
             try {
                 val agent = add(file, arg)
                 if (agent != null) {
                     // success
                     AddonAddEvent(AddonType.JAVAAGENT, agent)
-                    GuiLauncher.statusBar.text = f.getString("gui.addon.agents.add.success")
+                    GuiLauncher.statusBar.text = t.getString("gui.addon.agents.add.success")
                     agentList.clear()
                     loadAgents()
                 } else {
                     JOptionPane.showMessageDialog(
                         this,
-                        f.getString("gui.addon.agents.add.failure.exists"),
+                        t.getString("gui.addon.agents.add.failure.exists"),
                         "Error",
                         JOptionPane.ERROR_MESSAGE
                     )
@@ -337,7 +346,7 @@ class GuiAddonManager : JPanel() {
                 log.error(trace)
                 JOptionPane.showMessageDialog(
                     this,
-                    f.format("gui.addon.agents.add.failure.io", trace),
+                    t.format("gui.addon.agents.add.failure.io", trace),
                     "Error",
                     JOptionPane.ERROR_MESSAGE
                 )
@@ -347,10 +356,10 @@ class GuiAddonManager : JPanel() {
         btnAddWeaveMod.addActionListener {
             val file = chooseFile(FileNameExtensionFilter("Weave Mod", "jar")) ?: return@addActionListener
             try {
-                if (!(file.toJar().isMod(AddonType.WEAVE))) {
+                if (!(file.openAsJar().isMod(AddonType.WEAVE))) {
                     JOptionPane.showMessageDialog(
                         this,
-                        f.format("gui.addon.mods.incorrect", file),
+                        t.format("gui.addon.mods.incorrect", file),
                         "Warning | Type incorrect",
                         JOptionPane.WARNING_MESSAGE
                     )
@@ -359,13 +368,13 @@ class GuiAddonManager : JPanel() {
                 if (mod != null) {
                     // success
                     AddonAddEvent(AddonType.WEAVE, mod)
-                    GuiLauncher.statusBar.text = f.getString("gui.addon.mods.weave.add.success")
+                    GuiLauncher.statusBar.text = t.getString("gui.addon.mods.weave.add.success")
                     weaveList.clear()
                     loadWeaveMods()
                 } else {
                     JOptionPane.showMessageDialog(
                         this,
-                        f.getString("gui.addon.mods.weave.add.failure.exists"),
+                        t.getString("gui.addon.mods.weave.add.failure.exists"),
                         "Error",
                         JOptionPane.ERROR_MESSAGE
                     )
@@ -375,7 +384,7 @@ class GuiAddonManager : JPanel() {
                 log.error(trace)
                 JOptionPane.showMessageDialog(
                     this,
-                    f.format("gui.addon.mods.weave.add.failure.io", trace),
+                    t.format("gui.addon.mods.weave.add.failure.io", trace),
                     "Error",
                     JOptionPane.ERROR_MESSAGE
                 )
@@ -385,10 +394,10 @@ class GuiAddonManager : JPanel() {
         btnAddLunarCNMod.addActionListener {
             val file = chooseFile(FileNameExtensionFilter("LunarCN Mod", "jar")) ?: return@addActionListener
             try {
-                if (!(file.toJar().isMod(AddonType.LUNARCN))) {
+                if (!(file.openAsJar().isMod(AddonType.LUNARCN))) {
                     JOptionPane.showMessageDialog(
                         this,
-                        f.format("gui.addon.mods.incorrect", file),
+                        t.format("gui.addon.mods.incorrect", file),
                         "Warning | Type incorrect",
                         JOptionPane.WARNING_MESSAGE
                     )
@@ -397,13 +406,13 @@ class GuiAddonManager : JPanel() {
                 if (mod != null) {
                     // success
                     AddonAddEvent(AddonType.LUNARCN, mod)
-                    GuiLauncher.statusBar.text = f.getString("gui.addon.mods.cn.add.success")
+                    GuiLauncher.statusBar.text = t.getString("gui.addon.mods.cn.add.success")
                     weaveList.clear()
                     loadWeaveMods()
                 } else {
                     JOptionPane.showMessageDialog(
                         this,
-                        f.getString("gui.addon.mods.cn.add.failure.exists"),
+                        t.getString("gui.addon.mods.cn.add.failure.exists"),
                         "Error",
                         JOptionPane.ERROR_MESSAGE
                     )
@@ -413,7 +422,7 @@ class GuiAddonManager : JPanel() {
                 log.error(trace)
                 JOptionPane.showMessageDialog(
                     this,
-                    f.format("gui.addon.mods.cn.add.failure.io", trace),
+                    t.format("gui.addon.mods.cn.add.failure.io", trace),
                     "Error",
                     JOptionPane.ERROR_MESSAGE
                 )
@@ -431,13 +440,13 @@ class GuiAddonManager : JPanel() {
                 if (mod != null) {
                     // success
                     AddonAddEvent(AddonType.FABRIC, mod)
-                    GuiLauncher.statusBar.text = f.getString("gui.addon.mods.fabric.add.success")
+                    GuiLauncher.statusBar.text = t.getString("gui.addon.mods.fabric.add.success")
                     fabricList.clear()
                     loadFabricMods()
                 } else {
                     JOptionPane.showMessageDialog(
                         this,
-                        f.getString("gui.addon.mods.fabric.add.failure.exists"),
+                        t.getString("gui.addon.mods.fabric.add.failure.exists"),
                         "Error",
                         JOptionPane.ERROR_MESSAGE
                     )
@@ -447,7 +456,7 @@ class GuiAddonManager : JPanel() {
                 log.error(trace)
                 JOptionPane.showMessageDialog(
                     this,
-                    f.format("gui.addon.mods.fabric.add.failure.io", trace),
+                    t.format("gui.addon.mods.fabric.add.failure.io", trace),
                     "Error",
                     JOptionPane.ERROR_MESSAGE
                 )
@@ -462,7 +471,7 @@ class GuiAddonManager : JPanel() {
         val btnPanel1 = JPanel()
         btnPanel1.layout = BoxLayout(btnPanel1, BoxLayout.X_AXIS)
         btnPanel1.add(btnAddLunarCNMod)
-        btnPanel1.add(createButtonOpenFolder(f.getString("gui.addon.folder"), LunarCNMod.modFolder))
+        btnPanel1.add(createButtonOpenFolder(t.getString("gui.addon.folder"), LunarCNMod.modFolder))
         panelLunarCN.add(btnPanel1)
 
         val panelWeave = JPanel()
@@ -472,7 +481,7 @@ class GuiAddonManager : JPanel() {
         val btnPanel2 = JPanel()
         btnPanel2.layout = BoxLayout(btnPanel2, BoxLayout.X_AXIS)
         btnPanel2.add(btnAddWeaveMod)
-        btnPanel2.add(createButtonOpenFolder(f.getString("gui.addon.folder"), WeaveMod.modFolder))
+        btnPanel2.add(createButtonOpenFolder(t.getString("gui.addon.folder"), WeaveMod.modFolder))
         panelWeave.add(btnPanel2)
 
         val panelAgents = JPanel()
@@ -482,7 +491,7 @@ class GuiAddonManager : JPanel() {
         val btnPanel3 = JPanel()
         btnPanel3.layout = BoxLayout(btnPanel3, BoxLayout.X_AXIS)
         btnPanel3.add(btnAddAgent)
-        btnPanel3.add(createButtonOpenFolder(f.getString("gui.addon.folder"), JavaAgent.javaAgentFolder))
+        btnPanel3.add(createButtonOpenFolder(t.getString("gui.addon.folder"), JavaAgent.javaAgentFolder))
         panelAgents.add(btnPanel3)
 
         val panelFabric = JPanel()
@@ -493,7 +502,7 @@ class GuiAddonManager : JPanel() {
         val btnPanel4 = JPanel()
         btnPanel4.layout = BoxLayout(btnPanel4, BoxLayout.X_AXIS)
         //        btnPanel4.add(btnAddFabric);
-        btnPanel4.add(createButtonOpenFolder(f.getString("gui.addon.folder"), FabricMod.modFolder))
+        btnPanel4.add(createButtonOpenFolder(t.getString("gui.addon.folder"), FabricMod.modFolder))
         panelFabric.add(btnPanel4)
 
         val panelCelePatch = JPanel()
@@ -507,18 +516,18 @@ class GuiAddonManager : JPanel() {
         gbc.anchor = GridBagConstraints.CENTER
         // todo fix drag for Windows
 
-        panelCelePatch.add(f.getString("gui.addons.patch.drag").toJButton {
+        panelCelePatch.add(t.getString("gui.addons.patch.drag").toJButton {
             chooseFile(FileNameExtensionFilter("Celestial Patch", "jar"))?.let {
                 PatchDialog(panelCelePatch, it).isVisible = true
             }
         }, gbc)
 
-        tab.addTab(f.getString("gui.addons.agents"), panelAgents)
-        tab.addTab(f.getString("gui.addons.mods.cn"), panelLunarCN)
-        tab.addTab(f.getString("gui.addons.mods.weave"), panelWeave)
-        tab.addTab(f.getString("gui.addons.mods.fabric"), panelFabric)
+        tab.addTab(t.getString("gui.addons.agents"), panelAgents)
+        tab.addTab(t.getString("gui.addons.mods.cn"), panelLunarCN)
+        tab.addTab(t.getString("gui.addons.mods.weave"), panelWeave)
+        tab.addTab(t.getString("gui.addons.mods.fabric"), panelFabric)
 
-        tab.addTab(f.getString("gui.addons.patch"), panelCelePatch)
+        tab.addTab(t.getString("gui.addons.patch"), panelCelePatch)
 
         this.add(tab)
         tab.addChangeListener {
@@ -573,19 +582,19 @@ class GuiAddonManager : JPanel() {
                     list.selectedIndex = index
                     val current = list.selectedValue ?: return
                     if (current.isEnabled) {
-                        toggleWeave.text = f.getString("gui.addon.toggle.disable")
-                        toggleAgent.text = f.getString("gui.addon.toggle.disable")
-                        toggleCN.text = f.getString("gui.addon.toggle.disable")
+                        toggleWeave.text = t.getString("gui.addon.toggle.disable")
+                        toggleAgent.text = t.getString("gui.addon.toggle.disable")
+                        toggleCN.text = t.getString("gui.addon.toggle.disable")
                     } else {
-                        toggleWeave.text = f.getString("gui.addon.toggle.enable")
-                        toggleAgent.text = f.getString("gui.addon.toggle.enable")
-                        toggleCN.text = f.getString("gui.addon.toggle.enable")
+                        toggleWeave.text = t.getString("gui.addon.toggle.enable")
+                        toggleAgent.text = t.getString("gui.addon.toggle.enable")
+                        toggleCN.text = t.getString("gui.addon.toggle.enable")
                     }
                     if (current is JavaAgent) {
                         if (current.classpath) {
-                            toggleAgentClasspath.text = f.getString("gui.addon.agents.cp.disable")
+                            toggleAgentClasspath.text = t.getString("gui.addon.agents.cp.disable")
                         } else {
-                            toggleAgentClasspath.text = f.getString("gui.addon.agents.cp.enable")
+                            toggleAgentClasspath.text = t.getString("gui.addon.agents.cp.enable")
                         }
                     }
                     menu.show(list, e.x, e.y)
@@ -637,7 +646,7 @@ class GuiAddonManager : JPanel() {
 class PatchDialog(panel: JPanel, private val patch: File) : JDialog(SwingUtilities.getWindowAncestor(panel) as JFrame) {
 
     init {
-        this.title = f.getString("gui.addons.patch.title")
+        this.title = t.getString("gui.addons.patch.title")
         this.layout = VerticalFlowLayout()
         this.modalityType = ModalityType.APPLICATION_MODAL
         this.isLocationByPlatform = true
@@ -648,19 +657,19 @@ class PatchDialog(panel: JPanel, private val patch: File) : JDialog(SwingUtiliti
     }
 
     fun initGui() {
-        val gameDir = config.installationDir.toFile()
+        val gameDir = File(config.installationDir)
 
         this.add(patch.path.toJTextArea().readOnly())
-        this.add(f.getString("gui.addons.patch.warn").toJTextArea().readOnly())
+        this.add(t.getString("gui.addons.patch.warn").toJTextArea().readOnly())
         val lunarJar = gameDir.resolve("lunar.jar")
         if (!(gameDir.exists() || lunarJar.exists())) {
-            this.add(f.getString("gui.addons.patch.not-installed").toJLabel())
+            this.add(t.getString("gui.addons.patch.not-installed").toJLabel())
             return
         }
         if (!patch.isZipFile()) {
-            this.add(f.getString("gui.addons.patch.not-zip").toJLabel())
+            this.add(t.getString("gui.addons.patch.not-zip").toJLabel())
         }
-        this.add(JButton(f.getString("gui.addons.patch.confirm")).apply {
+        this.add(JButton(t.getString("gui.addons.patch.confirm")).apply {
             addActionListener { e ->
                 // java -jar patch.jar lunar.jar out.jar
                 val source = e.source<JButton>()
@@ -668,7 +677,7 @@ class PatchDialog(panel: JPanel, private val patch: File) : JDialog(SwingUtiliti
                 Thread {
                     val code = doPatch(lunarJar).start().waitFor()
                     source.text =
-                        if (code == 0) f.getString("gui.addons.patch.done") else f.getString("gui.addons.patch.fail")
+                        if (code == 0) t.getString("gui.addons.patch.done") else t.getString("gui.addons.patch.fail")
                 }.start()
             }
         })

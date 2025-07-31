@@ -13,12 +13,12 @@ import org.cubewhy.celestial.config
 import org.cubewhy.celestial.event.impl.CrashReportUploadEvent
 import org.cubewhy.celestial.game.AddonMeta
 import org.cubewhy.celestial.game.RemoteAddon
-import org.cubewhy.celestial.string
 import org.cubewhy.celestial.utils.CrashReportType
 import org.cubewhy.celestial.utils.OSEnum
 import org.cubewhy.celestial.utils.RequestUtils.get
 import org.cubewhy.celestial.utils.RequestUtils.post
 import org.cubewhy.celestial.utils.arch
+import org.cubewhy.celestial.utils.string
 import java.net.URI
 import java.net.URL
 import java.util.*
@@ -26,7 +26,7 @@ import java.util.*
 /**
  * Create a LauncherData instance with the official Launcher API
  */
-class LauncherData(val api: URI = URI.create("https://api.lunarclientprod.com")) {
+class LunarApiClient(val api: URI = URI.create("https://api.lunarclientprod.com")) {
     /**
      * Create a LauncherData instance with special API resource
      *

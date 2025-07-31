@@ -6,10 +6,8 @@
 
 package org.cubewhy.celestial.gui.elements
 
-import org.cubewhy.celestial.f
-import org.cubewhy.celestial.readOnly
-import org.cubewhy.celestial.toJLabel
-import org.cubewhy.celestial.toJTextArea
+import org.cubewhy.celestial.utils.readOnly
+import org.cubewhy.celestial.utils.toJTextArea
 import java.awt.Color
 import javax.swing.JPanel
 import javax.swing.JScrollPane

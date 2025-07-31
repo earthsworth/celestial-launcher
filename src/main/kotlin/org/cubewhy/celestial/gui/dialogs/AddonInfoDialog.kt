@@ -11,6 +11,11 @@ import org.cubewhy.celestial.files.DownloadManager
 import org.cubewhy.celestial.files.Downloadable
 import org.cubewhy.celestial.game.RemoteAddon
 import org.cubewhy.celestial.gui.layouts.VerticalFlowLayout
+import org.cubewhy.celestial.utils.forEachIsEnd
+import org.cubewhy.celestial.utils.format
+import org.cubewhy.celestial.utils.open
+import org.cubewhy.celestial.utils.toURI
+import org.cubewhy.celestial.utils.withScroller
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.awt.Color
@@ -32,7 +37,7 @@ class AddonInfoDialog(val addon: RemoteAddon, val file: File) : JDialog() {
     private val panel = JPanel()
 
     init {
-        this.title = f.getString("gui.plugins.info.title")
+        this.title = t.getString("gui.plugins.info.title")
         this.setSize(600, 600)
         this.panel.layout = VerticalFlowLayout()
         this.modalityType = ModalityType.APPLICATION_MODAL
@@ -41,11 +46,11 @@ class AddonInfoDialog(val addon: RemoteAddon, val file: File) : JDialog() {
     }
 
     private fun initGui() {
-        this.panel.add(JLabel(f.format("gui.plugins.info.name", addon.name)))
-        this.panel.add(JLabel(f.format("gui.plugins.info.category", addon.category)))
-        val exist = JLabel(f.getString("gui.plugins.exist"))
+        this.panel.add(JLabel(t.format("gui.plugins.info.name", addon.name)))
+        this.panel.add(JLabel(t.format("gui.plugins.info.category", addon.category)))
+        val exist = JLabel(t.getString("gui.plugins.exist"))
 
-        val btnDownload = JButton(f.getString("gui.plugins.download"))
+        val btnDownload = JButton(t.getString("gui.plugins.download"))
         btnDownload.addActionListener {
             DownloadManager.download(Downloadable(addon.downloadURL, file, addon.sha1))
             Thread {
@@ -68,29 +73,29 @@ class AddonInfoDialog(val addon: RemoteAddon, val file: File) : JDialog() {
         metaInfo.layout = VerticalFlowLayout(VerticalFlowLayout.LEFT)
         metaInfo.border = TitledBorder(
             null,
-            f.getString("gui.plugins.info.meta"),
+            t.getString("gui.plugins.info.meta"),
             TitledBorder.DEFAULT_JUSTIFICATION,
             TitledBorder.DEFAULT_POSITION,
             null,
             Color.orange
         )
         if (addon.meta == null) {
-            metaInfo.add(JLabel(f.getString("gui.plugins.info.meta.notfound")))
+            metaInfo.add(JLabel(t.getString("gui.plugins.info.meta.notfound")))
         } else {
             val meta = addon.meta
-            metaInfo.add(JLabel(f.format("gui.plugins.info.meta.name", meta.name)))
-            metaInfo.add(JLabel(f.format("gui.plugins.info.meta.version", meta.version)))
-            metaInfo.add(JLabel(f.format("gui.plugins.info.meta.description", meta.description)))
-            metaInfo.add(JLabel(f.format("gui.plugins.info.meta.authors", meta.authors.getAuthorsString())))
+            metaInfo.add(JLabel(t.format("gui.plugins.info.meta.name", meta.name)))
+            metaInfo.add(JLabel(t.format("gui.plugins.info.meta.version", meta.version)))
+            metaInfo.add(JLabel(t.format("gui.plugins.info.meta.description", meta.description)))
+            metaInfo.add(JLabel(t.format("gui.plugins.info.meta.authors", meta.authors.getAuthorsString())))
             if (meta.website != null) metaInfo.add(
                 createOpenWebsiteButton(
-                    f.getString("gui.plugins.info.meta.website"),
+                    t.getString("gui.plugins.info.meta.website"),
                     meta.website.toURI()
                 )
             )
             if (meta.repository != null) metaInfo.add(
                 createOpenWebsiteButton(
-                    f.getString("gui.plugins.info.meta.repo"),
+                    t.getString("gui.plugins.info.meta.repo"),
                     meta.repository.toURI()
                 )
             )
@@ -98,7 +103,7 @@ class AddonInfoDialog(val addon: RemoteAddon, val file: File) : JDialog() {
                 val dependencies = JTextArea()
                 dependencies.border = TitledBorder(
                     null,
-                    f.getString("gui.plugins.info.meta.dependencies"),
+                    t.getString("gui.plugins.info.meta.dependencies"),
                     TitledBorder.DEFAULT_JUSTIFICATION,
                     TitledBorder.DEFAULT_POSITION,
                     null,
@@ -106,8 +111,8 @@ class AddonInfoDialog(val addon: RemoteAddon, val file: File) : JDialog() {
                 )
                 dependencies.isEditable = false
                 val sb = StringBuilder()
-                meta.dependencies.forEachIsEnd { it, isEnd ->
-                    sb.append(it)
+                meta.dependencies.forEachIsEnd { item, isEnd ->
+                    sb.append(item)
                     if (!isEnd) sb.append("\n")
                 }
                 metaInfo.add(dependencies.withScroller())

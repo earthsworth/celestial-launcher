@@ -60,10 +60,10 @@ data class JavaagentConfiguration(
 
 
 enum class CloseFunction(val jsonValue: String, val text: String) {
-    NOTHING("nothing", f.getString("gui.settings.launcher.close-action.nothing")),
-    EXIT_JAVA("exitJava", f.getString("gui.settings.launcher.close-action.exit-java")),
-    TRAY("tray", f.getString("gui.settings.launcher.close-action.tray")),
-    REOPEN("reopen", f.getString("gui.settings.launcher.close-action.reopen"));
+    NOTHING("nothing", t.getString("gui.settings.launcher.close-action.nothing")),
+    EXIT_JAVA("exitJava", t.getString("gui.settings.launcher.close-action.exit-java")),
+    TRAY("tray", t.getString("gui.settings.launcher.close-action.tray")),
+    REOPEN("reopen", t.getString("gui.settings.launcher.close-action.reopen"));
 
     override fun toString() = text
 
@@ -99,7 +99,6 @@ data class BasicConfig(
     var jre: String = "", // // leave empty if you want to use the default one
     var language: Language = getLanguage(),
     var theme: String = "dark",
-    var dataSharing: Boolean = true,
     @SerialName("installation-dir")
     var installationDir: String = File(configDir, "game").path,
     @SerialName("game-dir")

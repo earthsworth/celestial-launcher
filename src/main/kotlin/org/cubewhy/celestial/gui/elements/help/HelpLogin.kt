@@ -6,14 +6,14 @@
 
 package org.cubewhy.celestial.gui.elements.help
 
-import org.cubewhy.celestial.f
+import org.cubewhy.celestial.t
 import org.cubewhy.celestial.gui.elements.HelpPage
-import org.cubewhy.celestial.readOnly
-import org.cubewhy.celestial.toJTextArea
+import org.cubewhy.celestial.utils.readOnly
+import org.cubewhy.celestial.utils.toJTextArea
 
-class HelpLogin : HelpPage(f.getString("gui.help.login.title")) {
+class HelpLogin : HelpPage(t.getString("gui.help.login.title")) {
 
     init {
-        this.add(f.getString("gui.help.login").toJTextArea().readOnly())
+        this.add(t.getString("gui.help.login").toJTextArea().readOnly())
     }
 }

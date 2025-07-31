@@ -9,11 +9,11 @@ import org.cubewhy.celestial.event.EventManager
 import org.cubewhy.celestial.event.EventTarget
 import org.cubewhy.celestial.event.impl.GameStartEvent
 import org.cubewhy.celestial.event.impl.GameTerminateEvent
-import org.cubewhy.celestial.f
+import org.cubewhy.celestial.t
 import org.cubewhy.celestial.gamePid
-import org.cubewhy.celestial.getInputStream
 import org.cubewhy.celestial.gui.dialogs.LogsDialog
-import org.cubewhy.celestial.toJLabel
+import org.cubewhy.celestial.utils.getInputStream
+import org.cubewhy.celestial.utils.toJLabel
 import java.awt.BorderLayout
 import javax.swing.*
 
@@ -25,7 +25,7 @@ class StatusBar : JPanel() {
     }
 
 
-    val dialog = LogsDialog(f.getString("gui.status.logs"))
+    val dialog = LogsDialog(t.getString("gui.status.logs"))
 
     init {
         EventManager.register(this)

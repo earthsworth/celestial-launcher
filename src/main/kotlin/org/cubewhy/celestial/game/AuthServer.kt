@@ -10,8 +10,8 @@ import co.gongzh.procbridge.Server
 import com.google.gson.JsonObject
 import launcher.Gameipc.*
 import org.cubewhy.celestial.event.impl.AuthEvent
-import org.cubewhy.celestial.open
-import org.cubewhy.celestial.toURI
+import org.cubewhy.celestial.utils.open
+import org.cubewhy.celestial.utils.toURI
 import org.java_websocket.WebSocket
 import org.java_websocket.handshake.ClientHandshake
 import org.java_websocket.server.WebSocketServer
@@ -125,6 +125,7 @@ class GameWebsocketServer(serverPort: Int = 28190) : WebSocketServer(InetSocketA
                 url.toURI().open()
             }
         }
+        // todo: refactor with the generated proto
         // todo handle radio
     }
 

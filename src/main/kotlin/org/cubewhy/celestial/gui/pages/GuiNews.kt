@@ -4,14 +4,14 @@ import cn.hutool.crypto.SecureUtil
 import org.cubewhy.celestial.event.EventManager
 import org.cubewhy.celestial.event.EventTarget
 import org.cubewhy.celestial.event.impl.APIReadyEvent
-import org.cubewhy.celestial.f
+import org.cubewhy.celestial.t
 import org.cubewhy.celestial.files.DownloadManager.cache
 import org.cubewhy.celestial.gui.LauncherAlert
 import org.cubewhy.celestial.gui.LauncherBirthday
 import org.cubewhy.celestial.gui.LauncherNews
 import org.cubewhy.celestial.metadata
-import org.cubewhy.celestial.toJLabel
 import org.cubewhy.celestial.utils.lunar.Blogpost
+import org.cubewhy.celestial.utils.toJLabel
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.awt.Color
@@ -19,7 +19,6 @@ import java.io.IOException
 import java.net.URL
 import java.time.LocalDate
 import java.time.temporal.ChronoUnit
-import javax.swing.BoxLayout
 import javax.swing.JLabel
 import javax.swing.JPanel
 import javax.swing.JScrollPane
@@ -34,7 +33,7 @@ class GuiNews : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCRO
         EventManager.register(this)
         this.border = TitledBorder(
             null,
-            f.getString("gui.news.title"),
+            t.getString("gui.news.title"),
             TitledBorder.DEFAULT_JUSTIFICATION,
             TitledBorder.DEFAULT_POSITION,
             null,
@@ -96,7 +95,7 @@ class GuiNews : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTAL_SCRO
                     log.error(e.stackTraceToString())
                 } catch (e: NullPointerException) {
                     // new API
-                    panel.add(JLabel(f.getString("gui.news.official")))
+                    panel.add(JLabel(t.getString("gui.news.official")))
                     log.warn("Failed to load news $imageURL")
                     log.error(e.stackTraceToString())
                 }

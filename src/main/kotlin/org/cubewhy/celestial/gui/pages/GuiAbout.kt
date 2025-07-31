@@ -6,10 +6,7 @@
 
 package org.cubewhy.celestial.gui.pages
 
-import org.cubewhy.celestial.config
-import org.cubewhy.celestial.f
-import org.cubewhy.celestial.readOnly
-import org.cubewhy.celestial.toJTextArea
+import org.cubewhy.celestial.t
 import org.cubewhy.celestial.utils.GitUtils.branch
 import org.cubewhy.celestial.utils.GitUtils.buildUser
 import org.cubewhy.celestial.utils.GitUtils.buildUserEmail
@@ -18,6 +15,8 @@ import org.cubewhy.celestial.utils.GitUtils.commitMessage
 import org.cubewhy.celestial.utils.GitUtils.commitTime
 import org.cubewhy.celestial.utils.GitUtils.getCommitId
 import org.cubewhy.celestial.utils.GitUtils.remote
+import org.cubewhy.celestial.utils.readOnly
+import org.cubewhy.celestial.utils.toJTextArea
 import java.awt.Color
 import javax.swing.BoxLayout
 import javax.swing.JPanel
@@ -29,41 +28,27 @@ class GuiAbout : JPanel() {
         this.name = "about"
         this.border = TitledBorder(
             null,
-            f.getString("gui.about.title"),
+            t.getString("gui.about.title"),
             TitledBorder.DEFAULT_JUSTIFICATION,
             TitledBorder.DEFAULT_POSITION,
             null,
             Color.orange
         )
-        val env = String.format(
-            """
-                
-                Celestial v%s (Running on Java %s)
-                Data sharing state: %s
+        val message = """
+                Celestial v${buildVersion} (Running on Java ${System.getProperty("java.version")})
                 -----
                 Git build info:
-                    Build user: %s
-                    Email: %s
-                    Remote (%s): %s
-                    Commit time: %s
-                    Commit: %s
-                    Commit Message: %s
+                    Build user: $buildUser
+                    Email: $buildUserEmail
+                    Remote ($branch): $remote
+                    Commit time: $commitTime
+                    Commit: ${getCommitId(true)}
+                    Commit Message: $commitMessage
                 
-                """.trimIndent(),
-            buildVersion,
-            System.getProperty("java.version"),
-            if (config.dataSharing) "turn on" else "turn off",
-            buildUser,
-            buildUserEmail,
-            branch,
-            remote,
-            commitTime,
-            getCommitId(true),
-            commitMessage
-        )
+                """.trimIndent()
 
         this.layout = BoxLayout(this, BoxLayout.Y_AXIS)
-        val textArea = (f.getString("gui.about") + "\n" + env).toJTextArea().readOnly()
+        val textArea = (t.getString("gui.about") + "\n" + message).toJTextArea().readOnly()
         this.add(textArea)
     }
 }

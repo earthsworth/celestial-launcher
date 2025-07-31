@@ -6,8 +6,8 @@
 
 package org.cubewhy.celestial.gui.elements
 
-import org.cubewhy.celestial.source
-import org.cubewhy.celestial.withScroller
+import org.cubewhy.celestial.utils.source
+import org.cubewhy.celestial.utils.withScroller
 import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.event.FocusAdapter

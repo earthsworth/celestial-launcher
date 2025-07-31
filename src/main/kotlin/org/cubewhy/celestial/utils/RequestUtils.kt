@@ -72,3 +72,6 @@ object RequestUtils {
         return post(url, JSON.encodeToString(map))
     }
 }
+
+val Response.string: String?
+    get() = this.body?.string()

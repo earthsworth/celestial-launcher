@@ -6,9 +6,9 @@
 
 package org.cubewhy.celestial.gui.pages
 
-import org.cubewhy.celestial.f
+import org.cubewhy.celestial.t
 import org.cubewhy.celestial.gui.elements.GuiAddonManager
-import org.cubewhy.celestial.gui.elements.GuiVersionSelect
+import org.cubewhy.celestial.gui.elements.GuiVersionList
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.awt.Color
@@ -20,7 +20,7 @@ class GuiVersion : JPanel() {
     init {
         this.border = TitledBorder(
             null,
-            f.getString("gui.version.title"),
+            t.getString("gui.version.title"),
             TitledBorder.DEFAULT_JUSTIFICATION,
             TitledBorder.DEFAULT_POSITION,
             null,
@@ -32,7 +32,7 @@ class GuiVersion : JPanel() {
 
 
     private fun initGui() {
-        this.add(GuiVersionSelect())
+        this.add(GuiVersionList())
         this.add(GuiAddonManager())
     }
 

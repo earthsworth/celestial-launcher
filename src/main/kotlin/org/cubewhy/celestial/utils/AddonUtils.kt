@@ -30,8 +30,7 @@ fun downloadLoader(repo: String, file: File): Boolean {
     var hash: String? = null
     var loader: URL? = null
     if (releaseEntity != null) {
-        val assetsArray = releaseEntity.assets.toTypedArray<Assets>()
-        for (assets in assetsArray) {
+        for (assets in releaseEntity.assets) {
             val url = URL(assets.browser_download_url)
             if (assets.name.endsWith(".jar")) {
                 loader = url

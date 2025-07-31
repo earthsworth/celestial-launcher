@@ -6,8 +6,8 @@
 
 package org.cubewhy.celestial.gui.dialogs
 
-import org.cubewhy.celestial.readOnly
-import org.cubewhy.celestial.withScroller
+import org.cubewhy.celestial.utils.readOnly
+import org.cubewhy.celestial.utils.withScroller
 import javax.swing.JDialog
 import javax.swing.JTextArea
 

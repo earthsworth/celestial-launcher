@@ -7,7 +7,7 @@ package org.cubewhy.celestial.game.addon
 
 import org.cubewhy.celestial.config
 import org.cubewhy.celestial.game.BaseAddon
-import org.cubewhy.celestial.toFile
+import org.cubewhy.celestial.utils.toFile
 import java.io.File
 import java.util.*
 

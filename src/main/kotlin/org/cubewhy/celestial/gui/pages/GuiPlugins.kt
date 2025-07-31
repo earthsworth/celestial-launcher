@@ -7,16 +7,16 @@ package org.cubewhy.celestial.gui.pages
 
 import org.cubewhy.celestial.event.EventTarget
 import org.cubewhy.celestial.event.impl.APIReadyEvent
-import org.cubewhy.celestial.f
-import org.cubewhy.celestial.launcherData
-import org.cubewhy.celestial.format
+import org.cubewhy.celestial.t
+import org.cubewhy.celestial.lunarApiClient
 import org.cubewhy.celestial.game.RemoteAddon
 import org.cubewhy.celestial.game.addon.JavaAgent
 import org.cubewhy.celestial.game.addon.LunarCNMod
 import org.cubewhy.celestial.game.addon.WeaveMod
 import org.cubewhy.celestial.gui.dialogs.AddonInfoDialog
 import org.cubewhy.celestial.gui.layouts.VerticalFlowLayout
-import org.cubewhy.celestial.withScroller
+import org.cubewhy.celestial.utils.format
+import org.cubewhy.celestial.utils.withScroller
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.awt.Color
@@ -35,7 +35,7 @@ class GuiPlugins : JPanel() {
     init {
         this.border = TitledBorder(
             null,
-            f.getString("gui.plugins.title"),
+            t.getString("gui.plugins.title"),
             TitledBorder.DEFAULT_JUSTIFICATION,
             TitledBorder.DEFAULT_POSITION,
             null,
@@ -57,7 +57,7 @@ class GuiPlugins : JPanel() {
         addTabs()
 
         // refresh addons
-        val btnRefresh = JButton(f.getString("gui.plugins.refresh"))
+        val btnRefresh = JButton(t.getString("gui.plugins.refresh"))
         btnRefresh.addActionListener {
             this.refresh()
         }
@@ -71,9 +71,9 @@ class GuiPlugins : JPanel() {
     }
 
     private fun addTabs() {
-        val addons: List<RemoteAddon>? = launcherData.plugins
+        val addons: List<RemoteAddon>? = lunarApiClient.plugins
         if (addons == null) {
-            this.add(JLabel(f.getString("gui.plugins.unsupported")))
+            this.add(JLabel(t.getString("gui.plugins.unsupported")))
             return
         }
         val panelWeave = JPanel()
@@ -119,7 +119,7 @@ class GuiPlugins : JPanel() {
     }
 
     private fun getInfoButton(addon: RemoteAddon, file: File): JButton {
-        val btn = JButton(f.format("gui.plugins.info", file.name))
+        val btn = JButton(t.format("gui.plugins.info", file.name))
         btn.addActionListener {
             log.info("Open plugin info dialog for " + addon.name)
             AddonInfoDialog(addon, file).isVisible = true // show info dialog

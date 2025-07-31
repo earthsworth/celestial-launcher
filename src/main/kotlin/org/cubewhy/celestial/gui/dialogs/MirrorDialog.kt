@@ -7,9 +7,9 @@ package org.cubewhy.celestial.gui.dialogs
 
 import cn.hutool.core.util.NumberUtil
 import org.cubewhy.celestial.config
-import org.cubewhy.celestial.f
+import org.cubewhy.celestial.t
 import org.cubewhy.celestial.gui.GuiLauncher
-import org.cubewhy.celestial.withScroller
+import org.cubewhy.celestial.utils.withScroller
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.awt.BorderLayout
@@ -22,7 +22,7 @@ class MirrorDialog : JDialog() {
     private lateinit var input: JTextArea
 
     init {
-        this.title = f.getString("gui.mirror.title")
+        this.title = t.getString("gui.mirror.title")
         this.setSize(600, 600)
         this.layout = BorderLayout()
         this.modalityType = ModalityType.APPLICATION_MODAL
@@ -34,7 +34,7 @@ class MirrorDialog : JDialog() {
         this.input = JTextArea(header)
         this.add(input.withScroller())
 
-        val btnCheckSyntax = JButton(f.getString("gui.mirror.syntax"))
+        val btnCheckSyntax = JButton(t.getString("gui.mirror.syntax"))
 
         btnCheckSyntax.addActionListener {
             log.info("Check syntax")
@@ -42,14 +42,14 @@ class MirrorDialog : JDialog() {
             if (status) {
                 JOptionPane.showMessageDialog(
                     this,
-                    f.getString("gui.mirror.syntax.pass"),
+                    t.getString("gui.mirror.syntax.pass"),
                     "Syntax check",
                     JOptionPane.INFORMATION_MESSAGE
                 )
             } else {
                 JOptionPane.showMessageDialog(
                     this,
-                    f.getString("gui.mirror.syntax.incorrect"),
+                    t.getString("gui.mirror.syntax.incorrect"),
                     "Syntax check",
                     JOptionPane.ERROR_MESSAGE
                 )
@@ -71,7 +71,7 @@ class MirrorDialog : JDialog() {
                 }
                 val json = asMap()
                 config.proxy.applyMirrors(json)
-                GuiLauncher.statusBar.text = f.getString("giu.mirror.success")
+                GuiLauncher.statusBar.text = t.getString("giu.mirror.success")
                 dispose() // close window
             }
         })
@@ -82,7 +82,7 @@ class MirrorDialog : JDialog() {
     private val header: String
         get() {
             val lines: Array<String> =
-                f.getString("gui.mirror.header").split("\n".toRegex()).dropLastWhile { it.isEmpty() }
+                t.getString("gui.mirror.header").split("\n".toRegex()).dropLastWhile { it.isEmpty() }
                     .toTypedArray()
             val sb = StringBuilder()
             for (line in lines) {

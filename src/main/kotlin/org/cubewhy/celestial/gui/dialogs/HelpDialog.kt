@@ -6,7 +6,7 @@
 
 package org.cubewhy.celestial.gui.dialogs
 
-import org.cubewhy.celestial.f
+import org.cubewhy.celestial.t
 import org.cubewhy.celestial.gui.elements.HelpPage
 import org.cubewhy.celestial.gui.elements.HelpPageX
 import org.cubewhy.celestial.gui.elements.SearchableList
@@ -23,7 +23,7 @@ import javax.swing.JPanel
 
 class HelpDialog : JDialog() {
     init {
-        this.title = f.getString("gui.help")
+        this.title = t.getString("gui.help")
         this.layout = BorderLayout()
         this.size = Dimension(600, 600)
         this.isLocationByPlatform = true

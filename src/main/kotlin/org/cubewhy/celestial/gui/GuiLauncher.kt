@@ -16,7 +16,10 @@ import org.cubewhy.celestial.event.impl.GameTerminateEvent
 import org.cubewhy.celestial.gui.dialogs.HelpDialog
 import org.cubewhy.celestial.gui.elements.StatusBar
 import org.cubewhy.celestial.utils.findJava
-import org.cubewhy.celestial.utils.lunar.LauncherData.Companion.getMainClass
+import org.cubewhy.celestial.utils.format
+import org.cubewhy.celestial.utils.getInputStream
+import org.cubewhy.celestial.utils.lunar.LunarApiClient.Companion.getMainClass
+import org.cubewhy.celestial.utils.open
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.awt.*
@@ -33,7 +36,7 @@ class GuiLauncher : JFrame() {
         EventManager.register(this)
 
         this.setBounds(100, 100, 1200, 700)
-        this.title = f.getString("gui.launcher.title")
+        this.title = t.getString("gui.launcher.title")
 
         // init icon
         this.resetIcon()
@@ -49,15 +52,13 @@ class GuiLauncher : JFrame() {
         this.add(statusBar, BorderLayout.SOUTH)
         // menu
         val menu = Panel()
-        val btnPrevious = JButton(f.getString("gui.previous"))
-        val btnNext = JButton(f.getString("gui.next"))
+        val btnPrevious = JButton(t.getString("gui.previous"))
+        val btnNext = JButton(t.getString("gui.next"))
         // For developers: It is not recommended to remove the Donate button in Celestial Launcher's derivative versions
-        // 不建议在衍生版本中删除赞助按钮
-        // Celestial 是免费开源的启动器, 请赞助来帮助我们走得更远 (收入会全部用于开发)
         // Celestial is an opensource launcher, please donate to let us go further (All money will be used for development)
-        val btnDonate = JButton(f.getString("gui.donate"))
-        val btnHelp = JButton(f.getString("gui.help"))
-        val btnDiscord = JButton(f.getString("gui.discord"))
+        val btnDonate = JButton(t.getString("gui.donate"))
+        val btnHelp = JButton(t.getString("gui.help"))
+        val btnDiscord = JButton(t.getString("gui.discord"))
         btnDonate.addActionListener {
             try {
                 URI.create("https://lunarclient.top/#/sponsor").open()
@@ -120,8 +121,8 @@ class GuiLauncher : JFrame() {
                 GameStartEvent(gamePid.get()).call()
                 JOptionPane.showMessageDialog(
                     this,
-                    f.format("gui.launcher.game.exist.message", pid),
-                    f.getString("gui.launcher.game.exist.title"),
+                    t.format("gui.launcher.game.exist.message", pid),
+                    t.getString("gui.launcher.game.exist.title"),
                     JOptionPane.INFORMATION_MESSAGE
                 )
                 java.detach()
@@ -168,13 +169,13 @@ class GuiLauncher : JFrame() {
 
     @EventTarget
     fun onAuth(e: AuthEvent) {
-        log.info("Request for login")
+        log.info("Request for Minecraft login")
         val clipboard = Toolkit.getDefaultToolkit().systemClipboard
         clipboard.setContents(StringSelection(e.authURL.toString()), null)
         val link = JOptionPane.showInputDialog(
             this,
-            f.getString("gui.launcher.auth.message"),
-            f.getString("gui.launcher.auth.title"),
+            t.getString("gui.launcher.auth.message"),
+            t.getString("gui.launcher.auth.title"),
             JOptionPane.QUESTION_MESSAGE
         )
         e.put(link)

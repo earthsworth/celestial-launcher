@@ -7,11 +7,11 @@ package org.cubewhy.celestial.utils.game
 
 import kotlinx.serialization.Serializable
 import org.cubewhy.celestial.JSON
-import org.cubewhy.celestial.string
 import org.cubewhy.celestial.utils.RequestUtils.get
+import org.cubewhy.celestial.utils.string
 import java.net.URL
 
-object MinecraftData {
+object MojangApiClient {
     private var versionManifest: URL = URL("https://launchermeta.mojang.com/mc/game/version_manifest_v2.json")
     var texture: URL = URL("https://resources.download.minecraft.net")
 
