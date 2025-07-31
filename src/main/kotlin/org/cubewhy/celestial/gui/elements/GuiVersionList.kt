@@ -16,7 +16,6 @@ import org.cubewhy.celestial.event.EventTarget
 import org.cubewhy.celestial.event.impl.APIReadyEvent
 import org.cubewhy.celestial.event.impl.GameStartEvent
 import org.cubewhy.celestial.event.impl.GameTerminateEvent
-import org.cubewhy.celestial.files.DownloadManager.waitForAll
 import org.cubewhy.celestial.game.GameProperties
 import org.cubewhy.celestial.game.LaunchCommandJson
 import org.cubewhy.celestial.game.addon.LunarCNMod
@@ -138,7 +137,7 @@ class GuiVersionList : JPanel() {
                 log.error(e.stackTraceToString())
             } catch (e: InterruptedException) {
                 log.error(e.stackTraceToString())
-            } catch (ignored: AttachNotSupportedException) {
+            } catch (_: AttachNotSupportedException) {
                 log.warn("Failed to attach to the game process")
             }
         }
@@ -255,7 +254,6 @@ class GuiVersionList : JPanel() {
 
         if (checkUpdate) {
             statusBar.text = t.getString("gui.addon.update")
-            waitForAll()
         }
     }
 
@@ -329,7 +327,6 @@ class GuiVersionList : JPanel() {
                     JOptionPane.ERROR_MESSAGE
                 )
             }
-            waitForAll()
             log.info("Everything is OK, starting game...")
             isLaunching = false
             launch(launchCommand).waitFor()

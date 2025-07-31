@@ -66,15 +66,6 @@ enum class CloseFunction(val jsonValue: String, val text: String) {
     REOPEN("reopen", t.getString("gui.settings.launcher.close-action.reopen"));
 
     override fun toString() = text
-
-    companion object {
-        fun findByJsonValue(value: String): CloseFunction? {
-            for (value1 in entries) {
-                if (value1.jsonValue == value) return value1
-            }
-            return null
-        }
-    }
 }
 
 @Serializable
@@ -103,8 +94,8 @@ data class BasicConfig(
     var installationDir: String = File(configDir, "game").path,
     @SerialName("game-dir")
     var game: GameConfiguration = GameConfiguration(),
-    @SerialName("max-threads")
-    var maxThreads: Int = Runtime.getRuntime().availableProcessors() * 2,
+//    @SerialName("max-threads")
+//    var maxThreads: Int = Runtime.getRuntime().availableProcessors() * 2,
     var addon: AddonConfiguration = AddonConfiguration(),
     var proxy: ProxyConfig = ProxyConfig(),
 

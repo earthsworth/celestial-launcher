@@ -19,31 +19,16 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.File
 import java.net.URL
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.TimeUnit
 
 object DownloadManager {
     val cacheDir: File = File(configDir, "cache")
     private val log: Logger = LoggerFactory.getLogger(DownloadManager::class.java)
-    private var pool: ExecutorService? = null
 
     init {
         if (!cacheDir.exists()) {
             cacheDir.mkdirs()
         }
     }
-
-
-    fun waitForAll() {
-        if (pool == null) return
-        pool!!.shutdown()
-        while (!pool!!.awaitTermination(1, TimeUnit.SECONDS)) {
-            Thread.onSpinWait()
-        }
-        // create a new pool (on invoking download)
-        pool = null
-    }
-
 
     /**
      * Cache something
@@ -113,7 +98,4 @@ object DownloadManager {
     }
 
 
-    suspend fun download(downloadable: Downloadable) {
-        downloadable.download()
-    }
 }

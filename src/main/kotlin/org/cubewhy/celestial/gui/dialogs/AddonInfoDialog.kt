@@ -10,7 +10,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.cubewhy.celestial.*
-import org.cubewhy.celestial.files.DownloadManager
 import org.cubewhy.celestial.files.Downloadable
 import org.cubewhy.celestial.game.RemoteAddon
 import org.cubewhy.celestial.gui.layouts.VerticalFlowLayout
@@ -56,15 +55,8 @@ class AddonInfoDialog(val addon: RemoteAddon, val file: File) : JDialog() {
         val btnDownload = JButton(t.getString("gui.plugins.download"))
         btnDownload.addActionListener {
             CoroutineScope(Dispatchers.IO).launch {
-                DownloadManager.download(Downloadable(addon.downloadURL, file, addon.sha1))
-                Thread {
-                    try {
-                        DownloadManager.waitForAll()
-                        exist.isVisible = file.exists()
-                    } catch (err: InterruptedException) {
-                        throw RuntimeException(err)
-                    }
-                }.start()
+                Downloadable(addon.downloadURL, file, addon.sha1).downloadAsync()
+                exist.isVisible = file.exists()
             }
 
         }

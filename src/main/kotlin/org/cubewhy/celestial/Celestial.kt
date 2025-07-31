@@ -11,11 +11,11 @@ import com.formdev.flatlaf.FlatLightLaf
 import com.formdev.flatlaf.IntelliJTheme
 import com.google.gson.Gson
 import com.google.gson.JsonParser
+import kotlinx.coroutines.Job
 import kotlinx.serialization.json.Json
 import org.apache.commons.io.FileUtils
 import org.cubewhy.celestial.event.impl.APIReadyEvent
 import org.cubewhy.celestial.event.impl.InitGuiEvent
-import org.cubewhy.celestial.files.DownloadManager
 import org.cubewhy.celestial.files.Downloadable
 import org.cubewhy.celestial.game.AuthServer
 import org.cubewhy.celestial.game.GameProperties
@@ -24,11 +24,11 @@ import org.cubewhy.celestial.game.addon.JavaAgent
 import org.cubewhy.celestial.gui.LauncherMainWindow
 import org.cubewhy.celestial.gui.elements.unzipUi
 import org.cubewhy.celestial.utils.*
-import org.cubewhy.celestial.utils.game.MojangApiClient
 import org.cubewhy.celestial.utils.game.MinecraftManifest
+import org.cubewhy.celestial.utils.game.MojangApiClient
 import org.cubewhy.celestial.utils.lunar.GameArtifactInfo
-import org.cubewhy.celestial.utils.lunar.LunarApiClient
 import org.cubewhy.celestial.utils.lunar.LauncherMetadata
+import org.cubewhy.celestial.utils.lunar.LunarApiClient
 import org.slf4j.LoggerFactory
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
@@ -53,10 +53,10 @@ val themesDir = File(configDir, "themes")
 val configFile = configDir.resolve("celestial.json")
 val config: BasicConfig = try {
     JSON.decodeFromString(configFile.readText())
-} catch (e: FileNotFoundException) {
+} catch (_: FileNotFoundException) {
     log.info("Config not found, creating a new one...")
     BasicConfig()
-} catch (e: Exception) {
+} catch (_: Exception) {
     log.info("Unexpected error detected, are you upgrading Celestial?")
     log.info("Creating a new config file...")
     BasicConfig()
@@ -194,11 +194,11 @@ private suspend fun run() {
     })
 }
 
-private class SwitchAPIDialog : JDialog() {
-    init {
-        this.title = t.getString("api.unreachable.title")
-    }
-}
+//private class SwitchAPIDialog : JDialog() {
+//    init {
+//        this.title = t.getString("api.unreachable.title")
+//    }
+//}
 
 private fun BasicConfig.save() {
     val string = JSON.encodeToString(BasicConfig.serializer(), this)
@@ -426,36 +426,45 @@ suspend fun getArgs(
  * @param branch  Git branch (LunarClient)
  */
 suspend fun checkUpdate(version: String, module: String, branch: String) {
+    val tasks = mutableListOf<Job>()
+
     log.info("Checking update")
     val installation = File(config.installationDir)
     val versionJson = lunarApiClient.launchVersion(version, branch, module)
     // download artifacts
     val artifacts = versionJson.launchTypeData.artifacts
     for (artifact in artifacts) {
+
         Downloadable(
             artifact.url.toURI().toURL(),
             File(installation, artifact.name),
             artifact.sha1
-        ).download()
+        ).download().also { job ->
+            tasks.add(job)
+        }
+
+
     }
 
     // download textures
     LunarApiClient.getLunarTexturesIndex(versionJson)!!.forEach { (fileName: String, urlString: String) ->
         downloadAssets(urlString, File(installation, "textures/$fileName"))
+            .also { job -> tasks.add(job) }
     }
     // download ui
     // (old api doesn't contain this feature)
     // ui html
     val uiZip = installation.resolve("ui.zip")
     versionJson.ui?.sourceUrl?.let {
-        DownloadManager.download(Downloadable(it.toURI().toURL(), uiZip, versionJson.ui.sourceSha1) { file ->
+        Downloadable(it.toURI().toURL(), uiZip, versionJson.ui.sourceSha1) { file ->
             // unzip the file
             file.unzipUi(installation)
-        })
+        }.download().also { job -> tasks.add(job) }
     }
     // ui assets
     LunarApiClient.getLunarUiAssetsIndex(versionJson).forEach { (fileName: String, urlString: String) ->
         downloadAssets(urlString, File(installation, "ui/assets/$fileName"))
+            .also { job -> tasks.add(job) }
     }
 
     val minecraftFolder = File(config.game.gameDir)
@@ -487,11 +496,13 @@ suspend fun checkUpdate(version: String, module: String, branch: String) {
         val folder = hash.substring(0, 2)
         val finalURL = String.format("%s/%s/%s", MojangApiClient.texture, folder, hash).toURI().toURL()
         val finalFile = File(assetsFolder, "objects/$folder/$hash")
-        DownloadManager.download(Downloadable(finalURL, finalFile, hash))
+        Downloadable(finalURL, finalFile, hash).download().also { job -> tasks.add(job) }
     }
+    // join tasks
+    tasks.forEach { it.join() }
 }
 
-private suspend fun downloadAssets(urlString: String, file: File) {
+private fun downloadAssets(urlString: String, file: File): Job {
     val url: URL
     try {
         url = urlString.toURI().toURL()
@@ -499,7 +510,7 @@ private suspend fun downloadAssets(urlString: String, file: File) {
         throw RuntimeException(e)
     }
     val full = urlString.split("/".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-    Downloadable(url, file, full[full.size - 1]).download();
+    return Downloadable(url, file, full[full.size - 1]).download()
 }
 
 private fun File.isReallyOfficial(): Boolean {

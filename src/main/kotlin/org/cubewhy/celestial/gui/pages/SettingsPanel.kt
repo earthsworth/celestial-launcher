@@ -303,10 +303,10 @@ class SettingsPanel : JScrollPane(panel, VERTICAL_SCROLLBAR_AS_NEEDED, HORIZONTA
                 )
                 panelLauncher.add(panelCeleWrap)*/
         // max-threads
-        val p7 = JPanel()
-        p7.add(JLabel(t.getString("gui.settings.launcher.max-threads")))
-        p7.add(getAutoSaveSpinner(config, "maxThreads", 1.0, 256.0, 1.0, true))
-        panelLauncher.add(p7)
+//        val p7 = JPanel()
+//        p7.add(JLabel(t.getString("gui.settings.launcher.max-threads")))
+//        p7.add(getAutoSaveSpinner(config, "maxThreads", 1.0, 256.0, 1.0, true))
+//        panelLauncher.add(p7)
         // installation-dir
         val p8 = JPanel()
         p8.add(JLabel(t.getString("gui.settings.launcher.installation")))
