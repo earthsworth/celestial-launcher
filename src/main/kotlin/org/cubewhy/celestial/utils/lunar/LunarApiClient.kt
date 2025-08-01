@@ -47,12 +47,12 @@ class LunarApiClient(val api: URI = URI.create("https://api.lunarclientprod.com"
                 assert(response.code == 200) {
                     "Code = " + response.code
                 }
-                return JSON.decodeFromString(response.body.stringAsync()!!)
+                return JSON.decodeFromString(response.body.stringAsync())
             }
     }
 
 
-    suspend fun launchVersion(version: String, branch: String, module: String): GameArtifactInfo {
+    suspend fun launchVersion(version: String, branch: String, module: String): GameArtifactManifest {
         val map = mapOf(
             "installation_id" to UUID.randomUUID().toString(), // fake uuid
             "overwolf_muid" to UUID.randomUUID().toString(),
@@ -127,7 +127,7 @@ class LunarApiClient(val api: URI = URI.create("https://api.lunarclientprod.com"
          * @param json Json of the special LunarClient instance
          * @return main class of the LunarClient instance
          */
-        fun getMainClass(json: GameArtifactInfo? = null): String =
+        fun getMainClass(json: GameArtifactManifest? = null): String =
             json?.launchTypeData?.mainClass ?: "com.moonsworth.lunar.genesis.Genesis"
 
         suspend fun checkConnective(api: String): Boolean {
@@ -139,7 +139,7 @@ class LunarApiClient(val api: URI = URI.create("https://api.lunarclientprod.com"
             }
         }
 
-        fun getDefaultJvmArgs(json: GameArtifactInfo): List<String> {
+        fun getDefaultJvmArgs(json: GameArtifactManifest): List<String> {
             val out: MutableList<String> = ArrayList()
             for (arg in json.jre.extraArguments) {
                 // block sentry
@@ -220,14 +220,14 @@ class LunarApiClient(val api: URI = URI.create("https://api.lunarclientprod.com"
          * @param version version info
          * @return textures' index
          */
-        suspend fun getLunarTexturesIndex(version: GameArtifactInfo): Map<String, String>? {
+        suspend fun getLunarTexturesIndex(version: GameArtifactManifest): Map<String, String>? {
             val indexUrl = version.textures.indexUrl
             // get index json
             val baseUrl = version.textures.baseUrl
             return getIndex(baseUrl, indexUrl)
         }
 
-        suspend fun getLunarUiAssetsIndex(version: GameArtifactInfo): Map<String, String> {
+        suspend fun getLunarUiAssetsIndex(version: GameArtifactManifest): Map<String, String> {
             if (version.ui == null) return emptyMap() // there's no ui files for old LC
             return getIndex(version.ui.assets.baseUrl, version.ui.assets.indexUrl)
         }
@@ -245,7 +245,6 @@ class LunarApiClient(val api: URI = URI.create("https://api.lunarclientprod.com"
                 }
                 return map
             }
-            return emptyMap()
         }
     }
 }
@@ -267,7 +266,7 @@ data class LunarSubVersion(
 )
 
 @Serializable
-data class GameArtifactInfo(
+data class GameArtifactManifest(
     val launchTypeData: LaunchTypeData,
     val textures: Textures,
     val jre: RuntimeInfo,

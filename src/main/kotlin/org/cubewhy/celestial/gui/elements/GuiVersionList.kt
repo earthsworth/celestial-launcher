@@ -23,7 +23,7 @@ import org.cubewhy.celestial.game.addon.WeaveMod
 import org.cubewhy.celestial.game.thirdparty.LunarQT
 import org.cubewhy.celestial.gui.LauncherMainWindow.Companion.statusBar
 import org.cubewhy.celestial.utils.*
-import org.cubewhy.celestial.utils.lunar.GameArtifactInfo
+import org.cubewhy.celestial.utils.lunar.GameArtifactManifest
 import org.cubewhy.celestial.utils.lunar.LunarApiClient.Companion.getMainClass
 import org.cubewhy.celestial.utils.lunar.LunarApiClient.Companion.getSupportModules
 import org.cubewhy.celestial.utils.lunar.LunarApiClient.Companion.getSupportVersions
@@ -187,7 +187,7 @@ class GuiVersionList : JPanel() {
                     log.info("Fetch OK! Dumping to ${file1.path}")
                     FileUtils.write(
                         file1,
-                        JSON.encodeToString(GameArtifactInfo.serializer(), json),
+                        JSON.encodeToString(GameArtifactManifest.serializer(), json),
                         StandardCharsets.UTF_8
                     )
                 }

@@ -27,7 +27,7 @@ import org.cubewhy.celestial.gui.elements.updateStatusText
 import org.cubewhy.celestial.utils.*
 import org.cubewhy.celestial.utils.game.MinecraftManifest
 import org.cubewhy.celestial.utils.game.MojangApiClient
-import org.cubewhy.celestial.utils.lunar.GameArtifactInfo
+import org.cubewhy.celestial.utils.lunar.GameArtifactManifest
 import org.cubewhy.celestial.utils.lunar.LauncherMetadata
 import org.cubewhy.celestial.utils.lunar.LunarApiClient
 import org.slf4j.LoggerFactory
@@ -380,22 +380,22 @@ suspend fun getArgs(
     val natives = mutableListOf<File>()
     for (artifact in json.launchTypeData.artifacts) {
         when (artifact.type) {
-            GameArtifactInfo.Artifact.ArtifactType.CLASS_PATH -> {
+            GameArtifactManifest.Artifact.ArtifactType.CLASS_PATH -> {
                 // is ClassPath
                 classpath.add(installation.resolve(artifact.name))
             }
 
-            GameArtifactInfo.Artifact.ArtifactType.EXTERNAL_FILE -> {
+            GameArtifactManifest.Artifact.ArtifactType.EXTERNAL_FILE -> {
                 // is external file
                 ichorPath.add(installation.resolve(artifact.name))
             }
 
-            GameArtifactInfo.Artifact.ArtifactType.NATIVES -> {
+            GameArtifactManifest.Artifact.ArtifactType.NATIVES -> {
                 // natives
                 natives.add(installation.resolve(artifact.name))
             }
 
-            GameArtifactInfo.Artifact.ArtifactType.JAVAAGENT -> {
+            GameArtifactManifest.Artifact.ArtifactType.JAVAAGENT -> {
                 javaAgents.add(JavaAgent(installation.resolve(artifact.name)))
             }
         }
