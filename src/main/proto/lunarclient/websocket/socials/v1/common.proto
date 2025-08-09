@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package lunarclient.websocket.socials.v1;
+
+import "google/protobuf/timestamp.proto";
+import "lunarclient/common/v1/social.proto";
+
+option java_package = "com.lunarclient.websocket.socials.v1";
+option java_outer_classname = "CommonProto";
+option java_multiple_files = true;
+
+message LinkedSocialCommunity {
+  bool is_member = 1;
+  google.protobuf.Timestamp joined_at = 2;
+  google.protobuf.Timestamp left_at = 3;
+}
+
+message LinkedSocial {
+  lunarclient.common.v1.UserSocial social = 1;
+  google.protobuf.Timestamp linked_at = 2;
+  lunarclient.websocket.socials.v1.LinkedSocialCommunity community = 3;
+}
+
+
+enum SocialsVisibility {
+  SOCIALS_VISIBILITY_UNSPECIFIED = 0;
+  SOCIALS_VISIBILITY_FRIENDS = 1;
+  SOCIALS_VISIBILITY_NOONE = 2;
+}
+
+

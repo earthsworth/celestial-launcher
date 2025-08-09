@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package lunarclient.websocket.friend.v1;
+
+import "lunarclient/common/v1/color.proto";
+import "lunarclient/common/v1/radio.proto";
+import "lunarclient/common/v1/uuid.proto";
+import "lunarclient/websocket/friend/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.friend.v1";
+option java_outer_classname = "PushProto";
+option java_multiple_files = true;
+
+message FriendStatusPush {
+  oneof friend {
+    lunarclient.websocket.friend.v1.OnlineFriend online_friend = 1;
+    lunarclient.websocket.friend.v1.OfflineFriend offline_friend = 2;
+  }
+}
+
+message FriendRadioInfoPush {
+  lunarclient.common.v1.Uuid friend_uuid = 1;
+  lunarclient.common.v1.RadioInfo radio_info = 2;
+}
+
+message FriendRemovedYouPush {
+  lunarclient.common.v1.Uuid friend_uuid = 1;
+}
+
+message FriendRequestReceivedPush {
+  lunarclient.common.v1.UuidAndUsername sender = 1;
+  lunarclient.common.v1.Color sender_logo_color = 3;
+  lunarclient.common.v1.Color sender_plus_color = 4;
+  string sender_rank_name = 5;
+}
+
+message FriendRequestAcceptedPush {
+  lunarclient.common.v1.Uuid new_friend_uuid = 1;
+  lunarclient.common.v1.UuidAndUsername new_friend = 2;
+}
+
+message FriendRequestDeniedPush {
+  lunarclient.common.v1.Uuid denier_uuid = 1;
+}
+
+message FriendRequestCanceledPush {
+  lunarclient.common.v1.Uuid sender_uuid = 1;
+}
+
+
+

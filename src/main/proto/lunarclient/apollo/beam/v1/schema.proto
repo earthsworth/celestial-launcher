@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package lunarclient.apollo.beam.v1;
+
+import "lunarclient/apollo/common/v1/color.proto";
+import "lunarclient/apollo/common/v1/location.proto";
+
+option java_package = "com.lunarclient.apollo.beam.v1";
+option java_outer_classname = "SchemaProto";
+option java_multiple_files = true;
+
+message DisplayBeaconBeamMessage {
+  string id = 1;
+  lunarclient.apollo.common.v1.Color color = 2;
+  lunarclient.apollo.common.v1.BlockLocation location = 3;
+}
+
+message RemoveBeaconBeamMessage {
+  string id = 1;
+}
+
+message ResetBeaconBeamsMessage {
+}
+
+
+

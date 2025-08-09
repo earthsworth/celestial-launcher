@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package lunarclient.gameipc.launch.v1;
+
+import "lunarclient/common/v1/modpack.proto";
+
+option java_package = "com.lunarclient.gameipc.launch.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message LaunchGameRequest {
+  string version = 1;
+  string module = 2;
+  string auto_join_server_ip = 3;
+  lunarclient.gameipc.launch.v1.LaunchGameRequest.LaunchSource launch_source = 4;
+  lunarclient.common.v1.PlayerModpack modpack = 5;
+
+  enum LaunchSource {
+    LAUNCH_SOURCE_UNSPECIFIED = 0;
+    LAUNCH_SOURCE_MAIN_MENU_SWITCHER = 1;
+    LAUNCH_SOURCE_SERVER_KICK_PROMPT = 2;
+    LAUNCH_SOURCE_SERVER_MODPACK_RECOMMENDATION = 3;
+  }
+}
+
+message LaunchGameResponse {
+}
+
+
+

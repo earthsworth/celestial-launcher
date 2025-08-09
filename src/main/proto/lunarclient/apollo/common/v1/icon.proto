@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package lunarclient.apollo.common.v1;
+
+
+option java_package = "com.lunarclient.apollo.common.v1";
+option java_outer_classname = "IconProto";
+option java_multiple_files = true;
+
+message ItemStackIcon {
+  oneof item {
+    int32 item_id = 1;
+    string item_name = 2;
+  }
+  int32 custom_model_data = 3;
+}
+
+message SimpleResourceLocationIcon {
+  string resource_location = 1;
+  int32 size = 2;
+}
+
+message AdvancedResourceLocationIcon {
+  string resource_location = 1;
+  float width = 2;
+  float height = 3;
+  float min_u = 4;
+  float max_u = 5;
+  float min_v = 6;
+  float max_v = 7;
+}
+
+message Icon {
+  oneof contents {
+    lunarclient.apollo.common.v1.ItemStackIcon item_stack = 1;
+    lunarclient.apollo.common.v1.SimpleResourceLocationIcon simple_resource_location = 2;
+    lunarclient.apollo.common.v1.AdvancedResourceLocationIcon advanced_resource_location = 3;
+  }
+}
+
+
+

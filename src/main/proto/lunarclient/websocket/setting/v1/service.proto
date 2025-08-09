@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package lunarclient.websocket.setting.v1;
+
+import "lunarclient/websocket/protocol/v1/common.proto";
+import "lunarclient/websocket/setting/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.setting.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message UpdateLauncherSettingRequest {
+  lunarclient.websocket.setting.v1.LauncherSetting setting = 1;
+  lunarclient.websocket.setting.v1.UpdateLauncherSettingRequest.Initiator initiator = 2;
+
+  enum Initiator {
+    INITIATOR_UNSPECIFIED = 0;
+    INITIATOR_RESET = 1;
+    INITIATOR_SET = 2;
+  }
+}
+
+message UpdateLauncherSettingResponse {
+}
+
+message UpdateClientSettingRequest {
+  lunarclient.websocket.setting.v1.ClientSetting setting = 1;
+  lunarclient.websocket.setting.v1.UpdateClientSettingRequest.Initiator initiator = 2;
+
+  enum Initiator {
+    INITIATOR_UNSPECIFIED = 0;
+    INITIATOR_RESET = 1;
+    INITIATOR_SET = 2;
+  }
+}
+
+message UpdateClientSettingResponse {
+}
+
+
+

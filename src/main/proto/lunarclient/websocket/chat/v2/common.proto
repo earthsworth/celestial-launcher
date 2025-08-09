@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package lunarclient.websocket.chat.v2;
+
+import "google/protobuf/timestamp.proto";
+import "lunarclient/common/v1/uuid.proto";
+
+option java_package = "com.lunarclient.websocket.chat.v2";
+option java_outer_classname = "CommonProto";
+option java_multiple_files = true;
+
+message ChatRef {
+  oneof target {
+    lunarclient.common.v1.Uuid chat_id = 1;
+    lunarclient.common.v1.Uuid friend_uuid = 2;
+  }
+}
+
+message ChatMessageContents {
+  optional string plain_text = 1;
+}
+
+message ChatMessage {
+  lunarclient.common.v1.Uuid chat_message_id = 1;
+  google.protobuf.Timestamp sent_at = 2;
+  lunarclient.common.v1.Uuid sender = 3;
+  lunarclient.websocket.chat.v2.ChatMessageContents contents = 4;
+}
+
+message Chat {
+  lunarclient.websocket.chat.v2.ChatRef chat_id = 1;
+  repeated lunarclient.common.v1.UuidAndUsername participants = 2;
+  lunarclient.websocket.chat.v2.ChatType type = 3;
+  repeated lunarclient.websocket.chat.v2.ChatMessage recent_messages = 4;
+}
+
+
+enum ChatType {
+  CHAT_TYPE_UNSPECIFIED = 0;
+  CHAT_TYPE_FRIEND = 1;
+}
+
+

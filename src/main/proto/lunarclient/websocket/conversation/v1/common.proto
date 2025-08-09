@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package lunarclient.websocket.conversation.v1;
+
+import "google/protobuf/timestamp.proto";
+import "lunarclient/common/v1/uuid.proto";
+
+option java_package = "com.lunarclient.websocket.conversation.v1";
+option java_outer_classname = "CommonProto";
+option java_multiple_files = true;
+
+message ConversationReference {
+  optional lunarclient.common.v1.Uuid friend_uuid = 1;
+}
+
+message ConversationSender {
+  optional lunarclient.common.v1.UuidAndUsername player = 1;
+}
+
+message ConversationMessageContents {
+  optional string plain_text = 1;
+}
+
+message ConversationMessage {
+  lunarclient.common.v1.Uuid id = 1;
+  google.protobuf.Timestamp sent_at = 2;
+  lunarclient.websocket.conversation.v1.ConversationSender sender = 3;
+  lunarclient.websocket.conversation.v1.ConversationMessageContents contents = 4;
+}
+
+
+enum PreSendAction {
+  PRE_SEND_ACTION_UNSPECIFIED = 0;
+  PRE_SEND_ACTION_NONE = 1;
+  PRE_SEND_ACTION_TYPING = 2;
+}
+
+

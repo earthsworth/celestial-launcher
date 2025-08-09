@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package lunarclient.websocket.chat.v1;
+
+import "lunarclient/common/v1/uuid.proto";
+import "lunarclient/websocket/protocol/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.chat.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message SendChatRequest {
+  lunarclient.common.v1.Uuid target_uuid = 1;
+  string chat_message = 2;
+}
+
+message SendChatResponse {
+}
+
+
+

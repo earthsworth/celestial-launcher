@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package lunarclient.apollo.staffmod.v1;
+
+
+option java_package = "com.lunarclient.apollo.staffmod.v1";
+option java_outer_classname = "SchemaProto";
+option java_multiple_files = true;
+
+message EnableStaffModsMessage {
+  repeated lunarclient.apollo.staffmod.v1.StaffMod staff_mods = 1;
+}
+
+message DisableStaffModsMessage {
+  repeated lunarclient.apollo.staffmod.v1.StaffMod staff_mods = 1;
+}
+
+
+enum StaffMod {
+  STAFF_MOD_UNSPECIFIED = 0;
+  STAFF_MOD_XRAY = 1;
+}
+
+

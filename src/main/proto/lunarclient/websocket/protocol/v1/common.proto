@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package lunarclient.websocket.protocol.v1;
+
+import "google/protobuf/any.proto";
+import "google/protobuf/descriptor.proto";
+
+option java_package = "com.lunarclient.websocket.protocol.v1";
+option java_outer_classname = "CommonProto";
+option java_multiple_files = true;
+
+message ServerboundWebSocketMessage {
+  bytes request_id = 1;
+  string service = 2;
+  string method = 3;
+  bytes input = 4;
+}
+
+message ClientboundWebSocketMessage {
+  oneof contents {
+    lunarclient.websocket.protocol.v1.WebSocketRpcResponse rpc_response = 1;
+    google.protobuf.Any push_notification = 2;
+  }
+}
+
+message WebSocketRpcResponse {
+  bytes request_id = 1;
+  bytes output = 2;
+}
+
+
+enum AllowedSender {
+  ALLOWED_SENDER_UNSPECIFIED = 0;
+  ALLOWED_SENDER_AUTHENTICATED_GAME = 1;
+  ALLOWED_SENDER_AUTHENTICATED_LAUNCHER = 2;
+  ALLOWED_SENDER_AUTHENTICATED_GAME_OR_LAUNCHER = 3;
+}
+
+

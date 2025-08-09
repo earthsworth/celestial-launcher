@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package lunarclient.apollo.evnt.v1;
+
+import "lunarclient/apollo/common/v1/color.proto";
+import "lunarclient/apollo/common/v1/uuid.proto";
+
+option java_package = "com.lunarclient.apollo.evnt.v1";
+option java_outer_classname = "CharacterProto";
+option java_multiple_files = true;
+
+message CharacterAbilityMessage {
+  lunarclient.apollo.evnt.v1.CharacterType character_type = 1;
+  repeated string abilities_adventure = 2;
+}
+
+message OverrideCharacterCosmeticMessage {
+  lunarclient.apollo.common.v1.Uuid player_uuid = 1;
+  lunarclient.apollo.evnt.v1.CharacterType character_type = 2;
+  string suit_name = 3;
+}
+
+message OverrideCharacterAbilityMessage {
+  repeated lunarclient.apollo.evnt.v1.CharacterAbilityMessage abilities = 1;
+}
+
+message OverrideCharacterMessage {
+  lunarclient.apollo.evnt.v1.CharacterType character_type = 1;
+  lunarclient.apollo.common.v1.Uuid player_uuid = 2;
+  lunarclient.apollo.common.v1.Color color = 3;
+  bool equipped = 4;
+  string suit_name = 5;
+}
+
+
+enum CharacterType {
+  CHARACTER_TYPE_UNSPECIFIED = 0;
+  CHARACTER_TYPE_ANGEL = 1;
+  CHARACTER_TYPE_AXEL = 2;
+  CHARACTER_TYPE_BANJAX = 3;
+  CHARACTER_TYPE_DAEDRA = 4;
+  CHARACTER_TYPE_FROSKA = 5;
+  CHARACTER_TYPE_GRANNY = 6;
+  CHARACTER_TYPE_GREAT_MAGE = 7;
+  CHARACTER_TYPE_IGNUS = 8;
+  CHARACTER_TYPE_TULABOT = 9;
+  CHARACTER_TYPE_SIR_BLOCK = 10;
+  CHARACTER_TYPE_HARMONY = 11;
+}
+
+

@@ -1,0 +1,133 @@
+syntax = "proto3";
+
+package lunarclient.websocket.hostedworld.v1;
+
+import "lunarclient/common/v1/color.proto";
+import "lunarclient/common/v1/uuid.proto";
+import "lunarclient/common/v1/version.proto";
+import "lunarclient/websocket/hostedworld/v1/common.proto";
+import "lunarclient/websocket/protocol/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.hostedworld.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message LoginRequest {
+}
+
+message LoginResponse {
+  bool hosting_enabled = 1;
+  bool joining_enabled = 2;
+  int32 max_world_player_count = 3;
+  repeated lunarclient.websocket.hostedworld.v1.AddressAndPort ping_requests = 4;
+  int32 multiplayer_refresh_interval_seconds = 5;
+}
+
+message StartHostingWorldRequest {
+  lunarclient.websocket.hostedworld.v1.Heartbeat heartbeat = 1;
+}
+
+message StartHostingWorldResponse {
+  lunarclient.websocket.hostedworld.v1.StartHostingWorldResponse.Status status = 1;
+  string join_ip = 2;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+    STATUS_ALREADY_HOSTING_WORLD = 2;
+    STATUS_HOSTING_DISABLED = 3;
+  }
+}
+
+message StopHostingWorldRequest {
+}
+
+message StopHostingWorldResponse {
+  lunarclient.websocket.hostedworld.v1.StopHostingWorldResponse.Status status = 1;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+    STATUS_NOT_HOSTING_WORLD = 2;
+  }
+}
+
+message HostedWorldHeartbeatRequest {
+  lunarclient.websocket.hostedworld.v1.Heartbeat heartbeat = 1;
+}
+
+message HostedWorldHeartbeatResponse {
+  lunarclient.websocket.hostedworld.v1.HostedWorldHeartbeatResponse.Status status = 1;
+  repeated lunarclient.websocket.hostedworld.v1.AddressAndPort relays_to_ping = 2;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+    STATUS_NOT_HOSTING_WORLD = 2;
+  }
+}
+
+message ListHostedWorldsRequest {
+}
+
+message ListHostedWorldsResponse {
+  repeated lunarclient.websocket.hostedworld.v1.ListHostedWorldsResponse.HostedWorld hosted_worlds = 1;
+
+  message HostedWorld {
+    lunarclient.common.v1.UuidAndUsername host = 1;
+    lunarclient.common.v1.MinecraftVersion minecraft_version = 2;
+    lunarclient.websocket.hostedworld.v1.Joinability joinability = 3;
+    int32 online_players = 4;
+    int32 max_players = 5;
+    repeated lunarclient.common.v1.UuidAndUsername sample_players = 6;
+    bool lunar_plus_boost = 7;
+    lunarclient.common.v1.Color logo_color = 8;
+    lunarclient.common.v1.Color plus_color = 9;
+  }
+}
+
+message JoinHostedWorldRequest {
+  lunarclient.common.v1.Uuid world_host_uuid = 1;
+  repeated lunarclient.websocket.hostedworld.v1.PingResponse ping_responses = 2;
+  lunarclient.websocket.hostedworld.v1.JoinHostedWorldRequest.Source source = 3;
+
+  enum Source {
+    SOURCE_UNSPECIFIED = 0;
+    SOURCE_FRIEND_CHAT_BOX = 1;
+    SOURCE_FRIEND_LIST_INLINE = 2;
+    SOURCE_FRIEND_LIST_RIGHT_CLICK = 3;
+    SOURCE_MULTIPLAYER_SERVER = 4;
+  }
+}
+
+message PreJoinHostedWorldRequest {
+}
+
+message PreJoinHostedWorldResponse {
+  repeated lunarclient.websocket.hostedworld.v1.AddressAndPort relays_to_ping = 1;
+}
+
+message JoinHostedWorldResponse {
+  lunarclient.websocket.hostedworld.v1.JoinHostedWorldResponse.Status status = 1;
+  lunarclient.websocket.hostedworld.v1.AddressAndPort relay = 2;
+  lunarclient.websocket.hostedworld.v1.Joinability joinability = 3;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+    STATUS_NO_ACCESS = 2;
+    STATUS_NOT_JOINABLE = 3;
+    STATUS_JOINING_DISABLED = 4;
+    STATUS_NO_RELAY = 5;
+  }
+}
+
+message ConfirmHostedWorldJoinRequest {
+  lunarclient.common.v1.Uuid world_host_uuid = 1;
+}
+
+message ConfirmHostedWorldJoinResponse {
+}
+
+
+

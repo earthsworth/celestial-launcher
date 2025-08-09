@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package lunarclient.apollo.cooldown.v1;
+
+import "google/protobuf/duration.proto";
+import "lunarclient/apollo/common/v1/icon.proto";
+
+option java_package = "com.lunarclient.apollo.cooldown.v1";
+option java_outer_classname = "SchemaProto";
+option java_multiple_files = true;
+
+message DisplayCooldownMessage {
+  string name = 1;
+  google.protobuf.Duration duration = 2;
+  lunarclient.apollo.common.v1.Icon icon = 3;
+}
+
+message RemoveCooldownMessage {
+  string name = 1;
+}
+
+message ResetCooldownsMessage {
+}
+
+
+

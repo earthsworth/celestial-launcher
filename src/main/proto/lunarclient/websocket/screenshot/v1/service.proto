@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package lunarclient.websocket.screenshot.v1;
+
+import "lunarclient/websocket/protocol/v1/common.proto";
+import "lunarclient/websocket/screenshot/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.screenshot.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message RecordScreenshotRequest {
+  lunarclient.websocket.screenshot.v1.ScreenshotMessage screenshot = 1;
+}
+
+message RecordScreenshotResponse {
+}
+
+message LoginRequest {
+}
+
+message LoginResponse {
+  lunarclient.websocket.screenshot.v1.ScreenshotPrivacy default_upload_privacy = 1;
+}
+
+message SetDefaultUploadPrivacyRequest {
+  lunarclient.websocket.screenshot.v1.ScreenshotPrivacy default_upload_privacy = 1;
+}
+
+message SetDefaultUploadPrivacyResponse {
+}
+
+
+

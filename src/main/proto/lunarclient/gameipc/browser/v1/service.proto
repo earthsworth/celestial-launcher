@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package lunarclient.gameipc.browser.v1;
+
+
+option java_package = "com.lunarclient.gameipc.browser.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message OpenUrlRequest {
+  string url = 1;
+  lunarclient.gameipc.browser.v1.OpenUrlRequest.Initiator initiator = 2;
+  lunarclient.gameipc.browser.v1.OpenUrlRequest.OpenType open_type = 3;
+
+  enum Initiator {
+    INITIATOR_UNSPECIFIED = 0;
+    INITIATOR_COSMETICS = 1;
+    INITIATOR_ALERT = 2;
+    INITIATOR_AUTH = 3;
+    INITIATOR_BLOG = 4;
+    INITIATOR_SOCIAL_LINK = 5;
+    INITIATOR_HOME_BUTTON = 6;
+    INITIATOR_LINK_CONFIRM = 7;
+    INITIATOR_SCREENSHOT_UPLOAD = 8;
+  }
+
+  enum OpenType {
+    OPEN_TYPE_UNSPECIFIED = 0;
+    OPEN_TYPE_FORCE_EMBEDDED = 1;
+    OPEN_TYPE_FORCE_EXTERNAL = 2;
+  }
+}
+
+message OpenUrlResponse {
+}
+
+
+

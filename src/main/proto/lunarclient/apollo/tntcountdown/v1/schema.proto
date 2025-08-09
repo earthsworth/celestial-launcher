@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package lunarclient.apollo.tntcountdown.v1;
+
+import "lunarclient/apollo/common/v1/entityid.proto";
+
+option java_package = "com.lunarclient.apollo.tntcountdown.v1";
+option java_outer_classname = "SchemaProto";
+option java_multiple_files = true;
+
+message SetTntCountdownMessage {
+  lunarclient.apollo.common.v1.EntityId entity_id = 1;
+  int32 duration_ticks = 2;
+}
+
+
+

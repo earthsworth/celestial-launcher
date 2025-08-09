@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package lunarclient.apollo.evnt.v1;
+
+
+option java_package = "com.lunarclient.apollo.evnt.v1";
+option java_outer_classname = "GuiProto";
+option java_multiple_files = true;
+
+message OpenGuiMessage {
+  lunarclient.apollo.evnt.v1.GuiType gui_type = 1;
+}
+
+message CloseGuiMessage {
+  lunarclient.apollo.evnt.v1.GuiType gui_type = 1;
+}
+
+
+enum GuiType {
+  GUI_TYPE_UNSPECIFIED = 0;
+  GUI_TYPE_SUIT = 1;
+  GUI_TYPE_CHARACTER_SELECTION = 2;
+  GUI_TYPE_OBSERVER_UI = 3;
+  GUI_TYPE_WELCOME_UI = 4;
+  GUI_TYPE_ESC = 5;
+  GUI_TYPE_PLAYER_INVENTORY = 6;
+}
+
+

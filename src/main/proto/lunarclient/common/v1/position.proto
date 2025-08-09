@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package lunarclient.common.v1;
+
+
+option java_package = "com.lunarclient.common.v1";
+option java_outer_classname = "PositionProto";
+option java_multiple_files = true;
+
+message GlobalPos {
+  string dimension = 1;
+  int32 x = 2;
+  int32 y = 3;
+  int32 z = 4;
+}
+
+message Vector3i {
+  int32 x = 1;
+  int32 y = 2;
+  int32 z = 3;
+}
+
+message Vector2i {
+  int32 x = 1;
+  int32 z = 3;
+}
+
+message Vector3f {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+}
+
+
+enum Direction {
+  DIRECTION_UNSPECIFIED = 0;
+  DIRECTION_DOWN = 1;
+  DIRECTION_UP = 2;
+  DIRECTION_NORTH = 3;
+  DIRECTION_SOUTH = 4;
+  DIRECTION_WEST = 5;
+  DIRECTION_EAST = 6;
+}
+
+

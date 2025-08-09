@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package lunarclient.websocket.spray.v1;
+
+import "lunarclient/common/v1/position.proto";
+import "lunarclient/websocket/protocol/v1/common.proto";
+import "lunarclient/websocket/spray/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.spray.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message LoginRequest {
+}
+
+message LoginResponse {
+  repeated lunarclient.websocket.spray.v1.OwnedSpray owned_sprays = 1;
+  repeated lunarclient.websocket.spray.v1.EquippedSpray equipped_sprays = 2;
+  int32 lunar_plus_free_spray_id = 3;
+  bool has_all_sprays_flag = 4;
+  int32 max_active_sprays = 5;
+}
+
+message UseSprayRequest {
+  int32 spray_id = 1;
+  lunarclient.common.v1.Vector3f pos = 2;
+  lunarclient.common.v1.Direction facing = 3;
+  float rotation = 4;
+}
+
+message UseSprayResponse {
+  lunarclient.websocket.spray.v1.UseSprayResponse.Status status = 1;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+    STATUS_SPRAY_NOT_OWNED = 2;
+  }
+}
+
+message RemoveSprayRequest {
+  lunarclient.common.v1.Vector3f pos = 1;
+}
+
+message RemoveSprayResponse {
+}
+
+message UpdateEquippedSpraysRequest {
+  repeated lunarclient.websocket.spray.v1.EquippedSpray equipped_sprays = 1;
+}
+
+message UpdateEquippedSpraysResponse {
+}
+
+
+

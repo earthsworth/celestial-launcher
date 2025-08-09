@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package lunarclient.websocket.radio.v1;
+
+import "lunarclient/common/v1/radio.proto";
+import "lunarclient/websocket/protocol/v1/common.proto";
+import "lunarclient/websocket/radio/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.radio.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message LoginRequest {
+}
+
+message LoginResponse {
+  bool is_premium = 1;
+  lunarclient.websocket.radio.v1.RadioPlayingVisibility radio_playing_visibility = 2;
+}
+
+message SetRadioPlayingVisibilityRequest {
+  lunarclient.websocket.radio.v1.RadioPlayingVisibility visibility = 1;
+}
+
+message SetRadioPlayingVisibilityResponse {
+}
+
+message BroadcastRadioInfoChangeRequest {
+  lunarclient.websocket.radio.v1.InboundRadioInfo new_radio_info = 1;
+  lunarclient.websocket.radio.v1.BroadcastRadioInfoChangeRequest.InfoChangeInitiator initiator = 2;
+  lunarclient.websocket.radio.v1.BroadcastRadioInfoChangeRequest.InfoChangeInitiatorSource initiator_source = 3;
+
+  enum InfoChangeInitiator {
+    INFO_CHANGE_INITIATOR_UNSPECIFIED = 0;
+    INFO_CHANGE_INITIATOR_STOP = 1;
+    INFO_CHANGE_INITIATOR_SKIP = 2;
+    INFO_CHANGE_INITIATOR_NEXT_TRACK = 3;
+    INFO_CHANGE_INITIATOR_START_STATION = 4;
+    INFO_CHANGE_INITIATOR_STATION_COMPLETE = 5;
+    INFO_CHANGE_INITIATOR_TRACK_PLAY_PAUSE = 6;
+    INFO_CHANGE_INITIATOR_TRACK_LIKE_TOGGLE = 7;
+    INFO_CHANGE_INITIATOR_STATION_LIKE_TOGGLE = 8;
+    INFO_CHANGE_INITIATOR_STATION_LOOP = 9;
+    INFO_CHANGE_INITIATOR_STATION_AUTO_START = 10;
+    INFO_CHANGE_INITIATOR_STATION_AUTO_START_RANDOM = 11;
+    INFO_CHANGE_INITIATOR_START_STATION_RANDOM = 12;
+    INFO_CHANGE_INITIATOR_INACTIVE = 13;
+  }
+
+  enum InfoChangeInitiatorSource {
+    INFO_CHANGE_INITIATOR_SOURCE_UNSPECIFIED = 0;
+    INFO_CHANGE_INITIATOR_SOURCE_GAME = 1;
+    INFO_CHANGE_INITIATOR_SOURCE_LAUNCHER = 2;
+  }
+}
+
+message BroadcastRadioInfoChangeResponse {
+  lunarclient.common.v1.RadioInfo new_radio_info = 1;
+}
+
+
+

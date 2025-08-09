@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package lunarclient.apollo.evnt.v1;
+
+import "lunarclient/apollo/common/v1/uuid.proto";
+import "lunarclient/apollo/evnt/v1/character.proto";
+
+option java_package = "com.lunarclient.apollo.evnt.v1";
+option java_outer_classname = "EventProto";
+option java_multiple_files = true;
+
+message EventPlayerStatusMessage {
+  lunarclient.apollo.common.v1.Uuid player_uuid = 1;
+  float health = 2;
+  float ultimate_percentage = 3;
+  int64 respawn_at = 4;
+}
+
+message EventStatusOverviewMessage {
+  repeated lunarclient.apollo.evnt.v1.EventPlayerStatusMessage team_one_status = 1;
+  repeated lunarclient.apollo.evnt.v1.EventPlayerStatusMessage team_two_status = 2;
+}
+
+message EventTeamStatusMessage {
+  float top_wither_health = 1;
+  float top_crystal_health = 2;
+  float middle_wither_health = 3;
+  float middle_crystal_health = 4;
+  float bottom_wither_health = 5;
+  float bottom_crystal_health = 6;
+  float dragon_health = 7;
+}
+
+message EventGameOverviewMessage {
+  lunarclient.apollo.evnt.v1.EventTeamStatusMessage team_one_status = 1;
+  lunarclient.apollo.evnt.v1.EventTeamStatusMessage team_two_status = 2;
+  float tier_three_health = 3;
+  int64 game_start_time = 4;
+  bool wither_shields = 5;
+  bool lock_game_time = 6;
+  int64 mid_respawn_time = 7;
+}
+
+message EventPlayerMessage {
+  lunarclient.apollo.common.v1.Uuid player_uuid = 1;
+  string player_name_adventure = 2;
+  lunarclient.apollo.evnt.v1.CharacterType character_type = 3;
+  bool team_one = 4;
+}
+
+message EventOverviewMessage {
+  repeated lunarclient.apollo.evnt.v1.EventPlayerMessage players = 1;
+}
+
+
+

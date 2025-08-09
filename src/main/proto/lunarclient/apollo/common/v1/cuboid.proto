@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package lunarclient.apollo.common.v1;
+
+
+option java_package = "com.lunarclient.apollo.common.v1";
+option java_outer_classname = "CuboidProto";
+option java_multiple_files = true;
+
+message Cuboid2D {
+  double min_x = 1;
+  double min_z = 2;
+  double max_x = 3;
+  double max_z = 4;
+}
+
+message Cuboid3D {
+  double min_x = 1;
+  double min_y = 2;
+  double min_z = 3;
+  double max_x = 4;
+  double max_y = 5;
+  double max_z = 6;
+}
+
+
+

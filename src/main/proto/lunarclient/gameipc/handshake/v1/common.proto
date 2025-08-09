@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package lunarclient.gameipc.handshake.v1;
+
+
+option java_package = "com.lunarclient.gameipc.handshake.v1";
+option java_outer_classname = "CommonProto";
+option java_multiple_files = true;
+
+message Handshake {
+  string launch_id = 1;
+  string process_id = 2;
+}
+
+
+

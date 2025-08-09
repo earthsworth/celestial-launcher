@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package lunarclient.websocket.socials.v1;
+
+
+option java_package = "com.lunarclient.websocket.socials.v1";
+option java_outer_classname = "PushProto";
+option java_multiple_files = true;
+
+message RefreshSocialsPush {
+}
+
+
+

@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package lunarclient.websocket.wrapped.v1;
+
+import "lunarclient/websocket/protocol/v1/common.proto";
+import "lunarclient/websocket/wrapped/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.wrapped.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message RecordCountersRequest {
+  repeated lunarclient.websocket.wrapped.v1.CounterUpdate updates = 1;
+}
+
+message RecordCountersResponse {
+}
+
+message LoginRequest {
+}
+
+message LoginResponse {
+  lunarclient.websocket.wrapped.v1.WrappedLeaderboardVisibility leaderboard_visibility = 1;
+}
+
+message SetLeaderboardVisibilityRequest {
+  lunarclient.websocket.wrapped.v1.WrappedLeaderboardVisibility leaderboard_visibility = 1;
+}
+
+message SetLeaderboardVisibilityResponse {
+}
+
+
+

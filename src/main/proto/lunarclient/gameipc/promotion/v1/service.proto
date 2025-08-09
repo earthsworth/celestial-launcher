@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package lunarclient.gameipc.promotion.v1;
+
+
+option java_package = "com.lunarclient.gameipc.promotion.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message CheckPendingPromotionRequest {
+}
+
+message CheckPendingPromotionResponse {
+  bool has_pending_promotion = 1;
+  repeated int32 pending_promotions = 2;
+}
+
+message PlayPromotionRequest {
+}
+
+message PlayPromotionResponse {
+}
+
+
+

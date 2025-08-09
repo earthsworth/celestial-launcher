@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package lunarclient.apollo.common.v1;
+
+import "lunarclient/apollo/common/v1/color.proto";
+
+option java_package = "com.lunarclient.apollo.common.v1";
+option java_outer_classname = "ComponentProto";
+option java_multiple_files = true;
+
+message Component {
+  string content = 1;
+  lunarclient.apollo.common.v1.Color color = 2;
+  repeated lunarclient.apollo.common.v1.Component.TextDecorator decorators = 3;
+  repeated lunarclient.apollo.common.v1.Component children = 4;
+
+  enum TextDecorator {
+    TEXT_DECORATOR_UNSPECIFIED = 0;
+    TEXT_DECORATOR_OBFUSCATED = 1;
+    TEXT_DECORATOR_BOLD = 2;
+    TEXT_DECORATOR_STRIKETHROUGH = 3;
+    TEXT_DECORATOR_UNDERLINED = 4;
+    TEXT_DECORATOR_ITALIC = 5;
+  }
+}
+
+
+

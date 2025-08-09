@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package lunarclient.apollo.notification.v1;
+
+import "google/protobuf/duration.proto";
+import "lunarclient/apollo/common/v1/icon.proto";
+
+option java_package = "com.lunarclient.apollo.notification.v1";
+option java_outer_classname = "SchemaProto";
+option java_multiple_files = true;
+
+message DisplayNotificationMessage {
+  string title = 1;
+  string description = 2;
+  string resource_location = 3;
+  google.protobuf.Duration display_time = 4;
+  string title_adventure_json_lines = 5;
+  string description_adventure_json_lines = 6;
+  lunarclient.apollo.common.v1.Icon icon = 7;
+}
+
+message ResetNotificationsMessage {
+}
+
+
+

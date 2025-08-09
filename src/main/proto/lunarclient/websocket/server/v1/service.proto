@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package lunarclient.websocket.server.v1;
+
+import "lunarclient/websocket/protocol/v1/common.proto";
+import "lunarclient/websocket/server/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.server.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message GetPlayerCountsRequest {
+  repeated string server_ids = 1;
+}
+
+message GetPlayerCountsResponse {
+  repeated lunarclient.websocket.server.v1.GetPlayerCountsResponse.Server servers = 1;
+
+  message Server {
+    string server_id = 1;
+    lunarclient.websocket.server.v1.GetPlayerCountsResponse.Server.Status status = 2;
+    int32 online_count = 3;
+
+    enum Status {
+      STATUS_UNSPECIFIED = 0;
+      STATUS_ONLINE = 1;
+      STATUS_OFFLINE = 2;
+    }
+  }
+}
+
+message CheckServerRecommendationsRequest {
+  string server_ip = 1;
+}
+
+message CheckServerRecommendationsResponse {
+  lunarclient.websocket.server.v1.ServerRecommendations recommendations = 1;
+}
+
+message CheckAuthorizedFeaturesRequest {
+  string server_ip = 1;
+}
+
+message CheckAuthorizedFeaturesResponse {
+  repeated string scopes = 1;
+  repeated int32 associated_cosmetic_ids = 2;
+  repeated int32 associated_emote_ids = 3;
+}
+
+
+

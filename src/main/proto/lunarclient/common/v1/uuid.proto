@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package lunarclient.common.v1;
+
+
+option java_package = "com.lunarclient.common.v1";
+option java_outer_classname = "UuidProto";
+option java_multiple_files = true;
+
+message Uuid {
+  fixed64 high64 = 1;
+  fixed64 low64 = 2;
+}
+
+message UuidAndUsername {
+  lunarclient.common.v1.Uuid uuid = 1;
+  string username = 2;
+}
+
+
+

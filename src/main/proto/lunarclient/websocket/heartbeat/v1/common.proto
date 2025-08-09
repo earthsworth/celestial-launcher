@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package lunarclient.websocket.heartbeat.v1;
+
+import "lunarclient/common/v1/modpack.proto";
+import "lunarclient/common/v1/version.proto";
+import "lunarclient/common/v1/location.proto";
+
+option java_package = "com.lunarclient.websocket.heartbeat.v1";
+option java_outer_classname = "CommonProto";
+option java_multiple_files = true;
+
+message OnlineCounts {
+  int32 launcher = 1;
+  int32 game = 2;
+}
+
+message RunningInstanceLoader {
+  string loader = 1;
+  string loader_version = 2;
+  bool loader_version_recommended = 3;
+}
+
+message RunningInstance {
+  string launch_id = 1;
+  lunarclient.common.v1.MinecraftVersion minecraft_version = 2;
+  string module = 3;
+  lunarclient.common.v1.PlayerModpack modpack = 4;
+  lunarclient.common.v1.Location location = 5;
+  lunarclient.websocket.heartbeat.v1.RunningInstanceLoader loader = 6;
+}
+
+message RendererPosition {
+  int32 position_x = 1;
+  int32 position_y = 2;
+  int32 width = 3;
+  int32 height = 4;
+  int32 display_id = 5;
+  bool primary_display = 6;
+  int32 display_width = 7;
+  int32 display_height = 8;
+}
+
+message OpenRenderer {
+  string id = 1;
+  string route = 2;
+  string title = 3;
+  bool focused = 4;
+  bool visible = 5;
+  bool fullscreened = 6;
+  bool minimized = 7;
+  lunarclient.websocket.heartbeat.v1.RendererPosition position = 8;
+}
+
+
+

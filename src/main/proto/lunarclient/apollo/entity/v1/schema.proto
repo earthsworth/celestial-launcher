@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package lunarclient.apollo.entity.v1;
+
+import "lunarclient/apollo/common/v1/entityid.proto";
+
+option java_package = "com.lunarclient.apollo.entity.v1";
+option java_outer_classname = "SchemaProto";
+option java_multiple_files = true;
+
+message OverrideRainbowSheepMessage {
+  repeated lunarclient.apollo.common.v1.EntityId entity_ids = 1;
+}
+
+message ResetRainbowSheepMessage {
+  repeated lunarclient.apollo.common.v1.EntityId entity_ids = 1;
+}
+
+message FlipEntityMessage {
+  repeated lunarclient.apollo.common.v1.EntityId entity_ids = 1;
+}
+
+message ResetFlipedEntityMessage {
+  repeated lunarclient.apollo.common.v1.EntityId entity_ids = 1;
+}
+
+
+

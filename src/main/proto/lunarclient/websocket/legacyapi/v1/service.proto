@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package lunarclient.websocket.legacyapi.v1;
+
+import "lunarclient/websocket/protocol/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.legacyapi.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message RecordDeprecatedApiUsageRequest {
+  lunarclient.websocket.legacyapi.v1.RecordDeprecatedApiUsageRequest.Feature feature = 1;
+
+  enum Feature {
+    FEATURE_UNSPECIFIED = 0;
+    FEATURE_TRANSFER_PACKET = 1;
+    FEATURE_BOSS_BAR = 2;
+    FEATURE_VOICE = 3;
+    FEATURE_COOLDOWN = 4;
+    FEATURE_GHOST = 5;
+    FEATURE_HOLOGRAM = 6;
+    FEATURE_MOD_SETTINGS = 7;
+    FEATURE_NAMETAGS = 8;
+    FEATURE_NOTIFICATION = 9;
+    FEATURE_SERVER_RULE = 10;
+    FEATURE_SERVER_UPDATE = 11;
+    FEATURE_STAFF_MOD = 12;
+    FEATURE_TEAMMATES = 13;
+    FEATURE_TITLE = 14;
+    FEATURE_WORLD = 15;
+    FEATURE_WORLD_BORDER = 16;
+    FEATURE_WAYPOINT = 17;
+    FEATURE_EMOTE = 18;
+  }
+}
+
+message RecordDeprecatedApiUsageResponse {
+}
+
+
+

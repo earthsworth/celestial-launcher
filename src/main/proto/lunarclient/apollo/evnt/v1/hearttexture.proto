@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package lunarclient.apollo.evnt.v1;
+
+
+option java_package = "com.lunarclient.apollo.evnt.v1";
+option java_outer_classname = "HearttextureProto";
+option java_multiple_files = true;
+
+message OverrideHeartTextureMessage {
+  int32 location_x = 1;
+  bool hardcore = 2;
+}
+
+message ResetHeartTextureMessage {
+}
+
+
+

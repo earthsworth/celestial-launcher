@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package lunarclient.websocket.language.v1;
+
+
+option java_package = "com.lunarclient.websocket.language.v1";
+option java_outer_classname = "CommonProto";
+option java_multiple_files = true;
+
+message Language {
+  oneof language {
+    string iso_639_3_code = 1;
+    string minecraft_code = 2;
+  }
+}
+
+
+

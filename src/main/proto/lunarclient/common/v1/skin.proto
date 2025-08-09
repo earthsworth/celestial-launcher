@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package lunarclient.common.v1;
+
+
+option java_package = "com.lunarclient.common.v1";
+option java_outer_classname = "SkinProto";
+option java_multiple_files = true;
+
+message MinecraftSkin {
+  string texture_id = 1;
+  lunarclient.common.v1.MinecraftSkinModel model = 2;
+}
+
+
+enum MinecraftSkinModel {
+  MINECRAFT_SKIN_MODEL_UNSPECIFIED = 0;
+  MINECRAFT_SKIN_MODEL_CLASSIC = 1;
+  MINECRAFT_SKIN_MODEL_SLIM = 2;
+}
+
+

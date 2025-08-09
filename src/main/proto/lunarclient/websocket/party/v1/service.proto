@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package lunarclient.websocket.party.v1;
+
+import "lunarclient/common/v1/uuid.proto";
+import "lunarclient/websocket/protocol/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.party.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message CreatePartyRequest {
+  int32 chat_id = 1;
+}
+
+message CreatePartyResponse {
+  lunarclient.websocket.party.v1.CreatePartyResponse.Status status = 1;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+  }
+}
+
+message AcceptPartyInviteRequest {
+  lunarclient.common.v1.Uuid leader_uuid = 1;
+}
+
+message AcceptPartyInviteResponse {
+}
+
+message InviteToPartyRequest {
+  lunarclient.common.v1.Uuid player_uuid = 1;
+}
+
+message InviteToPartyResponse {
+  lunarclient.websocket.party.v1.InviteToPartyResponse.Status status = 1;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+    STATUS_TARGET_NOT_FRIEND = 2;
+  }
+}
+
+message TransferPartyLeadershipRequest {
+  lunarclient.common.v1.Uuid new_leader_uuid = 1;
+}
+
+message TransferPartyLeadershipResponse {
+  lunarclient.websocket.party.v1.TransferPartyLeadershipResponse.Status status = 1;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+    STATUS_TARGET_IS_SENDER = 2;
+  }
+}
+
+message LeavePartyRequest {
+}
+
+message LeavePartyResponse {
+}
+
+message WarpPartyRequest {
+  string server_ip = 1;
+}
+
+message WarpPartyResponse {
+  lunarclient.websocket.party.v1.WarpPartyResponse.Status status = 1;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+  }
+}
+
+
+

@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package lunarclient.apollo.configurable.v1;
+
+import "google/protobuf/struct.proto";
+
+option java_package = "com.lunarclient.apollo.configurable.v1";
+option java_outer_classname = "SchemaProto";
+option java_multiple_files = true;
+
+message ConfigurableSettings {
+  oneof target {
+    string lunar_client_mod = 1;
+    string apollo_module = 2;
+  }
+  bool enable = 3;
+  repeated lunarclient.apollo.configurable.v1.ConfigurableSettings.PropertiesEntry properties = 4;
+
+  message PropertiesEntry {
+    string key = 1;
+    google.protobuf.Value value = 2;
+  }
+}
+
+message OverrideConfigurableSettingsMessage {
+  repeated lunarclient.apollo.configurable.v1.ConfigurableSettings configurable_settings = 1;
+}
+
+
+

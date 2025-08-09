@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package lunarclient.websocket.notification.v1;
+
+import "lunarclient/common/v1/uuid.proto";
+import "lunarclient/websocket/notification/v1/common.proto";
+import "lunarclient/websocket/protocol/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.notification.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message OpenNotificationRequest {
+  lunarclient.common.v1.Uuid notification_id = 1;
+}
+
+message OpenNotificationResponse {
+}
+
+message OpenAlertRequest {
+  int32 alert_id = 1;
+}
+
+message OpenAlertResponse {
+}
+
+message LoginRequest {
+}
+
+message LoginResponse {
+  repeated lunarclient.websocket.notification.v1.Notification notifications = 1;
+}
+
+
+

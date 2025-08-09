@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package lunarclient.apollo.limb.v1;
+
+import "lunarclient/apollo/common/v1/uuid.proto";
+
+option java_package = "com.lunarclient.apollo.limb.v1";
+option java_outer_classname = "SchemaProto";
+option java_multiple_files = true;
+
+message HideArmorPiecesMessage {
+  lunarclient.apollo.common.v1.Uuid player_uuid = 1;
+  repeated lunarclient.apollo.limb.v1.ArmorPiece armor_pieces = 2;
+}
+
+message ResetArmorPiecesMessage {
+  lunarclient.apollo.common.v1.Uuid player_uuid = 1;
+  repeated lunarclient.apollo.limb.v1.ArmorPiece armor_pieces = 2;
+}
+
+message HideBodyPartMessage {
+  lunarclient.apollo.common.v1.Uuid player_uuid = 1;
+  repeated lunarclient.apollo.limb.v1.BodyPart body_parts = 2;
+}
+
+message ResetBodyPartMessage {
+  lunarclient.apollo.common.v1.Uuid player_uuid = 1;
+  repeated lunarclient.apollo.limb.v1.BodyPart body_parts = 2;
+}
+
+
+enum ArmorPiece {
+  ARMOR_PIECE_UNSPECIFIED = 0;
+  ARMOR_PIECE_HELMET = 1;
+  ARMOR_PIECE_CHESTPLATE = 2;
+  ARMOR_PIECE_LEGGINGS = 3;
+  ARMOR_PIECE_BOOTS = 4;
+}
+
+enum BodyPart {
+  BODY_PART_UNSPECIFIED = 0;
+  BODY_PART_HEAD = 1;
+  BODY_PART_TORSO = 2;
+  BODY_PART_LEFT_ARM = 3;
+  BODY_PART_RIGHT_ARM = 4;
+  BODY_PART_LEFT_LEG = 5;
+  BODY_PART_RIGHT_LEG = 6;
+}
+
+

@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package lunarclient.websocket.liveexperience.v1;
+
+import "lunarclient/websocket/liveexperience/v1/common.proto";
+import "lunarclient/websocket/protocol/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.liveexperience.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message LoadLiveExperienceRequest {
+}
+
+message LoadLiveExperienceResponse {
+  lunarclient.websocket.liveexperience.v1.LiveExperience experience = 1;
+}
+
+message JoinLiveExperienceRequest {
+  string experience_id = 1;
+}
+
+message JoinLiveExperienceResponse {
+  oneof result {
+    lunarclient.websocket.liveexperience.v1.AddressAndPort server = 1;
+    string error_message = 2;
+  }
+}
+
+
+

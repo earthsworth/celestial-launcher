@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package lunarclient.apollo.tebex.v1;
+
+
+option java_package = "com.lunarclient.apollo.tebex.v1";
+option java_outer_classname = "SchemaProto";
+option java_multiple_files = true;
+
+message OpenTebexEmbeddedCheckoutMessage {
+  string basket_ident = 1;
+  string locale = 2;
+}
+
+
+

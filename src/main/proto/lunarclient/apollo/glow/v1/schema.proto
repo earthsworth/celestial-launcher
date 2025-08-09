@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package lunarclient.apollo.glow.v1;
+
+import "lunarclient/apollo/common/v1/color.proto";
+import "lunarclient/apollo/common/v1/uuid.proto";
+
+option java_package = "com.lunarclient.apollo.glow.v1";
+option java_outer_classname = "SchemaProto";
+option java_multiple_files = true;
+
+message OverrideGlowEffectMessage {
+  lunarclient.apollo.common.v1.Uuid player_uuid = 1;
+  lunarclient.apollo.common.v1.Color color = 2;
+}
+
+message ResetGlowEffectMessage {
+  lunarclient.apollo.common.v1.Uuid player_uuid = 1;
+}
+
+message ResetGlowEffectsMessage {
+}
+
+
+

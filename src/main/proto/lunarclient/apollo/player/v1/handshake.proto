@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package lunarclient.apollo.player.v1;
+
+import "lunarclient/apollo/common/v1/version.proto";
+
+option java_package = "com.lunarclient.apollo.player.v1";
+option java_outer_classname = "HandshakeProto";
+option java_multiple_files = true;
+
+message ModMessage {
+  string id = 1;
+  string name = 2;
+  string version = 3;
+  lunarclient.apollo.player.v1.ModMessage.Type type = 4;
+
+  enum Type {
+    TYPE_UNSPECIFIED = 0;
+    TYPE_FABRIC_INTERNAL = 1;
+    TYPE_FABRIC_EXTERNAL = 2;
+    TYPE_FORGE_INTERNAL = 3;
+    TYPE_FORGE_EXTERNAL = 4;
+  }
+}
+
+message PlayerHandshakeMessage {
+  lunarclient.apollo.common.v1.MinecraftVersion minecraft_version = 1;
+  lunarclient.apollo.common.v1.LunarClientVersion lunar_client_version = 2;
+  repeated lunarclient.apollo.player.v1.ModMessage installed_mods = 3;
+  lunarclient.apollo.player.v1.EmbeddedCheckoutSupport embedded_checkout_support = 4;
+}
+
+
+enum EmbeddedCheckoutSupport {
+  EMBEDDED_CHECKOUT_SUPPORT_UNSPECIFIED = 0;
+  EMBEDDED_CHECKOUT_SUPPORT_OVERLAY = 1;
+  EMBEDDED_CHECKOUT_SUPPORT_WINDOW = 2;
+}
+
+

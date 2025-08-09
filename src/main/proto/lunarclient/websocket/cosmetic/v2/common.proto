@@ -1,0 +1,130 @@
+syntax = "proto3";
+
+package lunarclient.websocket.cosmetic.v2;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "lunarclient/common/v1/gift.proto";
+import "lunarclient/common/v1/uuid.proto";
+
+option java_package = "com.lunarclient.websocket.cosmetic.v2";
+option java_outer_classname = "CommonProto";
+option java_multiple_files = true;
+
+message EquippedCosmetic {
+  int32 cosmetic_id = 1;
+  google.protobuf.Struct geckolib_metadata = 2;
+  bool cloth_cloak = 3;
+  bool show_over_skin_layer = 4;
+  bool show_over_helmet = 5;
+  bool show_over_chestplate = 6;
+  bool show_over_leggings = 7;
+  bool show_over_boots = 8;
+  float hat_height_offset = 9;
+  bool flip_arm = 10;
+}
+
+message OwnedCosmetic {
+  int32 cosmetic_id = 1;
+  google.protobuf.Timestamp granted_at = 2;
+  google.protobuf.Timestamp expires_at = 3;
+  lunarclient.websocket.cosmetic.v2.OwnedCosmetic.ExpirationReason expiration_reason = 4;
+  lunarclient.common.v1.GiftInfo gift_info = 5;
+
+  enum ExpirationReason {
+    EXPIRATION_REASON_UNSPECIFIED = 0;
+    EXPIRATION_REASON_TIME_LAPSED = 1;
+    EXPIRATION_REASON_LEFT_LC_DISCORD = 2;
+  }
+}
+
+message Outfit {
+  lunarclient.common.v1.Uuid id = 1;
+  string name = 2;
+  repeated lunarclient.websocket.cosmetic.v2.EquippedCosmetic cosmetics = 3;
+  bool favorite = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+message DimensionCondition {
+  string dimension_id = 1;
+}
+
+message WeatherCondition {
+  lunarclient.websocket.cosmetic.v2.WeatherCondition.Weather weather = 1;
+
+  enum Weather {
+    WEATHER_UNSPECIFIED = 0;
+    WEATHER_RAIN = 1;
+    WEATHER_SNOW = 2;
+    WEATHER_THUNDERSTORM = 3;
+  }
+}
+
+message BiomeTemperatureCondition {
+  lunarclient.websocket.cosmetic.v2.BiomeTemperatureCondition.Temperature temperature = 1;
+
+  enum Temperature {
+    TEMPERATURE_UNSPECIFIED = 0;
+    TEMPERATURE_HOT = 1;
+    TEMPERATURE_COLD = 2;
+  }
+}
+
+message PassengerOfEntityCondition {
+  string entity_id = 1;
+}
+
+message MovementStateCondition {
+  lunarclient.websocket.cosmetic.v2.MovementStateCondition.State state = 1;
+
+  enum State {
+    STATE_UNSPECIFIED = 0;
+    STATE_SWIMMING = 1;
+    STATE_CREATIVE_FLYING = 2;
+    STATE_ELYTRA_FLYING = 3;
+  }
+}
+
+message InLiquidCondition {
+  lunarclient.websocket.cosmetic.v2.InLiquidCondition.Liquid liquid = 1;
+
+  enum Liquid {
+    LIQUID_UNSPECIFIED = 0;
+    LIQUID_WATER = 1;
+    LIQUID_LAVA = 2;
+  }
+}
+
+message RadioPlayingCondition {
+}
+
+message OnFireCondition {
+}
+
+message EquipCondition {
+  oneof condition {
+    lunarclient.websocket.cosmetic.v2.DimensionCondition dimension = 1;
+    lunarclient.websocket.cosmetic.v2.WeatherCondition weather = 2;
+    lunarclient.websocket.cosmetic.v2.BiomeTemperatureCondition biome_temperature = 3;
+    lunarclient.websocket.cosmetic.v2.PassengerOfEntityCondition passenger_of_entity = 4;
+    lunarclient.websocket.cosmetic.v2.MovementStateCondition movement_state = 5;
+    lunarclient.websocket.cosmetic.v2.InLiquidCondition in_liquid = 6;
+    lunarclient.websocket.cosmetic.v2.RadioPlayingCondition radio_playing = 7;
+    lunarclient.websocket.cosmetic.v2.OnFireCondition on_fire = 8;
+  }
+}
+
+message OutfitTree {
+  repeated lunarclient.websocket.cosmetic.v2.OutfitTree.ConditionalOutfit conditional_outfits = 1;
+  lunarclient.common.v1.Uuid default_outfit_id = 2;
+
+  message ConditionalOutfit {
+    lunarclient.websocket.cosmetic.v2.EquipCondition equip_condition = 1;
+    lunarclient.common.v1.Uuid outfit_id = 2;
+  }
+}
+
+
+

@@ -1,0 +1,68 @@
+syntax = "proto3";
+
+package lunarclient.websocket.radio.v1;
+
+
+option java_package = "com.lunarclient.websocket.radio.v1";
+option java_outer_classname = "CommonProto";
+option java_multiple_files = true;
+
+message InboundRadioTrack {
+  string title = 1;
+  int32 track_id = 2;
+  int32 asset_id = 3;
+  bool liked = 4;
+  repeated string artist_names = 5;
+  int32 duration = 7;
+  int32 progress = 8;
+  int32 position = 9;
+  bool paused = 10;
+  string image_url = 11;
+  repeated lunarclient.websocket.radio.v1.InboundRadioTrack.CustomMetadataEntry custom_metadata = 12;
+  string album_name = 13;
+  string royalty_free_usage_report_id = 14;
+
+  message CustomMetadataEntry {
+    string key = 1;
+    string value = 2;
+  }
+}
+
+message InboundRadioStation {
+  string name = 1;
+  string description = 2;
+  string station_id = 3;
+  int32 track_count = 4;
+  lunarclient.websocket.radio.v1.InboundRadioStation.StationType station_type = 5;
+  lunarclient.websocket.radio.v1.InboundRadioStation.MonetizationType monetization_type = 6;
+  int32 duration = 7;
+  string licensed_session_id = 8;
+  string image_url = 9;
+
+  enum StationType {
+    STATION_TYPE_UNSPECIFIED = 0;
+    STATION_TYPE_LICENSED = 1;
+    STATION_TYPE_ROYALTY_FREE = 2;
+  }
+
+  enum MonetizationType {
+    MONETIZATION_TYPE_UNSPECIFIED = 0;
+    MONETIZATION_TYPE_INTERNAL_AD_FUNDED = 1;
+    MONETIZATION_TYPE_EXTERNAL_AD_FUNDED = 2;
+    MONETIZATION_TYPE_PREMIUM = 3;
+  }
+}
+
+message InboundRadioInfo {
+  lunarclient.websocket.radio.v1.InboundRadioTrack track = 1;
+  lunarclient.websocket.radio.v1.InboundRadioStation station = 2;
+}
+
+
+enum RadioPlayingVisibility {
+  RADIO_PLAYING_VISIBILITY_UNSPECIFIED = 0;
+  RADIO_PLAYING_VISIBILITY_FRIENDS = 1;
+  RADIO_PLAYING_VISIBILITY_NOONE = 2;
+}
+
+

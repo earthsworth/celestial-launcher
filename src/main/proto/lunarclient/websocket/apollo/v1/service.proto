@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package lunarclient.websocket.apollo.v1;
+
+import "lunarclient/websocket/protocol/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.apollo.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message TrackFeatureAdoptionRequest {
+  string module = 1;
+  string feature = 2;
+}
+
+message TrackFeatureAdoptionResponse {
+}
+
+
+

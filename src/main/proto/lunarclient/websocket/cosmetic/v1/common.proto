@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package lunarclient.websocket.cosmetic.v1;
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/timestamp.proto";
+import "lunarclient/common/v1/color.proto";
+import "lunarclient/common/v1/gift.proto";
+
+option java_package = "com.lunarclient.websocket.cosmetic.v1";
+option java_outer_classname = "CommonProto";
+option java_multiple_files = true;
+
+message CustomizableCosmeticSettings {
+  repeated int32 active_cosmetic_ids = 1;
+  bool cloth_cloak = 2;
+  lunarclient.common.v1.Color plus_color = 3;
+  bool show_hats_over_helmet = 4;
+  bool show_hats_over_skin_layer = 5;
+  bool show_over_chestplate = 6;
+  bool show_over_leggings = 7;
+  bool show_over_boots = 8;
+  repeated lunarclient.websocket.cosmetic.v1.CustomizableCosmeticSettings.HatHeightOffsetEntry hat_height_offset = 9;
+  bool flip_shoulder_pet = 10;
+  repeated lunarclient.websocket.cosmetic.v1.EquippedCosmetic equipped_cosmetics = 11;
+
+  message HatHeightOffsetEntry {
+    int32 key = 1;
+    float value = 2;
+  }
+}
+
+message EquippedCosmetic {
+  int32 cosmetic_id = 1;
+  google.protobuf.Struct metadata = 2;
+}
+
+message OwnedCosmetic {
+  int32 cosmetic_id = 1;
+  google.protobuf.Timestamp granted_at = 2;
+  google.protobuf.Timestamp expires_at = 3;
+  lunarclient.websocket.cosmetic.v1.OwnedCosmetic.ExpirationReason expiration_reason = 4;
+  lunarclient.common.v1.GiftInfo gift_info = 5;
+
+  enum ExpirationReason {
+    EXPIRATION_REASON_UNSPECIFIED = 0;
+    EXPIRATION_REASON_TIME_LAPSED = 1;
+    EXPIRATION_REASON_LEFT_LC_DISCORD = 2;
+  }
+}
+
+
+

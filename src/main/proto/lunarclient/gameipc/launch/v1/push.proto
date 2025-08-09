@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package lunarclient.gameipc.launch.v1;
+
+
+option java_package = "com.lunarclient.gameipc.launch.v1";
+option java_outer_classname = "PushProto";
+option java_multiple_files = true;
+
+message PlayServerPush {
+  string auto_join_server_ip = 1;
+}
+
+message ExitGamePush {
+}
+
+
+

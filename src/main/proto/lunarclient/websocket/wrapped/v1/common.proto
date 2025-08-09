@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package lunarclient.websocket.wrapped.v1;
+
+
+option java_package = "com.lunarclient.websocket.wrapped.v1";
+option java_outer_classname = "CommonProto";
+option java_multiple_files = true;
+
+message CounterUpdate {
+  string counter = 1;
+  int32 delta = 2;
+}
+
+
+enum WrappedLeaderboardVisibility {
+  WRAPPED_LEADERBOARD_VISIBILITY_UNSPECIFIED = 0;
+  WRAPPED_LEADERBOARD_VISIBILITY_EVERYONE = 1;
+  WRAPPED_LEADERBOARD_VISIBILITY_NOONE = 2;
+}
+
+

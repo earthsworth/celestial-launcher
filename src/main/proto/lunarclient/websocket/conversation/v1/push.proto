@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package lunarclient.websocket.conversation.v1;
+
+import "lunarclient/websocket/conversation/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.conversation.v1";
+option java_outer_classname = "PushProto";
+option java_multiple_files = true;
+
+message ConversationMessagePush {
+  lunarclient.websocket.conversation.v1.ConversationReference conversation_reference = 1;
+  lunarclient.websocket.conversation.v1.ConversationMessage message = 2;
+}
+
+message ConversationPreSendActionPush {
+  lunarclient.websocket.conversation.v1.ConversationReference conversation_reference = 1;
+  lunarclient.websocket.conversation.v1.PreSendAction action = 2;
+  lunarclient.websocket.conversation.v1.ConversationSender sender = 3;
+}
+
+
+

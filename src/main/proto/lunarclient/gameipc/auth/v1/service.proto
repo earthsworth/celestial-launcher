@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package lunarclient.gameipc.auth.v1;
+
+import "lunarclient/common/v1/uuid.proto";
+
+option java_package = "com.lunarclient.gameipc.auth.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message OpenMicrosoftPopupRequest {
+}
+
+message OpenMicrosoftPopupResponse {
+  lunarclient.gameipc.auth.v1.OpenMicrosoftPopupResponse.Status status = 1;
+  string url = 2;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_MATCHED_TARGET_URL = 1;
+    STATUS_CLOSED_WITH_NO_URL = 2;
+  }
+}
+
+message RefreshAccountRequest {
+  lunarclient.common.v1.Uuid uuid = 1;
+}
+
+message RefreshAccountResponse {
+  bool success = 1;
+  lunarclient.gameipc.auth.v1.RefreshAccountResponse.AccountError error = 2;
+
+  enum AccountError {
+    ACCOUNT_ERROR_UNSPECIFIED = 0;
+    ACCOUNT_ERROR_ACCOUNTS_FILE_EMPTY = 1;
+    ACCOUNT_ERROR_NOT_PURCHASED_MINECRAFT = 2;
+    ACCOUNT_ERROR_MISSING_REFRESH_TOKEN = 3;
+    ACCOUNT_ERROR_ALREADY_REFRESHING = 4;
+  }
+}
+
+message AddAccountRequest {
+}
+
+message AddAccountResponse {
+  bool success = 1;
+  lunarclient.gameipc.auth.v1.AddAccountResponse.AccountError error = 2;
+
+  enum AccountError {
+    ACCOUNT_ERROR_UNSPECIFIED = 0;
+    ACCOUNT_ERROR_NOT_PURCHASED_MINECRAFT = 1;
+  }
+}
+
+
+

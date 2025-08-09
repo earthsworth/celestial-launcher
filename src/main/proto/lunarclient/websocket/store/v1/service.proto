@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package lunarclient.websocket.store.v1;
+
+import "lunarclient/websocket/protocol/v1/common.proto";
+import "lunarclient/websocket/store/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.store.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message LoginRequest {
+}
+
+message LoginResponse {
+  lunarclient.websocket.store.v1.IncomingGiftPrivacy incoming_gift_privacy = 1;
+}
+
+message SetIncomingGiftPrivacyRequest {
+  lunarclient.websocket.store.v1.IncomingGiftPrivacy incoming_gift_privacy = 1;
+}
+
+message SetIncomingGiftPrivacyResponse {
+}
+
+
+

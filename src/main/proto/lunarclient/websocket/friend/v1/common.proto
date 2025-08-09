@@ -1,0 +1,82 @@
+syntax = "proto3";
+
+package lunarclient.websocket.friend.v1;
+
+import "google/protobuf/timestamp.proto";
+import "lunarclient/common/v1/color.proto";
+import "lunarclient/common/v1/location.proto";
+import "lunarclient/common/v1/modpack.proto";
+import "lunarclient/common/v1/social.proto";
+import "lunarclient/common/v1/uuid.proto";
+import "lunarclient/common/v1/version.proto";
+import "lunarclient/websocket/hostedworld/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.friend.v1";
+option java_outer_classname = "CommonProto";
+option java_multiple_files = true;
+
+message FriendSocials {
+  bool hidden = 1;
+  repeated lunarclient.common.v1.UserSocial linked = 2;
+}
+
+message OnlineFriend {
+  lunarclient.common.v1.UuidAndUsername player = 1;
+  lunarclient.websocket.friend.v1.OnlineFriendStatus status = 2;
+  lunarclient.common.v1.Location location = 3;
+  lunarclient.common.v1.MinecraftVersion minecraft_version = 4;
+  bool just_came_online = 5;
+  lunarclient.websocket.hostedworld.v1.Joinability hosted_world_joinability = 6;
+  lunarclient.common.v1.Color logo_color = 7;
+  lunarclient.common.v1.PlayerModpack modpack = 8;
+  lunarclient.common.v1.Color plus_color = 9;
+  bool is_radio_premium = 10;
+  google.protobuf.Timestamp friends_since = 11;
+  lunarclient.websocket.friend.v1.FriendSocials socials = 12;
+  string rank_name = 13;
+  string country_code = 14;
+}
+
+message OfflineFriend {
+  lunarclient.common.v1.UuidAndUsername player = 1;
+  google.protobuf.Timestamp last_visible_online = 2;
+  lunarclient.common.v1.Color logo_color = 3;
+  lunarclient.common.v1.Color plus_color = 4;
+  bool is_radio_premium = 5;
+  google.protobuf.Timestamp friends_since = 6;
+  lunarclient.websocket.friend.v1.FriendSocials socials = 7;
+  string rank_name = 8;
+  string country_code = 9;
+}
+
+message FriendRequest {
+  lunarclient.common.v1.UuidAndUsername player = 1;
+  google.protobuf.Timestamp sent_at = 2;
+  lunarclient.common.v1.Color player_logo_color = 3;
+  lunarclient.common.v1.Color player_plus_color = 4;
+  string player_rank_name = 5;
+}
+
+
+enum OnlineFriendStatus {
+  ONLINE_FRIEND_STATUS_UNSPECIFIED = 0;
+  ONLINE_FRIEND_STATUS_ONLINE = 1;
+  ONLINE_FRIEND_STATUS_AWAY = 2;
+  ONLINE_FRIEND_STATUS_BUSY = 3;
+  ONLINE_FRIEND_STATUS_INVISIBLE = 4;
+}
+
+enum LastSeenVisibility {
+  LAST_SEEN_VISIBILITY_UNSPECIFIED = 0;
+  LAST_SEEN_VISIBILITY_FRIENDS = 1;
+  LAST_SEEN_VISIBILITY_NOONE = 2;
+}
+
+enum CountryFlagVisibility {
+  COUNTRY_FLAG_VISIBILITY_UNSPECIFIED = 0;
+  COUNTRY_FLAG_VISIBILITY_EVERYONE = 1;
+  COUNTRY_FLAG_VISIBILITY_FRIENDS = 2;
+  COUNTRY_FLAG_VISIBILITY_NOONE = 3;
+}
+
+

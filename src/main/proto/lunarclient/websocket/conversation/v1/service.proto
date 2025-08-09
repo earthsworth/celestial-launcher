@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package lunarclient.websocket.conversation.v1;
+
+import "lunarclient/websocket/conversation/v1/common.proto";
+import "lunarclient/websocket/protocol/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.conversation.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message SendConversationMessageRequest {
+  lunarclient.websocket.conversation.v1.ConversationReference conversation_reference = 1;
+  lunarclient.websocket.conversation.v1.ConversationMessageContents message_contents = 2;
+}
+
+message SendConversationMessageResponse {
+  lunarclient.websocket.conversation.v1.SendConversationMessageResponse.Status status = 1;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+    STATUS_UNKNOWN_CONVERSATION = 2;
+  }
+}
+
+message PreSendActionRequest {
+  lunarclient.websocket.conversation.v1.ConversationReference conversation_reference = 1;
+  lunarclient.websocket.conversation.v1.PreSendAction action = 2;
+}
+
+message PreSendActionResponse {
+  lunarclient.websocket.conversation.v1.PreSendActionResponse.Status status = 1;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+    STATUS_UNKNOWN_CONVERSATION = 2;
+  }
+}
+
+message LoadConversationRequest {
+  lunarclient.websocket.conversation.v1.ConversationReference conversation_reference = 1;
+}
+
+message LoadConversationResponse {
+  repeated lunarclient.websocket.conversation.v1.ConversationMessage messages = 1;
+}
+
+
+

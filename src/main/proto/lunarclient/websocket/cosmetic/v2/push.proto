@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package lunarclient.websocket.cosmetic.v2;
+
+import "lunarclient/common/v1/color.proto";
+import "lunarclient/common/v1/uuid.proto";
+import "lunarclient/websocket/cosmetic/v2/common.proto";
+
+option java_package = "com.lunarclient.websocket.cosmetic.v2";
+option java_outer_classname = "PushProto";
+option java_multiple_files = true;
+
+message PlayerCosmeticsPush {
+  lunarclient.common.v1.Uuid player_uuid = 1;
+  lunarclient.common.v1.Color logo_color = 2;
+  bool logo_always_show = 3;
+  lunarclient.common.v1.Color plus_color = 4;
+  repeated lunarclient.websocket.cosmetic.v2.PlayerCosmeticsPush.ConditionalCosmetics conditional_cosmetics = 5;
+  repeated lunarclient.websocket.cosmetic.v2.EquippedCosmetic default_cosmetics = 6;
+
+  message ConditionalCosmetics {
+    lunarclient.websocket.cosmetic.v2.EquipCondition equip_condition = 1;
+    repeated lunarclient.websocket.cosmetic.v2.EquippedCosmetic cosmetics = 2;
+  }
+}
+
+message RefreshCosmeticsPush {
+}
+
+
+

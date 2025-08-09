@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package lunarclient.websocket.emote.v1;
+
+import "lunarclient/websocket/emote/v1/common.proto";
+import "lunarclient/websocket/protocol/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.emote.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message LoginRequest {
+}
+
+message LoginResponse {
+  repeated int32 owned_emote_ids = 1;
+  repeated int32 equipped_emote_ids = 2;
+  int32 lunar_plus_free_emote_id = 3;
+  repeated lunarclient.websocket.emote.v1.OwnedEmote owned_emotes = 7;
+  bool has_all_emotes_flag = 5;
+  repeated lunarclient.websocket.emote.v1.EquippedEmote equipped_emotes = 8;
+}
+
+message UseEmoteRequest {
+  int32 emote_id = 1;
+  int32 emote_metadata = 2;
+  string emote_soundtrack_url = 3;
+  int32 emote_jam_id = 4;
+}
+
+message UseEmoteResponse {
+  lunarclient.websocket.emote.v1.UseEmoteResponse.Status status = 1;
+  int32 emote_id = 2;
+  int32 emote_metadata = 3;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+    STATUS_EMOTE_NOT_OWNED = 2;
+    STATUS_ILLEGAL_SOUNDTRACK = 3;
+    STATUS_RATE_LIMITED = 4;
+  }
+}
+
+message StopEmoteRequest {
+}
+
+message StopEmoteResponse {
+}
+
+message UpdateEquippedEmotesRequest {
+  repeated int32 equipped_emote_ids = 1;
+  repeated lunarclient.websocket.emote.v1.EquippedEmote equipped_emotes = 2;
+}
+
+message UpdateEquippedEmotesResponse {
+}
+
+
+

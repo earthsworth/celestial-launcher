@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package lunarclient.common.v1;
+
+
+option java_package = "com.lunarclient.common.v1";
+option java_outer_classname = "RadioProto";
+option java_multiple_files = true;
+
+message RadioTrack {
+  string title = 1;
+  repeated string artist_names = 2;
+  int32 duration = 3;
+  int32 progress = 4;
+  bool paused = 5;
+  string image_url = 6;
+}
+
+message RadioStation {
+  string name = 1;
+  string description = 2;
+  string station_id = 3;
+  string image_url = 4;
+}
+
+message RadioInfo {
+  lunarclient.common.v1.RadioTrack track = 1;
+  lunarclient.common.v1.RadioStation station = 2;
+}
+
+
+

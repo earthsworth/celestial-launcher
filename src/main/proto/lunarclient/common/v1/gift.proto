@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package lunarclient.common.v1;
+
+import "lunarclient/common/v1/uuid.proto";
+
+option java_package = "com.lunarclient.common.v1";
+option java_outer_classname = "GiftProto";
+option java_multiple_files = true;
+
+message GiftInfo {
+  lunarclient.common.v1.UuidAndUsername gifted_by = 1;
+  string message = 2;
+}
+
+
+

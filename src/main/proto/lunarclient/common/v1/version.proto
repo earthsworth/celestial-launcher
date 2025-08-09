@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package lunarclient.common.v1;
+
+
+option java_package = "com.lunarclient.common.v1";
+option java_outer_classname = "VersionProto";
+option java_multiple_files = true;
+
+message MinecraftVersion {
+  string enum = 1;
+  lunarclient.common.v1.MinecraftVersion.MinecraftVersionType type = 2;
+  string id = 3;
+
+  enum MinecraftVersionType {
+    MINECRAFT_VERSION_TYPE_UNSPECIFIED = 0;
+    MINECRAFT_VERSION_TYPE_RELEASE = 1;
+    MINECRAFT_VERSION_TYPE_SNAPSHOT = 2;
+    MINECRAFT_VERSION_TYPE_OLD_BETA = 3;
+    MINECRAFT_VERSION_TYPE_OLD_ALPHA = 4;
+  }
+}
+
+message LauncherVersion {
+  string semver = 1;
+}
+
+message LunarClientVersion {
+  string git_branch = 1;
+  string git_commit = 2;
+  string semver = 3;
+}
+
+
+

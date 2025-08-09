@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package lunarclient.apollo.common.v1;
+
+
+option java_package = "com.lunarclient.apollo.common.v1";
+option java_outer_classname = "ColorProto";
+option java_multiple_files = true;
+
+message Color {
+  int32 color = 1;
+}
+
+
+

@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package lunarclient.websocket.socials.v1;
+
+import "lunarclient/common/v1/social.proto";
+import "lunarclient/websocket/protocol/v1/common.proto";
+import "lunarclient/websocket/socials/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.socials.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message LoginRequest {
+}
+
+message LoginResponse {
+  repeated lunarclient.websocket.socials.v1.LinkedSocial linked_socials = 1;
+  lunarclient.websocket.socials.v1.SocialsVisibility socials_visibility = 2;
+}
+
+message SetSocialsVisibilityRequest {
+  lunarclient.websocket.socials.v1.SocialsVisibility visibility = 1;
+}
+
+message SetSocialsVisibilityResponse {
+}
+
+message UnlinkSocialRequest {
+  lunarclient.common.v1.UserSocialPlatform platform = 1;
+}
+
+message UnlinkSocialResponse {
+  lunarclient.websocket.socials.v1.UnlinkSocialResponse.Status status = 1;
+  lunarclient.common.v1.UserSocialPlatform platform = 2;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+    STATUS_TARGET_NOT_LINKED = 2;
+  }
+}
+
+
+

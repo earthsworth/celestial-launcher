@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package lunarclient.apollo.title.v1;
+
+import "google/protobuf/duration.proto";
+import "lunarclient/apollo/common/v1/component.proto";
+
+option java_package = "com.lunarclient.apollo.title.v1";
+option java_outer_classname = "SchemaProto";
+option java_multiple_files = true;
+
+message DisplayTitleMessage {
+  lunarclient.apollo.title.v1.TitleType title_type = 1;
+  lunarclient.apollo.common.v1.Component message = 2;
+  float scale = 3;
+  google.protobuf.Duration fade_in_time = 4;
+  google.protobuf.Duration display_time = 5;
+  google.protobuf.Duration fade_out_time = 6;
+  string adventure_json_message = 7;
+  float interpolation_scale = 8;
+  float interpolation_rate = 9;
+}
+
+message ResetTitlesMessage {
+}
+
+
+enum TitleType {
+  TITLE_TYPE_UNSPECIFIED = 0;
+  TITLE_TYPE_TITLE = 1;
+  TITLE_TYPE_SUBTITLE = 2;
+}
+
+

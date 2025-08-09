@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package lunarclient.apollo.vignette.v1;
+
+
+option java_package = "com.lunarclient.apollo.vignette.v1";
+option java_outer_classname = "SchemaProto";
+option java_multiple_files = true;
+
+message DisplayVignetteMessage {
+  string resource_location = 1;
+  float opacity = 2;
+}
+
+message ResetVignetteMessage {
+}
+
+
+

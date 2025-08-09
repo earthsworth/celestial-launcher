@@ -1,0 +1,64 @@
+syntax = "proto3";
+
+package lunarclient.websocket.hostedworld.v1;
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+import "lunarclient/common/v1/uuid.proto";
+
+option java_package = "com.lunarclient.websocket.hostedworld.v1";
+option java_outer_classname = "CommonProto";
+option java_multiple_files = true;
+
+message AddressAndPort {
+  string address = 1;
+  int32 port = 2;
+}
+
+message PingResponse {
+  lunarclient.websocket.hostedworld.v1.AddressAndPort target = 1;
+  bool success = 2;
+  google.protobuf.Duration latency = 3;
+}
+
+message Heartbeat {
+  repeated lunarclient.websocket.hostedworld.v1.JoinSource allowed_join_sources = 1;
+  int32 max_players = 2;
+  repeated lunarclient.common.v1.Uuid whitelisted_uuids = 3;
+  repeated lunarclient.websocket.hostedworld.v1.Heartbeat.OnlinePlayer online_players = 4;
+  repeated lunarclient.websocket.hostedworld.v1.Heartbeat.OfflinePlayer offline_players = 5;
+  repeated lunarclient.websocket.hostedworld.v1.PingResponse ping_responses = 6;
+
+  message OnlinePlayer {
+    lunarclient.common.v1.UuidAndUsername player = 1;
+  }
+
+  message OfflinePlayer {
+    lunarclient.common.v1.UuidAndUsername player = 1;
+    google.protobuf.Timestamp last_online = 2;
+  }
+}
+
+
+enum JoinSource {
+  JOIN_SOURCE_UNSPECIFIED = 0;
+  JOIN_SOURCE_LOCAL_AREA_NETWORK = 1;
+  JOIN_SOURCE_HOSTED_WORLD_WHITELIST = 2;
+  JOIN_SOURCE_LUNAR_CLIENT_FRIENDS = 3;
+  JOIN_SOURCE_EVERYONE = 4;
+}
+
+enum Joinability {
+  JOINABILITY_UNSPECIFIED = 0;
+  JOINABILITY_ALLOWED = 1;
+  JOINABILITY_WORLD_FULL = 2;
+  JOINABILITY_INCOMPATIBLE_MINECRAFT_VERSION = 3;
+}
+
+enum Role {
+  ROLE_UNSPECIFIED = 0;
+  ROLE_NONE = 1;
+  ROLE_HOST = 2;
+}
+
+

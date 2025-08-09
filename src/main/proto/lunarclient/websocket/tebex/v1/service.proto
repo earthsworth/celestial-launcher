@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package lunarclient.websocket.tebex.v1;
+
+import "lunarclient/websocket/protocol/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.tebex.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message TebexJsCheckoutOpenedRequest {
+  string basket_ident = 1;
+  lunarclient.websocket.tebex.v1.TebexJsCheckoutOpenedRequest.Backend backend = 2;
+  string locale = 3;
+
+  enum Backend {
+    BACKEND_UNSPECIFIED = 0;
+    BACKEND_OVERWOLF_OVERLAY = 1;
+    BACKEND_ELECTRON_WINDOW = 2;
+  }
+}
+
+message TebexJsCheckoutOpenedResponse {
+}
+
+message TebexJsCheckoutClosedRequest {
+}
+
+message TebexJsCheckoutClosedResponse {
+}
+
+
+

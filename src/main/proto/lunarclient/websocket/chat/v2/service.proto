@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package lunarclient.websocket.chat.v2;
+
+import "lunarclient/common/v1/uuid.proto";
+import "lunarclient/websocket/chat/v2/common.proto";
+import "lunarclient/websocket/protocol/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.chat.v2";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message LoginRequest {
+}
+
+message LoginResponse {
+  repeated lunarclient.websocket.chat.v2.Chat chats = 1;
+}
+
+message SendChatMessageRequest {
+  oneof recipient {
+    int32 chat_id = 1;
+    lunarclient.common.v1.Uuid recipient_uuid = 2;
+  }
+  string chat_message = 3;
+}
+
+message SendChatMessageResponse {
+  lunarclient.websocket.chat.v2.SendChatMessageResponse.Status status = 1;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+    STATUS_TARGET_NOT_FRIEND = 2;
+  }
+}
+
+message LoadChatMessagesRequest {
+  int32 chat_id = 1;
+  int32 before_message_id = 2;
+  int32 num_messages = 3;
+}
+
+message LoadChatMessagesResponse {
+  repeated lunarclient.websocket.chat.v2.ChatMessage messages = 1;
+}
+
+message CreateChatRequest {
+  repeated lunarclient.common.v1.Uuid participant_uuids = 1;
+  lunarclient.websocket.chat.v2.ChatType chat_type = 2;
+}
+
+message CreateChatResponse {
+  lunarclient.websocket.chat.v2.CreateChatResponse.Status status = 1;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+    STATUS_TOO_MANY_PARTICIPANTS = 2;
+    STATUS_PARTICIPANT_NOT_FRIEND = 3;
+  }
+}
+
+message InviteToChatRequest {
+  int32 chat_id = 1;
+  lunarclient.common.v1.Uuid participant_uuid = 2;
+}
+
+message InviteToChatResponse {
+  lunarclient.websocket.chat.v2.InviteToChatResponse.Status status = 1;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+    STATUS_TARGET_NOT_FRIEND = 2;
+  }
+}
+
+message LeaveChatRequest {
+  int32 chat_id = 1;
+}
+
+message LeaveChatResponse {
+}
+
+
+

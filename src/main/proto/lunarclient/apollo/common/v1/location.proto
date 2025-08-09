@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package lunarclient.apollo.common.v1;
+
+
+option java_package = "com.lunarclient.apollo.common.v1";
+option java_outer_classname = "LocationProto";
+option java_multiple_files = true;
+
+message BlockLocation {
+  string world = 1;
+  sint32 x = 2;
+  sint32 y = 3;
+  sint32 z = 4;
+}
+
+message PlayerLocation {
+  lunarclient.apollo.common.v1.Location location = 1;
+  float yaw = 2;
+  float pitch = 3;
+}
+
+message Location {
+  string world = 1;
+  double x = 2;
+  double y = 3;
+  double z = 4;
+}
+
+
+

@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package lunarclient.apollo.common.v1;
+
+
+option java_package = "com.lunarclient.apollo.common.v1";
+option java_outer_classname = "VersionProto";
+option java_multiple_files = true;
+
+message MinecraftVersion {
+  string enum = 1;
+}
+
+message LunarClientVersion {
+  string git_branch = 1;
+  string git_commit = 2;
+  string semver = 3;
+}
+
+
+

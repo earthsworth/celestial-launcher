@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package lunarclient.gameipc.styngr.v1;
+
+
+option java_package = "com.lunarclient.gameipc.styngr.v1";
+option java_outer_classname = "CommonProto";
+option java_multiple_files = true;
+
+message StyngrTrackState {
+  string image_url = 1;
+  string title = 2;
+  repeated string artist_names = 3;
+  bool liked = 4;
+  int32 remaining_skips = 5;
+  string playlist_id = 6;
+  string playlist_name = 7;
+}
+
+message StyngrControlsState {
+  bool playing = 1;
+  bool muted = 2;
+  float volume = 3;
+}
+
+message StyngrProgressState {
+  float duration = 1;
+  float position = 2;
+}
+
+
+enum PlaylistLicense {
+  PLAYLIST_LICENSE_UNSPECIFIED = 0;
+  PLAYLIST_LICENSE_LICENSED = 1;
+  PLAYLIST_LICENSE_ROYALTY_FREE = 2;
+}
+
+enum PlaylistMonetization {
+  PLAYLIST_MONETIZATION_UNSPECIFIED = 0;
+  PLAYLIST_MONETIZATION_INTERNAL_AD_FUNDED = 1;
+  PLAYLIST_MONETIZATION_EXTERNAL_AD_FUNDED = 2;
+  PLAYLIST_MONETIZATION_PREMIUM = 3;
+}
+
+

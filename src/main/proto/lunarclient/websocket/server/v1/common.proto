@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package lunarclient.websocket.server.v1;
+
+import "lunarclient/common/v1/modpack.proto";
+
+option java_package = "com.lunarclient.websocket.server.v1";
+option java_outer_classname = "CommonProto";
+option java_multiple_files = true;
+
+message ServerRecommendations {
+  lunarclient.common.v1.PlayerModpack modpack = 1;
+}
+
+
+

@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package lunarclient.gameipc.location.v1;
+
+import "lunarclient/common/v1/location.proto";
+
+option java_package = "com.lunarclient.gameipc.location.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message UpdateLocationRequest {
+  lunarclient.common.v1.Location location = 1;
+}
+
+message UpdateLocationResponse {
+}
+
+message UpdateFocusRequest {
+  bool focused = 1;
+}
+
+message UpdateFocusResponse {
+}
+
+
+

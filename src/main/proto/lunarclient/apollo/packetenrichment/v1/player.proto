@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package lunarclient.apollo.packetenrichment.v1;
+
+import "lunarclient/apollo/common/v1/location.proto";
+import "lunarclient/apollo/common/v1/uuid.proto";
+
+option java_package = "com.lunarclient.apollo.packetenrichment.v1";
+option java_outer_classname = "PlayerProto";
+option java_multiple_files = true;
+
+message PlayerInfo {
+  lunarclient.apollo.common.v1.Uuid player_uuid = 1;
+  lunarclient.apollo.common.v1.PlayerLocation location = 2;
+  bool sneaking = 3;
+  bool sprinting = 4;
+  bool jumping = 5;
+  float forward_speed = 6;
+  float strafe_speed = 7;
+}
+
+
+

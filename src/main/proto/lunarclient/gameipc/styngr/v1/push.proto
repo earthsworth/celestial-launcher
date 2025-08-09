@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package lunarclient.gameipc.styngr.v1;
+
+import "lunarclient/gameipc/styngr/v1/common.proto";
+
+option java_package = "com.lunarclient.gameipc.styngr.v1";
+option java_outer_classname = "PushProto";
+option java_multiple_files = true;
+
+message StyngrTrackControlsUpdate {
+  bool playing = 1;
+  bool muted = 2;
+  float volume = 3;
+}
+
+message StyngrTrackProgressUpdate {
+  float duration = 1;
+  float position = 2;
+}
+
+message StyngrTrackUpdate {
+  optional lunarclient.gameipc.styngr.v1.StyngrTrackState track = 1;
+}
+
+
+

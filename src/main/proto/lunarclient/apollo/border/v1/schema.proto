@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package lunarclient.apollo.border.v1;
+
+import "lunarclient/apollo/common/v1/color.proto";
+import "lunarclient/apollo/common/v1/cuboid.proto";
+
+option java_package = "com.lunarclient.apollo.border.v1";
+option java_outer_classname = "SchemaProto";
+option java_multiple_files = true;
+
+message DisplayBorderMessage {
+  string id = 1;
+  string world = 2;
+  bool cancel_entry = 3;
+  bool cancel_exit = 4;
+  bool can_shrink_or_expand = 5;
+  lunarclient.apollo.common.v1.Color color = 6;
+  lunarclient.apollo.common.v1.Cuboid2D bounds = 7;
+  int32 duration_ticks = 8;
+}
+
+message RemoveBorderMessage {
+  string id = 1;
+}
+
+message ResetBordersMessage {
+}
+
+
+

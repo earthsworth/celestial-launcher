@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package lunarclient.websocket.notification.v1;
+
+import "google/protobuf/timestamp.proto";
+import "lunarclient/common/v1/uuid.proto";
+
+option java_package = "com.lunarclient.websocket.notification.v1";
+option java_outer_classname = "CommonProto";
+option java_multiple_files = true;
+
+message Notification {
+  lunarclient.common.v1.Uuid id = 1;
+  string title = 2;
+  lunarclient.websocket.notification.v1.Notification.NotificationType type = 3;
+  google.protobuf.Timestamp sent_at = 4;
+  google.protobuf.Timestamp read_at = 5;
+  string metadata = 6;
+
+  enum NotificationType {
+    NOTIFICATION_TYPE_UNSPECIFIED = 0;
+    NOTIFICATION_TYPE_ANNOUNCEMENT = 1;
+    NOTIFICATION_TYPE_FRIEND_REQUEST = 2;
+    NOTIFICATION_TYPE_PURCHASE = 3;
+    NOTIFICATION_TYPE_GIFT = 4;
+    NOTIFICATION_TYPE_GENERAL = 5;
+    NOTIFICATION_TYPE_NOW_FRIENDS = 6;
+    NOTIFICATION_TYPE_PROMOTION = 7;
+  }
+}
+
+
+

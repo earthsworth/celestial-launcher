@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package lunarclient.websocket.handshake.v1;
+
+import "lunarclient/common/v1/uuid.proto";
+
+option java_package = "com.lunarclient.websocket.handshake.v1";
+option java_outer_classname = "PushProto";
+option java_multiple_files = true;
+
+message SessionIdentifyPush {
+  lunarclient.common.v1.Uuid session_id = 1;
+}
+
+
+

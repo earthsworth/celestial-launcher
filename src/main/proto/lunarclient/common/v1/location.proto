@@ -1,0 +1,100 @@
+syntax = "proto3";
+
+package lunarclient.common.v1;
+
+import "lunarclient/common/v1/color.proto";
+import "lunarclient/common/v1/modpack.proto";
+import "lunarclient/common/v1/uuid.proto";
+import "lunarclient/common/v1/version.proto";
+
+option java_package = "com.lunarclient.common.v1";
+option java_outer_classname = "LocationProto";
+option java_multiple_files = true;
+
+message ServerRichStatus {
+  lunarclient.common.v1.ServerRichStatus.Source source = 8;
+  string game_name = 1;
+  string game_variant_name = 9;
+  string game_state = 2;
+  string player_state = 3;
+  string map_name = 4;
+  string sub_server = 5;
+  int32 team_current_size = 6;
+  int32 team_max_size = 7;
+
+  enum Source {
+    SOURCE_UNSPECIFIED = 0;
+    SOURCE_APOLLO = 1;
+    SOURCE_LUNAR_CLIENT_PARSED = 2;
+  }
+}
+
+message PublicServerColors {
+  lunarclient.common.v1.Color primary = 1;
+  lunarclient.common.v1.Color secondary = 2;
+}
+
+message PublicServerVersions {
+  repeated lunarclient.common.v1.MinecraftVersion supported = 1;
+  lunarclient.common.v1.MinecraftVersion recommended = 2;
+}
+
+message PublicServer {
+  string server_mappings_id = 1;
+  string name = 2;
+  string primary_address = 3;
+  lunarclient.common.v1.PublicServerColors colors = 4;
+  lunarclient.common.v1.PublicServerVersions versions = 5;
+  bool supports_discord_rich_presence = 6;
+  lunarclient.common.v1.ServerRichStatus rich_status = 7;
+}
+
+message PrivateServer {
+}
+
+message LocalServer {
+  lunarclient.common.v1.ServerRichStatus rich_status = 1;
+}
+
+message SinglePlayer {
+}
+
+message MinecraftRealms {
+}
+
+message InMenus {
+}
+
+message InLauncher {
+}
+
+message HostedWorld {
+  lunarclient.common.v1.UuidAndUsername world_host = 1;
+}
+
+message ReplayWorld {
+}
+
+message InGame {
+  lunarclient.common.v1.MinecraftVersion minecraft_version = 1;
+  lunarclient.common.v1.PlayerModpack modpack = 2;
+  bool is_badlion = 3;
+}
+
+message Location {
+  oneof location {
+    lunarclient.common.v1.PublicServer public_server = 1;
+    lunarclient.common.v1.PrivateServer private_server = 2;
+    lunarclient.common.v1.LocalServer local_server = 3;
+    lunarclient.common.v1.SinglePlayer single_player = 4;
+    lunarclient.common.v1.MinecraftRealms minecraft_realms = 5;
+    lunarclient.common.v1.InMenus in_menus = 6;
+    lunarclient.common.v1.InLauncher in_launcher = 7;
+    lunarclient.common.v1.HostedWorld hosted_world = 8;
+    lunarclient.common.v1.ReplayWorld replay_world = 9;
+    lunarclient.common.v1.InGame in_game = 10;
+  }
+}
+
+
+

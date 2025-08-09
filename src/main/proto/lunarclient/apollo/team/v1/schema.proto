@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package lunarclient.apollo.team.v1;
+
+import "lunarclient/apollo/common/v1/color.proto";
+import "lunarclient/apollo/common/v1/component.proto";
+import "lunarclient/apollo/common/v1/location.proto";
+import "lunarclient/apollo/common/v1/uuid.proto";
+
+option java_package = "com.lunarclient.apollo.team.v1";
+option java_outer_classname = "SchemaProto";
+option java_multiple_files = true;
+
+message TeamMember {
+  lunarclient.apollo.common.v1.Uuid player_uuid = 1;
+  lunarclient.apollo.common.v1.Component player_display_name = 2;
+  lunarclient.apollo.common.v1.Location location = 3;
+  lunarclient.apollo.common.v1.Color marker_color = 4;
+  string adventure_json_player_name = 5;
+}
+
+message UpdateTeamMembersMessage {
+  repeated lunarclient.apollo.team.v1.TeamMember members = 1;
+}
+
+message ResetTeamMembersMessage {
+}
+
+
+

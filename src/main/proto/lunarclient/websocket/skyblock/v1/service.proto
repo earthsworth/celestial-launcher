@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package lunarclient.websocket.skyblock.v1;
+
+import "lunarclient/websocket/protocol/v1/common.proto";
+import "lunarclient/websocket/skyblock/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.skyblock.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message BroadcastDungeonUpdateRequest {
+  lunarclient.websocket.skyblock.v1.DungeonUpdate update = 1;
+}
+
+message BroadcastDungeonUpdateResponse {
+}
+
+
+

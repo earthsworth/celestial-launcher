@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package lunarclient.websocket.promotion.v1;
+
+import "lunarclient/websocket/promotion/v1/common.proto";
+import "lunarclient/websocket/protocol/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.promotion.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message LoginRequest {
+}
+
+message LoginResponse {
+  bool corner_exempt = 1;
+  bool show_ads = 2;
+}
+
+message StartPromotionViewRequest {
+  string promotion_id = 1;
+}
+
+message StartPromotionViewResponse {
+}
+
+message EndPromotionViewRequest {
+  string promotion_id = 1;
+  bool completed = 2;
+}
+
+message EndPromotionViewResponse {
+  repeated lunarclient.websocket.promotion.v1.PromotionReward rewards = 1;
+}
+
+
+

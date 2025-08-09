@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package lunarclient.authenticator.v1;
+
+import "lunarclient/authenticator/v1/message.proto";
+
+option java_package = "com.lunarclient.authenticator.v1";
+option java_outer_classname = "ProtocolProto";
+option java_multiple_files = true;
+
+message ServerboundWebSocketMessage {
+  oneof contents {
+    lunarclient.authenticator.v1.HelloMessage hello = 1;
+    lunarclient.authenticator.v1.EncryptionResponseMessage encryption_response = 2;
+    lunarclient.authenticator.v1.EncryptionFailMessage encryption_fail = 3;
+  }
+}
+
+message ClientboundWebSocketMessage {
+  oneof contents {
+    lunarclient.authenticator.v1.EncryptionRequestMessage encryption_request = 1;
+    lunarclient.authenticator.v1.AuthSuccessMessage auth_success = 2;
+  }
+}
+
+
+

@@ -1,0 +1,178 @@
+syntax = "proto3";
+
+package lunarclient.websocket.friend.v1;
+
+import "lunarclient/common/v1/location.proto";
+import "lunarclient/common/v1/uuid.proto";
+import "lunarclient/websocket/friend/v1/common.proto";
+import "lunarclient/websocket/friend/v1/location.proto";
+import "lunarclient/websocket/protocol/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.friend.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message LoginRequest {
+}
+
+message LoginResponse {
+  lunarclient.websocket.friend.v1.OnlineFriendStatus current_status = 1;
+  repeated lunarclient.websocket.friend.v1.OfflineFriend offline_friends = 2;
+  bool allow_friend_requests = 3;
+  repeated lunarclient.common.v1.UuidAndUsername outbound_friend_requests = 4;
+  repeated lunarclient.common.v1.UuidAndUsername inbound_friend_requests = 5;
+  repeated lunarclient.websocket.friend.v1.FriendRequest outbound_friend_add_requests = 6;
+  repeated lunarclient.websocket.friend.v1.FriendRequest inbound_friend_add_requests = 7;
+  repeated lunarclient.common.v1.Uuid pinned_friends = 8;
+  lunarclient.websocket.friend.v1.LastSeenVisibility last_seen_visibility = 9;
+  lunarclient.websocket.friend.v1.CountryFlagVisibility country_flag_visibility = 10;
+}
+
+message BroadcastLocationChangeRequest {
+  lunarclient.websocket.friend.v1.InboundLocation new_location = 1;
+  lunarclient.websocket.friend.v1.BroadcastLocationChangeRequest.Trigger trigger = 2;
+
+  enum Trigger {
+    TRIGGER_UNSPECIFIED = 0;
+    TRIGGER_JOIN_EVENT = 1;
+    TRIGGER_DISCONNECT_EVENT = 2;
+    TRIGGER_HOSTED_WORLD_START = 3;
+    TRIGGER_HOSTED_WORLD_STOP = 4;
+    TRIGGER_SERVER_RICH_STATUS = 5;
+  }
+}
+
+message BroadcastLocationChangeResponse {
+  lunarclient.common.v1.Location new_location = 1;
+}
+
+message BroadcastStatusChangeRequest {
+  lunarclient.websocket.friend.v1.OnlineFriendStatus new_status = 1;
+}
+
+message BroadcastStatusChangeResponse {
+}
+
+message BroadcastServerKickRequest {
+  string kick_reason = 1;
+}
+
+message BroadcastServerKickResponse {
+}
+
+message RemoveFriendRequest {
+  lunarclient.common.v1.Uuid friend_uuid = 1;
+}
+
+message RemoveFriendResponse {
+}
+
+message ToggleFriendRequestsRequest {
+  bool allow_friend_requests = 1;
+}
+
+message ToggleFriendRequestsResponse {
+}
+
+message SendFriendRequestRequest {
+  string target_username = 1;
+}
+
+message SendFriendRequestResponse {
+  lunarclient.websocket.friend.v1.SendFriendRequestResponse.Status status = 1;
+  lunarclient.common.v1.UuidAndUsername target = 2;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+    STATUS_TARGET_INVALID_USERNAME = 2;
+    STATUS_TARGET_NOT_FOUND = 3;
+    STATUS_TARGET_FRIEND_REQUESTS_DISABLED = 4;
+    STATUS_TARGET_IS_SENDER = 5;
+    STATUS_ALREADY_FRIENDS = 6;
+    STATUS_ALREADY_HAVE_INBOUND_REQUEST = 7;
+    STATUS_ALREADY_HAVE_OUTBOUND_REQUEST = 8;
+  }
+}
+
+message CancelFriendRequestRequest {
+  lunarclient.common.v1.Uuid target_uuid = 1;
+}
+
+message CancelFriendRequestResponse {
+}
+
+message AcceptFriendRequestRequest {
+  lunarclient.common.v1.Uuid sender_uuid = 1;
+}
+
+message AcceptFriendRequestResponse {
+  lunarclient.websocket.friend.v1.AcceptFriendRequestResponse.Status status = 1;
+  lunarclient.websocket.friend.v1.OfflineFriend offline_friend = 2;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+    STATUS_YOUR_FRIEND_LIST_FULL = 2;
+    STATUS_TARGET_FRIEND_LIST_FULL = 3;
+    STATUS_ALREADY_FRIENDS = 4;
+    STATUS_FRIEND_REQUEST_NOT_FOUND = 5;
+  }
+}
+
+message DenyFriendRequestRequest {
+  lunarclient.common.v1.Uuid sender_uuid = 1;
+}
+
+message DenyFriendRequestResponse {
+}
+
+message AddFriendPinRequest {
+  lunarclient.common.v1.Uuid target_uuid = 1;
+}
+
+message AddFriendPinResponse {
+  lunarclient.websocket.friend.v1.AddFriendPinResponse.Status status = 1;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+    STATUS_FRIEND_ALREADY_PINNED = 2;
+    STATUS_TARGET_IS_NOT_FRIEND = 3;
+    STATUS_TARGET_NOT_FOUND = 4;
+    STATUS_LIMIT_REACHED = 5;
+  }
+}
+
+message RemoveFriendPinRequest {
+  lunarclient.common.v1.Uuid target_uuid = 1;
+}
+
+message RemoveFriendPinResponse {
+  lunarclient.websocket.friend.v1.RemoveFriendPinResponse.Status status = 1;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+    STATUS_FRIEND_NOT_PINNED = 2;
+    STATUS_TARGET_IS_NOT_FRIEND = 3;
+    STATUS_TARGET_NOT_FOUND = 4;
+  }
+}
+
+message SetLastSeenVisibilityRequest {
+  lunarclient.websocket.friend.v1.LastSeenVisibility visibility = 1;
+}
+
+message SetLastSeenVisibilityResponse {
+}
+
+message SetCountryFlagVisibilityRequest {
+  lunarclient.websocket.friend.v1.CountryFlagVisibility visibility = 1;
+}
+
+message SetCountryFlagVisibilityResponse {
+}
+
+
+

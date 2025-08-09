@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package lunarclient.websocket.spray.v1;
+
+import "lunarclient/common/v1/position.proto";
+import "lunarclient/common/v1/uuid.proto";
+
+option java_package = "com.lunarclient.websocket.spray.v1";
+option java_outer_classname = "PushProto";
+option java_multiple_files = true;
+
+message UseSprayPush {
+  lunarclient.common.v1.Uuid player_uuid = 1;
+  int32 spray_id = 2;
+  lunarclient.common.v1.Vector3f pos = 3;
+  lunarclient.common.v1.Direction facing = 4;
+  float rotation = 5;
+  int32 max_active_sprays = 6;
+}
+
+message RemoveSprayPush {
+  lunarclient.common.v1.Uuid player_uuid = 1;
+  lunarclient.common.v1.Vector3f pos = 2;
+}
+
+message RefreshSpraysPush {
+}
+
+
+

@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package lunarclient.websocket.subscription.v1;
+
+import "lunarclient/common/v1/uuid.proto";
+import "lunarclient/websocket/protocol/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.subscription.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message SubscribeRequest {
+  repeated lunarclient.common.v1.Uuid target_uuids = 1;
+}
+
+message SubscribeResponse {
+}
+
+message UnsubscribeRequest {
+  repeated lunarclient.common.v1.Uuid target_uuids = 1;
+}
+
+message UnsubscribeResponse {
+}
+
+
+

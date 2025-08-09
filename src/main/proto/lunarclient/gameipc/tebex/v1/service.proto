@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package lunarclient.gameipc.tebex.v1;
+
+
+option java_package = "com.lunarclient.gameipc.tebex.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message CheckTebexCapabilitiesRequest {
+}
+
+message CheckTebexCapabilitiesResponse {
+  lunarclient.gameipc.tebex.v1.CheckTebexCapabilitiesResponse.EmbeddedCheckout embedded_checkout = 1;
+
+  enum EmbeddedCheckout {
+    EMBEDDED_CHECKOUT_UNSPECIFIED = 0;
+    EMBEDDED_CHECKOUT_OVERWOLF_OVERLAY = 1;
+    EMBEDDED_CHECKOUT_ELECTRON_WINDOW = 2;
+  }
+}
+
+message OpenTebexJsCheckoutRequest {
+  string basket_ident = 1;
+  string locale = 2;
+}
+
+message OpenTebexJsCheckoutResponse {
+  lunarclient.gameipc.tebex.v1.OpenTebexJsCheckoutResponse.Status status = 1;
+  bool open_minecraft_screen = 2;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_OK = 1;
+    STATUS_INTERNAL_ERROR = 2;
+    STATUS_SERVER_NOT_ALLOWED = 3;
+  }
+}
+
+
+

@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+package lunarclient.websocket.skyblock.v1;
+
+import "lunarclient/common/v1/position.proto";
+
+option java_package = "com.lunarclient.websocket.skyblock.v1";
+option java_outer_classname = "CommonProto";
+option java_multiple_files = true;
+
+message EarlyInDoor {
+  lunarclient.websocket.skyblock.v1.DungeonRoomType type = 1;
+  lunarclient.common.v1.Vector2i position_1 = 2;
+  lunarclient.common.v1.Vector2i position_2 = 3;
+}
+
+message EarlyInRoom {
+  repeated lunarclient.common.v1.Vector2i components = 1;
+  lunarclient.websocket.skyblock.v1.DungeonRoomType type = 2;
+}
+
+message EarlyInUnknown {
+  lunarclient.common.v1.Vector2i position = 1;
+}
+
+message RoomDetection {
+  lunarclient.common.v1.Vector2i position = 1;
+  string hash = 2;
+  lunarclient.common.v1.Vector3i origin = 3;
+  lunarclient.websocket.skyblock.v1.DungeonRoomRotation rotation = 4;
+}
+
+message RoomSecrets {
+  lunarclient.common.v1.Vector2i position = 1;
+  int32 current = 2;
+  int32 max = 3;
+}
+
+message DungeonUpdate {
+  oneof contents {
+    lunarclient.websocket.skyblock.v1.EarlyInDoor early_in_door = 1;
+    lunarclient.websocket.skyblock.v1.EarlyInRoom early_in_room = 2;
+    lunarclient.websocket.skyblock.v1.EarlyInUnknown early_in_unknown = 3;
+    lunarclient.websocket.skyblock.v1.RoomDetection room_detection = 4;
+    lunarclient.websocket.skyblock.v1.RoomSecrets room_secrets = 5;
+  }
+}
+
+
+enum DungeonRoomType {
+  DUNGEON_ROOM_TYPE_UNSPECIFIED = 0;
+  DUNGEON_ROOM_TYPE_SPAWN = 1;
+  DUNGEON_ROOM_TYPE_CLEAR = 2;
+  DUNGEON_ROOM_TYPE_MINIBOSS = 3;
+  DUNGEON_ROOM_TYPE_PUZZLE = 4;
+  DUNGEON_ROOM_TYPE_TRAP = 5;
+  DUNGEON_ROOM_TYPE_FAIRY = 6;
+  DUNGEON_ROOM_TYPE_BLOOD = 7;
+  DUNGEON_ROOM_TYPE_BOSS = 8;
+  DUNGEON_ROOM_TYPE_UNKNOWN = 9;
+  DUNGEON_ROOM_TYPE_WITHER_DOOR = 10;
+}
+
+enum DungeonRoomRotation {
+  DUNGEON_ROOM_ROTATION_UNSPECIFIED = 0;
+  DUNGEON_ROOM_ROTATION_EAST = 1;
+  DUNGEON_ROOM_ROTATION_SOUTH = 2;
+  DUNGEON_ROOM_ROTATION_WEST = 3;
+  DUNGEON_ROOM_ROTATION_NORTH = 4;
+}
+
+

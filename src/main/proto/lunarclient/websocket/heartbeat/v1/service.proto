@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package lunarclient.websocket.heartbeat.v1;
+
+import "lunarclient/websocket/heartbeat/v1/common.proto";
+import "lunarclient/websocket/protocol/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.heartbeat.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message LauncherHeartbeatRequest {
+  bool focused = 1;
+  bool game_currently_launched = 2;
+  repeated lunarclient.websocket.heartbeat.v1.RunningInstance running_instances = 3;
+  repeated lunarclient.websocket.heartbeat.v1.OpenRenderer open_renderers = 4;
+}
+
+message LauncherHeartbeatResponse {
+  lunarclient.websocket.heartbeat.v1.OnlineCounts online_counts = 1;
+}
+
+message GameHeartbeatRequest {
+  repeated lunarclient.websocket.heartbeat.v1.GameHeartbeatRequest.ModsEntry mods = 1;
+  string server_game_mode = 2;
+
+  message ModsEntry {
+    string key = 1;
+    bool value = 2;
+  }
+}
+
+message GameHeartbeatResponse {
+}
+
+
+

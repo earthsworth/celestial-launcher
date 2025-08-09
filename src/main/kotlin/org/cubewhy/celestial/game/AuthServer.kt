@@ -8,7 +8,14 @@ package org.cubewhy.celestial.game
 import co.gongzh.procbridge.IDelegate
 import co.gongzh.procbridge.Server
 import com.google.gson.JsonObject
-import launcher.Gameipc.*
+import com.google.protobuf.ByteString
+import com.google.protobuf.GeneratedMessage
+import com.lunarclient.gameipc.auth.v1.OpenMicrosoftPopupResponse
+import com.lunarclient.gameipc.browser.v1.OpenUrlRequest
+import com.lunarclient.gameipc.promotion.v1.CheckPendingPromotionResponse
+import com.lunarclient.gameipc.protocol.v1.GameboundIPCMessage
+import com.lunarclient.gameipc.protocol.v1.IPCRpcResponse
+import com.lunarclient.gameipc.protocol.v1.LauncherboundIPCMessage
 import org.cubewhy.celestial.event.impl.AuthEvent
 import org.cubewhy.celestial.utils.open
 import org.cubewhy.celestial.utils.toURI
@@ -82,18 +89,20 @@ class GameWebsocketServer(serverPort: Int = 28190) : WebSocketServer(InetSocketA
     }
 
     override fun onOpen(p0: WebSocket?, p1: ClientHandshake?) {
-        log.debug("Open.")
+        log.debug("Opened gameipc.")
     }
 
     override fun onClose(p0: WebSocket?, p1: Int, p2: String?, p3: Boolean) {
-        log.debug("Closed.")
+        log.debug("Closed gameipc.")
     }
 
     override fun onMessage(p0: WebSocket?, p1: String?) {
     }
 
     override fun onMessage(conn: WebSocket, message: ByteBuffer) {
-        val request = GameRequest.parseFrom(message)
+        val request = LauncherboundIPCMessage.parseFrom(message)
+        log.info("Client send gameipc request ${request.service}:${request.method}")
+        // TODO: handle request.service
         when (request.method) {
             "OpenMicrosoftPopup" -> {
                 log.info("Client request login")
@@ -104,28 +113,32 @@ class GameWebsocketServer(serverPort: Int = 28190) : WebSocketServer(InetSocketA
                     return
                 }
                 val responseUrl = event.waitForAuth()
-                conn.send(
-                    LoginResponseBase.newBuilder()
-                        .setResponse(
-                            LoginResponse.newBuilder()
-                                .setResponseId(request.requestId)
-                                .setAuth(
-                                    AuthResponse.newBuilder()
-                                        .setStatus(1)
-                                        .setUrl(responseUrl)
-                                        .build()
-                                ).build()
-                        ).build().toByteArray()
+                responseIpcRpcResponse(
+                    conn, request.requestId,
+                    OpenMicrosoftPopupResponse.newBuilder().apply {
+                        status = OpenMicrosoftPopupResponse.Status.STATUS_MATCHED_TARGET_URL
+                        url = responseUrl
+                    }.build()
                 )
             }
 
             "OpenUrl" -> {
-                val url = request.payload.data
+                val openUrlRequest = OpenUrlRequest.parseFrom(request.input)
+                val url = openUrlRequest.url
                 log.info("Open URL: $url")
                 url.toURI().open()
             }
+
+            "CheckPendingPromotion" -> {
+                responseIpcRpcResponse(
+                    conn, request.requestId,
+                    CheckPendingPromotionResponse.newBuilder().apply {
+                        this.hasPendingPromotion = true
+                        addPendingPromotions(721)
+                    }.build()
+                )
+            }
         }
-        // todo: refactor with the generated proto
         // todo handle radio
     }
 
@@ -137,5 +150,16 @@ class GameWebsocketServer(serverPort: Int = 28190) : WebSocketServer(InetSocketA
 
     override fun onStart() {
         log.info("Lunar auth server started at port $port")
+    }
+
+    fun responseIpcRpcResponse(conn: WebSocket, requestId: ByteString, payload: GeneratedMessage) {
+        conn.send(
+            GameboundIPCMessage.newBuilder().apply {
+                rpcResponse = IPCRpcResponse.newBuilder().apply {
+                    this.requestId = requestId
+                    output = payload.toByteString()
+                }.build()
+            }.build().toByteArray()
+        )
     }
 }

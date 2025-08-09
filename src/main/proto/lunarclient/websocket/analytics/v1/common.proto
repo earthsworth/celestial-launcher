@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package lunarclient.websocket.analytics.v1;
+
+
+option java_package = "com.lunarclient.websocket.analytics.v1";
+option java_outer_classname = "CommonProto";
+option java_multiple_files = true;
+
+message CounterUpdate {
+  string counter = 1;
+  int32 delta = 2;
+}
+
+
+

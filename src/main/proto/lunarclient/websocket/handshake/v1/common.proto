@@ -1,0 +1,168 @@
+syntax = "proto3";
+
+package lunarclient.websocket.handshake.v1;
+
+import "google/protobuf/timestamp.proto";
+import "lunarclient/common/v1/modpack.proto";
+import "lunarclient/common/v1/skin.proto";
+import "lunarclient/common/v1/uuid.proto";
+import "lunarclient/common/v1/version.proto";
+import "lunarclient/websocket/friend/v1/location.proto";
+import "lunarclient/websocket/language/v1/common.proto";
+import "lunarclient/websocket/radio/v1/common.proto";
+import "lunarclient/websocket/setting/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.handshake.v1";
+option java_outer_classname = "CommonProto";
+option java_multiple_files = true;
+
+message Handshake {
+  lunarclient.websocket.handshake.v1.MinecraftIdentity identity = 1;
+  lunarclient.common.v1.LauncherVersion launcher_version = 2;
+  string installation_id = 3;
+  string hwid = 4;
+  string operating_system = 5;
+  string operating_system_release = 11;
+  string cpu_architecture = 6;
+  lunarclient.websocket.language.v1.Language language = 7;
+  string canary_token = 10;
+  string overwolf_muid = 12;
+  oneof client {
+    lunarclient.websocket.handshake.v1.GameHandshake game_handshake = 8;
+    lunarclient.websocket.handshake.v1.LauncherHandshake launcher_handshake = 9;
+  }
+}
+
+message InstalledMod {
+  string id = 1;
+  string name = 2;
+  string version = 3;
+  lunarclient.websocket.handshake.v1.InstalledMod.Type type = 4;
+
+  enum Type {
+    TYPE_UNSPECIFIED = 0;
+    TYPE_FABRIC_INTERNAL = 1;
+    TYPE_FABRIC_EXTERNAL = 2;
+    TYPE_FORGE_INTERNAL = 3;
+    TYPE_FORGE_EXTERNAL = 4;
+  }
+}
+
+message MinecraftIdentity {
+  lunarclient.common.v1.UuidAndUsername player = 1;
+  lunarclient.websocket.handshake.v1.MinecraftIdentity.Type type = 2;
+  string authenticator_jwt = 3;
+  repeated lunarclient.websocket.handshake.v1.MinecraftIdentity.Skin skins = 4;
+  repeated lunarclient.websocket.handshake.v1.MinecraftIdentity.Cape capes = 5;
+  lunarclient.websocket.handshake.v1.MinecraftIdentity.Attributes attributes = 6;
+  google.protobuf.Timestamp created_at = 8;
+  lunarclient.websocket.handshake.v1.MinecraftIdentity.NameChange name_change = 9;
+  bool owns_bedrock_edition = 10;
+
+  message NameChange {
+    google.protobuf.Timestamp last_changed_at = 1;
+    bool allowed = 2;
+  }
+
+  message Skin {
+    string id = 1;
+    lunarclient.websocket.handshake.v1.MinecraftIdentity.TextureState state = 2;
+    lunarclient.common.v1.MinecraftSkin skin = 3;
+  }
+
+  message Cape {
+    string id = 1;
+    lunarclient.websocket.handshake.v1.MinecraftIdentity.TextureState state = 2;
+    string texture_id = 3;
+    string alias = 4;
+  }
+
+  message Attributes {
+    bool priviledge_online_chat = 1;
+    bool priviledge_multiplayer_server = 2;
+    bool priviledge_multiplayer_realms = 3;
+    bool priviledge_telemetry = 4;
+    bool priviledge_optional_telemetry = 5;
+    bool profanity_filter_realms = 6;
+    repeated lunarclient.websocket.handshake.v1.MinecraftIdentity.Attributes.BannedScope banned_scopes = 7;
+
+    message BannedScope {
+      lunarclient.websocket.handshake.v1.MinecraftIdentity.Attributes.BannedScope.Type type = 1;
+      string ban_id = 2;
+      google.protobuf.Timestamp expires = 3;
+      string reason = 4;
+      string reason_message = 5;
+
+      enum Type {
+        TYPE_UNSPECIFIED = 0;
+        TYPE_MULTIPLAYER = 1;
+      }
+    }
+  }
+  enum Type {
+    TYPE_UNSPECIFIED = 0;
+    TYPE_MOJANG = 1;
+    TYPE_MICROSOFT = 2;
+  }
+
+  enum TextureState {
+    TEXTURE_STATE_UNSPECIFIED = 0;
+    TEXTURE_STATE_ACTIVE = 1;
+    TEXTURE_STATE_INACTIVE = 2;
+  }
+}
+
+message NvidiaGpuMemory {
+  int32 dedicated_vram_kb = 1;
+  int32 total_available_memory_kb = 2;
+}
+
+message MesaGpuMemory {
+  int32 total_vram_mb = 1;
+  bool unified_memory = 2;
+}
+
+message GameHandshake {
+  lunarclient.common.v1.MinecraftVersion minecraft_version = 1;
+  lunarclient.common.v1.LunarClientVersion lunar_client_version = 2;
+  lunarclient.websocket.friend.v1.InboundLocation location = 3;
+  repeated string ichor_modules = 4;
+  repeated lunarclient.websocket.handshake.v1.InstalledMod installed_mods = 5;
+  lunarclient.common.v1.PlayerModpack modpack = 6;
+  repeated string gl_extensions = 7;
+  string launch_id = 8;
+  oneof gpu_memory {
+    lunarclient.websocket.handshake.v1.NvidiaGpuMemory nvidia_memory = 9;
+    lunarclient.websocket.handshake.v1.MesaGpuMemory mesa_memory = 10;
+  }
+  repeated lunarclient.websocket.setting.v1.ClientSetting settings = 11;
+}
+
+message LauncherHandshake {
+  string environment = 1;
+  string session_id = 2;
+  string updater_stream = 3;
+  lunarclient.websocket.handshake.v1.LauncherHandshake.ElectronBinariesType electron_binaries_type = 4;
+  bool elevated = 5;
+  bool silent_start = 6;
+  int32 uptime_since_start = 7;
+  google.protobuf.Timestamp started_at = 8;
+  int32 build_number = 9;
+  string git_commit_hash = 10;
+  string git_short_commit_hash = 11;
+  lunarclient.websocket.radio.v1.InboundRadioInfo radio_info = 12;
+  bool optimized_ads = 13;
+  bool analytics = 14;
+  bool owahe = 15;
+  repeated lunarclient.websocket.setting.v1.LauncherSetting settings = 16;
+  bool safe_storage = 17;
+
+  enum ElectronBinariesType {
+    ELECTRON_BINARIES_TYPE_UNSPECIFIED = 0;
+    ELECTRON_BINARIES_TYPE_OVERWOLF_OW_ELECTRON = 1;
+    ELECTRON_BINARIES_TYPE_ELECTRON = 2;
+  }
+}
+
+
+

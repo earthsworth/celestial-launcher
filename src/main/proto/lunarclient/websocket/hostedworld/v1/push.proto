@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package lunarclient.websocket.hostedworld.v1;
+
+import "google/protobuf/timestamp.proto";
+import "lunarclient/common/v1/color.proto";
+import "lunarclient/common/v1/uuid.proto";
+import "lunarclient/websocket/hostedworld/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.hostedworld.v1";
+option java_outer_classname = "PushProto";
+option java_multiple_files = true;
+
+message JoinHostedWorldPush {
+  lunarclient.websocket.hostedworld.v1.AddressAndPort relay = 1;
+  string relay_session_id = 2;
+  lunarclient.common.v1.Uuid joiner_uuid = 3;
+  lunarclient.websocket.hostedworld.v1.AddressAndPort simple_voice_chat_endpoint = 4;
+}
+
+message HostedWorldAvailablePush {
+  lunarclient.common.v1.UuidAndUsername world_host = 1;
+}
+
+message HostedWorldWhitelistedPush {
+  lunarclient.common.v1.UuidAndUsername world_host = 1;
+}
+
+message HostedWorldStatusPush {
+  repeated lunarclient.websocket.hostedworld.v1.HostedWorldStatusPush.OnlinePlayer online_players = 1;
+  repeated lunarclient.websocket.hostedworld.v1.HostedWorldStatusPush.OfflinePlayer offline_players = 2;
+  repeated lunarclient.websocket.hostedworld.v1.JoinSource allowed_join_sources = 3;
+  int32 max_players = 4;
+
+  message OnlinePlayer {
+    lunarclient.common.v1.UuidAndUsername player = 1;
+    lunarclient.websocket.hostedworld.v1.Role role = 2;
+    lunarclient.common.v1.Color logo_color = 3;
+    lunarclient.common.v1.Color plus_color = 4;
+  }
+
+  message OfflinePlayer {
+    lunarclient.common.v1.UuidAndUsername player = 1;
+    google.protobuf.Timestamp last_online = 2;
+  }
+}
+
+
+

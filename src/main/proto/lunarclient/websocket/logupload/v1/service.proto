@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package lunarclient.websocket.logupload.v1;
+
+import "lunarclient/websocket/protocol/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.logupload.v1";
+option java_outer_classname = "ServiceProto";
+option java_multiple_files = true;
+
+message StartLogUploadRequest {
+  repeated lunarclient.websocket.logupload.v1.StartLogUploadRequest.File files = 1;
+  string sentry_crash_id = 2;
+  string solution_id = 3;
+
+  message File {
+    string name = 1;
+  }
+}
+
+message StartLogUploadResponse {
+  repeated lunarclient.websocket.logupload.v1.StartLogUploadResponse.File files = 1;
+  string upload_id = 2;
+  lunarclient.websocket.logupload.v1.StartLogUploadResponse.Status status = 3;
+
+  message File {
+    string name = 1;
+    string upload_url = 2;
+  }
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_SUCCESS = 1;
+    STATUS_NOT_ALLOWED = 2;
+  }
+}
+
+message CompleteLogUploadRequest {
+  string upload_id = 1;
+}
+
+message CompleteLogUploadResponse {
+}
+
+
+

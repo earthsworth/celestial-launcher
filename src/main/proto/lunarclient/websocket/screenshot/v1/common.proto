@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+package lunarclient.websocket.screenshot.v1;
+
+import "lunarclient/common/v1/location.proto";
+import "lunarclient/common/v1/position.proto";
+import "lunarclient/common/v1/skin.proto";
+import "lunarclient/common/v1/uuid.proto";
+import "lunarclient/common/v1/version.proto";
+
+option java_package = "com.lunarclient.websocket.screenshot.v1";
+option java_outer_classname = "CommonProto";
+option java_multiple_files = true;
+
+message ScreenshotMessage {
+  lunarclient.common.v1.UuidAndUsername author = 1;
+  repeated lunarclient.websocket.screenshot.v1.PlayerState states = 2;
+  repeated lunarclient.websocket.screenshot.v1.ScreenshotPlayer players = 3;
+  string dimension = 4;
+  string biome = 5;
+  float yaw = 6;
+  float pitch = 7;
+  lunarclient.common.v1.Vector3f pos = 8;
+  lunarclient.websocket.screenshot.v1.Dimensions size = 9;
+  lunarclient.websocket.screenshot.v1.Perspective perspective = 10;
+  bool has_hud = 11;
+  int64 day_time = 12;
+  lunarclient.websocket.screenshot.v1.Weather weather = 13;
+  float health = 14;
+  float max_health = 15;
+  float food_level = 16;
+  float saturation_level = 17;
+  lunarclient.common.v1.Uuid local_id = 18;
+}
+
+message ScreenshotPlayer {
+  lunarclient.common.v1.UuidAndUsername player = 1;
+  repeated lunarclient.websocket.screenshot.v1.PlayerState states = 2;
+  repeated int32 cosmetics = 3;
+  int32 emote = 4;
+  int32 emote_jam = 5;
+  lunarclient.common.v1.MinecraftSkin skin = 6;
+  string cape = 7;
+}
+
+message ExtraScreenshotData {
+  lunarclient.common.v1.MinecraftVersion mc_version = 1;
+  lunarclient.common.v1.LunarClientVersion lunar_version = 2;
+  lunarclient.common.v1.Location location = 3;
+}
+
+message Dimensions {
+  int64 width = 1;
+  int64 height = 2;
+}
+
+
+enum Perspective {
+  PERSPECTIVE_UNSPECIFIED = 0;
+  PERSPECTIVE_FIRST = 1;
+  PERSPECTIVE_BACK = 2;
+  PERSPECTIVE_FRONT = 3;
+}
+
+enum PlayerState {
+  PLAYER_STATE_UNSPECIFIED = 0;
+  PLAYER_STATE_SLEEPING = 1;
+  PLAYER_STATE_ELYTRA_FLYING = 2;
+  PLAYER_STATE_FLYING = 3;
+  PLAYER_STATE_SPRINTING = 4;
+  PLAYER_STATE_SNEAKING = 5;
+  PLAYER_STATE_SWIMMING = 6;
+  PLAYER_STATE_RIDING = 7;
+  PLAYER_STATE_JUMPING = 8;
+  PLAYER_STATE_FALLING = 9;
+  PLAYER_STATE_WALKING = 10;
+  PLAYER_STATE_STANDING = 11;
+}
+
+enum Weather {
+  WEATHER_UNSPECIFIED = 0;
+  WEATHER_CLEAR = 1;
+  WEATHER_RAIN = 2;
+  WEATHER_SNOW = 3;
+  WEATHER_THUNDER = 4;
+}
+
+enum ScreenshotPrivacy {
+  SCREENSHOT_PRIVACY_UNSPECIFIED = 0;
+  SCREENSHOT_PRIVACY_PUBLIC = 1;
+  SCREENSHOT_PRIVACY_UNLISTED = 2;
+  SCREENSHOT_PRIVACY_PRIVATE = 3;
+}
+
+

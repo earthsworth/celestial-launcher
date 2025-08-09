@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package lunarclient.apollo.evnt.v1;
+
+import "lunarclient/apollo/common/v1/uuid.proto";
+import "lunarclient/apollo/evnt/v1/character.proto";
+
+option java_package = "com.lunarclient.apollo.evnt.v1";
+option java_outer_classname = "CosmeticsProto";
+option java_multiple_files = true;
+
+message OverrideCosmeticResourcesMessage {
+  lunarclient.apollo.common.v1.Uuid player_uuid = 1;
+  lunarclient.apollo.evnt.v1.CharacterType character_type = 2;
+  string model_path = 3;
+  string animation_path = 4;
+  string texture_path = 5;
+}
+
+message UpdateCosmeticsMessage {
+  repeated string model_locations = 1;
+  repeated string animation_locations = 2;
+}
+
+message OverrideCharacterSuitResourcesMessage {
+  lunarclient.apollo.evnt.v1.CharacterType character_type = 1;
+  repeated string suit_names = 2;
+}
+
+
+

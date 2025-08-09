@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package lunarclient.websocket.chat.v2;
+
+import "lunarclient/websocket/chat/v2/common.proto";
+
+option java_package = "com.lunarclient.websocket.chat.v2";
+option java_outer_classname = "PushProto";
+option java_multiple_files = true;
+
+message ChatMessagePush {
+  int32 chat_id = 1;
+  lunarclient.websocket.chat.v2.ChatMessage chat_message = 2;
+}
+
+
+

@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package lunarclient.websocket.notification.v1;
+
+import "lunarclient/common/v1/uuid.proto";
+import "lunarclient/websocket/notification/v1/common.proto";
+
+option java_package = "com.lunarclient.websocket.notification.v1";
+option java_outer_classname = "PushProto";
+option java_multiple_files = true;
+
+message DisplayNotificationPush {
+  string notification_title = 1;
+  string notification_message = 2;
+}
+
+message DisplayChatMessagePush {
+  string chat_message = 1;
+}
+
+message NewNotificationPush {
+  lunarclient.websocket.notification.v1.Notification notification = 1;
+}
+
+message RemoveNotificationPush {
+  lunarclient.common.v1.Uuid id = 1;
+}
+
+
+

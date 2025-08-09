@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package lunarclient.apollo.player.v1;
+
+
+option java_package = "com.lunarclient.apollo.player.v1";
+option java_outer_classname = "WorldProto";
+option java_multiple_files = true;
+
+message UpdatePlayerWorldMessage {
+  string world = 1;
+}
+
+
+
