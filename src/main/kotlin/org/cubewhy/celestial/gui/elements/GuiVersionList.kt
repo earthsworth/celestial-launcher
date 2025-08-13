@@ -16,6 +16,7 @@ import org.cubewhy.celestial.event.EventTarget
 import org.cubewhy.celestial.event.impl.APIReadyEvent
 import org.cubewhy.celestial.event.impl.GameStartEvent
 import org.cubewhy.celestial.event.impl.GameTerminateEvent
+import org.cubewhy.celestial.game.AccountManager
 import org.cubewhy.celestial.game.GameProperties
 import org.cubewhy.celestial.game.LaunchCommandJson
 import org.cubewhy.celestial.game.addon.LunarCNMod
@@ -199,6 +200,8 @@ class GuiVersionList : JPanel() {
 
 
     private suspend fun beforeLaunch() {
+        // restore offline accounts
+        AccountManager.fixBrokenOfflineAccounts()
         if (gamePid.get() != 0L) {
             if (findJava(/*if (config.celeWrap.state) CeleWrap.MAIN_CLASS else */getMainClass(null)) != null) {
                 JOptionPane.showMessageDialog(

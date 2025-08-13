@@ -6,21 +6,15 @@
 
 package org.cubewhy.celestial.gui.pages
 
-import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
-import org.cubewhy.celestial.JSON
 import org.cubewhy.celestial.entities.LunarAccount
-import org.cubewhy.celestial.entities.LunarAccountConfig
-import org.cubewhy.celestial.entities.LunarMinecraftProfile
+import org.cubewhy.celestial.game.AccountManager
 import org.cubewhy.celestial.gui.elements.PlaceholderTextField
 import org.cubewhy.celestial.t
 import org.cubewhy.celestial.utils.safeConvertStringToUuid
 import java.awt.*
-import java.io.File
 import java.util.*
 import javax.swing.*
 import javax.swing.border.TitledBorder
-import kotlin.random.Random
 
 private data class LunarAccountState(
     val lunarAccount: LunarAccount,
@@ -40,13 +34,7 @@ private data class LunarAccountState(
 
 class AccountManagerPanel : JPanel() {
     private val tab: JTabbedPane
-    private lateinit var accountConfig: LunarAccountConfig
-
     private val accountList = DefaultListModel<LunarAccountState>()
-
-    companion object {
-        val accountsFile = File(System.getProperty("user.home"), ".lunarclient/settings/game/accounts.json")
-    }
 
     init {
         this.name = "account-manager"
@@ -69,9 +57,8 @@ class AccountManagerPanel : JPanel() {
         accountPanel.layout = BorderLayout()
         tab.addTab("Accounts", accountPanel)
 
-        accountConfig = this.loadAccounts()
-        accountConfig.accounts.values.forEach { account ->
-            this.addAccountToUi(account, accountConfig.activeAccountLocalId == account.localId)
+        AccountManager.accountConfig.accounts.values.forEach { account ->
+            this.addAccountToUi(account, AccountManager.accountConfig.activeAccountLocalId == account.localId)
         }
 
         accountPanel.add(JList(this.accountList), BorderLayout.CENTER)
@@ -133,6 +120,12 @@ class AccountManagerPanel : JPanel() {
             )
         )
 
+        createOfflineAccountPanel.add(
+            JLabel("Note: You must add the browser debugger agent to use offline accounts"), gbc(
+                x = 0, y = 2, gw = 2, anchor = GridBagConstraints.WEST
+            )
+        )
+
         btnCreateOfflineAccount.addActionListener {
             val username = usernameField.text
             if (username.isEmpty()) {
@@ -147,7 +140,7 @@ class AccountManagerPanel : JPanel() {
                 return@addActionListener
             }
 
-            if (accountConfig.accounts.any {
+            if (AccountManager.accountConfig.accounts.any {
                     it.value.username.contentEquals(
                         username,
                         true
@@ -174,24 +167,7 @@ class AccountManagerPanel : JPanel() {
     }
 
     private fun addAccount(username: String, uuid: UUID): Boolean {
-        val localId = UUID.randomUUID().toString().replace("-", "")
-        // generate fake jwt
-        val remoteId = Random.nextInt(1000, 1000000)
-        val algorithm = Algorithm.HMAC384("celestial")
-        val jwt = JWT.create()
-            .withClaim("xuid", remoteId)
-        val fakeAccessToken = jwt.sign(algorithm)
-        val account = LunarAccount(
-            accessToken = fakeAccessToken,
-            accessTokenExpiresAt = "3000-07-29T05:16:13.698487159Z",
-            localId = localId,
-            minecraftProfile = LunarMinecraftProfile(uuid.toString().replace("-", ""), username),
-            username = username,
-            refreshToken = "OFFLINE_ALT",
-            remoteId = remoteId.toString()
-        )
-        accountConfig.accounts[localId] = account
-        accountsFile.writeText(JSON.encodeToString(this.accountConfig))
+        val account = AccountManager.addOfflineAccount(username, uuid)
         this.accountList.addElement(LunarAccountState(account, false))
         return true
     }
@@ -199,17 +175,5 @@ class AccountManagerPanel : JPanel() {
 
     private fun addAccountToUi(account: LunarAccount, isActive: Boolean) {
         accountList.addElement(LunarAccountState(account, isActive))
-    }
-
-    private fun loadAccounts(): LunarAccountConfig {
-        // get config file
-        // ~/.lunarclient/settings/game/accounts.json
-        if (!(accountsFile.exists())) {
-            return LunarAccountConfig() // first run
-        }
-        val content = accountsFile.readText()
-        // parse json
-        val accountConfig = JSON.decodeFromString(LunarAccountConfig.serializer(), content)
-        return accountConfig
     }
 }

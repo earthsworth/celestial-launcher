@@ -17,8 +17,8 @@ data class LunarAccountConfig(
 
 @Serializable
 data class LunarAccount(
-    val accessToken: String,
-    val accessTokenExpiresAt: String,
+    var accessToken: String? = null,
+    var accessTokenExpiresAt: String,
     val eligibleForMigration: Boolean = false,
     val hasMultipleProfiles: Boolean = false,
     val legacy: Boolean = false,
@@ -26,13 +26,16 @@ data class LunarAccount(
     @SerialName("userProperites") // lol lunar made a mistake
     val userProperties: List<String> = listOf(),
     val localId: String,
-    val refreshToken: String,
+    var refreshToken: String? = null,
     val minecraftProfile: LunarMinecraftProfile,
-    val remoteId: String, // xbox id, same in the jwt
+    var remoteId: String, // xbox id, same in the jwt
     val type: String = "Xbox",
     val username: String,
 ) {
-    val offline = refreshToken == "OFFLINE_ALT"
+    val offline: Boolean
+        get() {
+            return accessToken == null || refreshToken == null || refreshToken == "OFFLINE_ALT"
+        }
 }
 
 @Serializable

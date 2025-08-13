@@ -7,6 +7,7 @@
 package org.cubewhy.celestial.utils
 
 import java.util.*
+import kotlin.random.Random
 
 fun ResourceBundle.format(key: String, vararg args: Any?): String =
     this.getString(key).format(*args)
@@ -19,4 +20,12 @@ fun safeConvertStringToUuid(str: String?): UUID? {
     } catch (_: IllegalArgumentException) {
         null
     }
+}
+
+fun randomDigitString(length: Int): String {
+    val sb = StringBuilder(length)
+    repeat(length) {
+        sb.append(Random.nextInt(0, 10))
+    }
+    return sb.toString()
 }
