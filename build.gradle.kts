@@ -37,6 +37,7 @@ repositories {
 }
 
 dependencies {
+    implementation("com.auth0:java-jwt:4.5.0")
     implementation("org.slf4j:slf4j-api:2.0.17")
     implementation("org.slf4j:slf4j-log4j12:2.0.17")
     implementation("org.apache.logging.log4j:log4j-api:2.24.3")

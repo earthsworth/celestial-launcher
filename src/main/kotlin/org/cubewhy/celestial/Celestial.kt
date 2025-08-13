@@ -47,7 +47,7 @@ import kotlin.system.exitProcess
 object Celestial
 
 private var log = LoggerFactory.getLogger(Celestial::class.java)
-val JSON = Json { ignoreUnknownKeys = true; prettyPrint = true }
+val JSON = Json { ignoreUnknownKeys = true; prettyPrint = true; encodeDefaults = true }
 val configDir = File(System.getProperty("user.home"), ".cubewhy/lunarcn")
 val themesDir = File(configDir, "themes")
 val configFile = configDir.resolve("celestial.json")

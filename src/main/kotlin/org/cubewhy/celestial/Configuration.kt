@@ -11,6 +11,7 @@ import kotlinx.serialization.Serializable
 import org.cubewhy.celestial.game.LauncherFeatureFlags
 import org.cubewhy.celestial.gui.Language
 import org.cubewhy.celestial.gui.pages.AboutPanel
+import org.cubewhy.celestial.gui.pages.AccountManagerPanel
 import org.cubewhy.celestial.gui.pages.NewsPanel
 import org.cubewhy.celestial.gui.pages.SettingsPanel
 import org.cubewhy.celestial.gui.pages.VersionPanel
@@ -117,7 +118,8 @@ enum class LauncherPage(val pageName: String, val translateKey: String, val claz
     NEWS("news", "gui.news.title", NewsPanel::class.java),
     VERSION("version", "gui.version.title", VersionPanel::class.java),
 
-    //    PLUGINS("plugins", "gui.plugins.title", GuiPlugins::class.java),
+    ACCOUNT_MANAGER("account-manager", "gui.account-manager.title", AccountManagerPanel::class.java),
+//        PLUGINS("plugins", "gui.plugins.title", GuiPlugins::class.java),
     SETTINGS("settings", "gui.settings.title", SettingsPanel::class.java),
     ABOUT("about", "gui.about.title", AboutPanel::class.java)
 }

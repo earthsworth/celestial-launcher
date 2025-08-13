@@ -10,3 +10,13 @@ import java.util.*
 
 fun ResourceBundle.format(key: String, vararg args: Any?): String =
     this.getString(key).format(*args)
+
+fun safeConvertStringToUuid(str: String?): UUID? {
+    if (str.isNullOrEmpty()) return null
+    return try {
+        UUID.fromString(str)
+
+    } catch (_: IllegalArgumentException) {
+        null
+    }
+}
