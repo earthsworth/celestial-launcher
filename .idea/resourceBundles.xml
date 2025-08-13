@@ -9,6 +9,7 @@
     <custom-resource-bundle>
       <file value="file://$PROJECT_DIR$/src/main/resources/languages/launcher.properties" />
       <file value="file://$PROJECT_DIR$/src/main/resources/languages/launcher_en.properties" />
+      <file value="file://$PROJECT_DIR$/src/main/resources/languages/launcher_es.properties" />
       <file value="file://$PROJECT_DIR$/src/main/resources/languages/launcher_ja.properties" />
       <file value="file://$PROJECT_DIR$/src/main/resources/languages/launcher_ko.properties" />
       <file value="file://$PROJECT_DIR$/src/main/resources/languages/launcher_zh.properties" />

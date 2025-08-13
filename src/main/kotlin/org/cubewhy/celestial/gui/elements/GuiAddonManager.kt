@@ -106,6 +106,8 @@ class GuiAddonManager : JPanel() {
         val manageArg = JMenuItem(t.getString("gui.addon.agents.arg"))
         val removeAgent = JMenuItem(t.getString("gui.addon.agents.remove"))
         val renameAgent = JMenuItem(t.getString("gui.addon.rename"))
+        val openAgentConfigUi = JMenuItem(t.getString("gui.addon.extra-ui"))
+        agentMenu.add(openAgentConfigUi)
         agentMenu.add(manageArg)
         agentMenu.add(renameAgent)
         agentMenu.addSeparator()
@@ -123,8 +125,7 @@ class GuiAddonManager : JPanel() {
                         .updateStatusText()
                 } else {
                     t.format(
-                        "gui.addon.agents.arg.set.success", currentAgent.file.name,
-                        newArg
+                        "gui.addon.agents.arg.set.success", currentAgent.file.name, newArg
                     ).updateStatusText()
                 }
                 agentList.clear()
@@ -153,9 +154,7 @@ class GuiAddonManager : JPanel() {
             val file = currentAgent.file
             val name = file.name
             val newName = JOptionPane.showInputDialog(
-                this,
-                t.getString("gui.addon.rename.dialog.message"),
-                name.substring(0, name.length - 4)
+                this, t.getString("gui.addon.rename.dialog.message"), name.substring(0, name.length - 4)
             )
             if (newName != null && file.renameTo(File(file.parentFile, "$newName.jar"))) {
                 log.info("Rename agent $name -> $newName.jar")
@@ -164,6 +163,20 @@ class GuiAddonManager : JPanel() {
                 migrate(name, "$newName.jar")
                 agentList.clear()
                 loadAgents()
+            }
+        }
+
+        openAgentConfigUi.addActionListener {
+            val currentAgent = jListAgents.selectedValue
+            if (currentAgent.hasExtraUi) {
+                currentAgent.openConfigWindow()
+            } else {
+                JOptionPane.showMessageDialog(
+                    this,
+                    t.getString("gui.addon.extra-ui.unavailable.description"),
+                    t.getString("gui.addon.extra-ui.unavailable.title"),
+                    JOptionPane.ERROR_MESSAGE
+                )
             }
         }
 
@@ -182,9 +195,7 @@ class GuiAddonManager : JPanel() {
             val file = currentMod.file
             val name = file.name
             val newName = JOptionPane.showInputDialog(
-                this,
-                t.getString("gui.addon.rename.dialog.message"),
-                name.substring(0, name.length - 4)
+                this, t.getString("gui.addon.rename.dialog.message"), name.substring(0, name.length - 4)
             )
             if (newName != null && file.renameTo(File(file.parentFile, "$newName.jar"))) {
                 log.info(String.format("Rename weave mod %s -> %s", name, "$newName.jar"))
@@ -224,9 +235,7 @@ class GuiAddonManager : JPanel() {
             val file = currentMod.file
             val name = file.name
             val newName = JOptionPane.showInputDialog(
-                this,
-                t.getString("gui.addon.rename.dialog.message"),
-                name.substring(0, name.length - 4)
+                this, t.getString("gui.addon.rename.dialog.message"), name.substring(0, name.length - 4)
             )
             if (newName != null && file.renameTo(File(file.parentFile, "$newName.jar"))) {
                 log.info(String.format("Rename LunarCN mod %s -> %s", name, "$newName.jar"))
@@ -261,9 +270,7 @@ class GuiAddonManager : JPanel() {
             val file = currentMod.file
             val name = file.name
             val newName = JOptionPane.showInputDialog(
-                this,
-                t.getString("gui.addon.rename.dialog.message"),
-                name.substring(0, name.length - 4)
+                this, t.getString("gui.addon.rename.dialog.message"), name.substring(0, name.length - 4)
             )
             if (newName != null && file.renameTo(File(file.parentFile, "$newName.jar"))) {
                 log.info(String.format("Rename Fabric mod %s -> %s", name, "$newName.jar"))
@@ -323,20 +330,14 @@ class GuiAddonManager : JPanel() {
                     loadAgents()
                 } else {
                     JOptionPane.showMessageDialog(
-                        this,
-                        t.getString("gui.addon.agents.add.failure.exists"),
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE
+                        this, t.getString("gui.addon.agents.add.failure.exists"), "Error", JOptionPane.ERROR_MESSAGE
                     )
                 }
             } catch (e: IOException) {
                 val trace = e.stackTraceToString()
                 log.error(trace)
                 JOptionPane.showMessageDialog(
-                    this,
-                    t.format("gui.addon.agents.add.failure.io", trace),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
+                    this, t.format("gui.addon.agents.add.failure.io", trace), "Error", JOptionPane.ERROR_MESSAGE
                 )
             }
         }
@@ -361,20 +362,14 @@ class GuiAddonManager : JPanel() {
                     loadWeaveMods()
                 } else {
                     JOptionPane.showMessageDialog(
-                        this,
-                        t.getString("gui.addon.mods.weave.add.failure.exists"),
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE
+                        this, t.getString("gui.addon.mods.weave.add.failure.exists"), "Error", JOptionPane.ERROR_MESSAGE
                     )
                 }
             } catch (e: IOException) {
                 val trace = e.stackTraceToString()
                 log.error(trace)
                 JOptionPane.showMessageDialog(
-                    this,
-                    t.format("gui.addon.mods.weave.add.failure.io", trace),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
+                    this, t.format("gui.addon.mods.weave.add.failure.io", trace), "Error", JOptionPane.ERROR_MESSAGE
                 )
             }
         }
@@ -399,20 +394,14 @@ class GuiAddonManager : JPanel() {
                     loadWeaveMods()
                 } else {
                     JOptionPane.showMessageDialog(
-                        this,
-                        t.getString("gui.addon.mods.cn.add.failure.exists"),
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE
+                        this, t.getString("gui.addon.mods.cn.add.failure.exists"), "Error", JOptionPane.ERROR_MESSAGE
                     )
                 }
             } catch (e: IOException) {
                 val trace = e.stackTraceToString()
                 log.error(trace)
                 JOptionPane.showMessageDialog(
-                    this,
-                    t.format("gui.addon.mods.cn.add.failure.io", trace),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
+                    this, t.format("gui.addon.mods.cn.add.failure.io", trace), "Error", JOptionPane.ERROR_MESSAGE
                 )
             }
         }
@@ -443,10 +432,7 @@ class GuiAddonManager : JPanel() {
                 val trace = e.stackTraceToString()
                 log.error(trace)
                 JOptionPane.showMessageDialog(
-                    this,
-                    t.format("gui.addon.mods.fabric.add.failure.io", trace),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
+                    this, t.format("gui.addon.mods.fabric.add.failure.io", trace), "Error", JOptionPane.ERROR_MESSAGE
                 )
             }
         }

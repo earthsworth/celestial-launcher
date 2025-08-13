@@ -5,15 +5,23 @@
  */
 package org.cubewhy.celestial.game.addon
 
+import org.cubewhy.celestial.JSON
 import org.cubewhy.celestial.JavaagentConfiguration
 import org.cubewhy.celestial.config
 import org.cubewhy.celestial.configDir
 import org.cubewhy.celestial.game.BaseAddon
+import org.cubewhy.celestial.utils.GitUtils
+import org.cubewhy.celestial.utils.javaExecUsedToLaunchGame
 import org.jetbrains.annotations.Contract
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.io.BufferedReader
 import java.io.File
+import java.io.InputStreamReader
 import java.util.*
+import java.util.jar.JarFile
+
+private val log: Logger = LoggerFactory.getLogger(JavaAgent::class.java)
 
 class JavaAgent : BaseAddon {
     /**
@@ -34,6 +42,11 @@ class JavaAgent : BaseAddon {
      * */
     var classpath: Boolean
 
+    var agentManifest: JavaagentManifest? = null
+
+    val hasExtraUi: Boolean
+        get() = agentManifest?.extraConfigMain != null
+
     /**
      * Create an instance
      *
@@ -44,6 +57,7 @@ class JavaAgent : BaseAddon {
         this.file = File(path)
         this.arg = arg
         this.classpath = classpath
+        agentManifest = parseManifest()
     }
 
     /**
@@ -56,6 +70,7 @@ class JavaAgent : BaseAddon {
         this.file = file
         this.arg = arg
         this.classpath = classpath
+        agentManifest = parseManifest()
     }
 
     val jvmArg: String
@@ -90,6 +105,57 @@ class JavaAgent : BaseAddon {
             migrate(file.name, file.name.substring(0, file.name.length - 9))
         }
         return toggle(file)
+    }
+
+    fun parseManifest(): JavaagentManifest? {
+        val content = try {      // open the jar file
+            val jar = JarFile(this.file)
+            // get the entry
+            val entry = jar.getEntry("celestial.manifest.json")
+            jar.getInputStream(entry).readAllBytes().toString(Charsets.UTF_8)
+        } catch (_: NullPointerException) {
+            // ignored
+            return null
+        }
+        try {
+            // parse json
+            return JSON.decodeFromString(JavaagentManifest.serializer(), content)
+        } catch (e: RuntimeException) {
+            // invalid manifest
+            log.error("Invalid manifest of javaagent ${this.file}", e)
+            return null
+        }
+    }
+
+    fun openConfigWindow() {
+        if (!this.hasExtraUi || this.agentManifest == null) return // there's no extra config ui defined in this agent
+        val java = File(javaExecUsedToLaunchGame)
+        val commandList = mutableListOf<String>()
+        commandList.add(java.absolutePath)
+        commandList.add("-cp")
+        commandList.add(this.file.absolutePath)
+        // celestial properties
+        // Celestial version
+        commandList.add("-Dcelestial.version=${GitUtils.buildVersion}")
+        // agent arg
+        this.arg?.let { commandList.add("-Dcelestial.agent.arg=$it") }
+        // installation path
+        commandList.add("-Dcelestial.game.installation=${config.installationDir}")
+        // main class
+        commandList.add(this.agentManifest!!.extraConfigMain!!)
+
+        // build command
+        val pb = ProcessBuilder(commandList)
+            .redirectErrorStream(true)
+
+        val process = pb.start()
+        log.info("Started extra config ui (pid = ${process.pid()})")
+        Thread {
+            // redirect logs
+            BufferedReader(InputStreamReader(process.inputStream)).use { reader ->
+                reader.lines().forEach { line -> log.info(line) }
+            }
+        }.start()
     }
 
     fun toggleClasspath(): Boolean {

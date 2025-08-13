@@ -311,25 +311,15 @@ suspend fun getArgs(
     val json = lunarApiClient.launchVersion(version, branch, module)
     // === JRE ===
     val wrapper = config.game.wrapper
-    val customJre = config.jre
     val vmArgs = mutableListOf<String>()
     if (wrapper.isNotBlank()) {
         log.warn("Launch the game via the wrapper: $wrapper")
     }
-    var java = currentJavaExec
+    val java = File(javaExecUsedToLaunchGame)
     if (!java.exists()) {
-        log.error("Java executable not found, please specify it in the config file")
+        log.error("Java executable not found, please specify it correctly in the config file")
     }
-    if (customJre.isNotEmpty()) {
-        log.info("Use custom jre: $customJre")
-        val customJreFile = customJre.toFile()
-        if (!customJreFile.exists()) {
-            log.warn("Custom jre is not exist on the filesystem, launch may fail.")
-        }
-        java = customJreFile
-    } else {
-        log.info("Use default jre: $java")
-    }
+    log.info("Use jre: $java")
     // === default vm args ===
     vmArgs.addAll(LunarApiClient.getDefaultJvmArgs(json))
     // serviceOverride
